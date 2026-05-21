@@ -1,0 +1,216 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.order-cancelled {
+  padding: $space-6;
+  @include flex-center;
+  min-height: calc(100vh - 64px);
+
+  &__card {
+    @include card;
+    max-width: 560px;
+    width: 100%;
+    padding: $space-12 $space-8;
+    text-align: center;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &__icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(248, 113, 113, 0.1);
+    border: 2px solid var(--color-error);
+    @include flex-center;
+    margin: 0 auto $space-6;
+    animation: fadeIn 0.5s ease;
+  }
+
+  &__icon {
+    font-size: 2.5rem;
+    color: var(--color-error);
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  }
+
+  &__heading {
+    font-family: $font-headline;
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-3;
+  }
+
+  &__subtitle {
+    font-size: 0.95rem;
+    color: $color-text-muted;
+    margin-bottom: $space-6;
+    line-height: 1.6;
+    strong { color: $color-text; }
+  }
+
+  &__item-preview {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-4;
+    text-align: left;
+    margin-bottom: $space-6;
+  }
+
+  &__item-img {
+    width: 56px;
+    height: 70px;
+    border-radius: $radius-sm;
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    @include flex-center;
+    .material-symbols-outlined { font-size: 1.4rem; color: $color-text-dimmed; }
+  }
+
+  &__item-info { flex: 1; display: flex; flex-direction: column; gap: $space-1; }
+  &__item-name { font-size: 0.95rem; font-weight: 700; color: $color-text; }
+  &__item-meta { font-size: 0.8rem; color: $color-text-muted; }
+  &__item-price { font-size: 0.9rem; font-weight: 800; color: $color-text; }
+
+  &__refund-section {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-5;
+    text-align: left;
+    margin-bottom: $space-6;
+  }
+
+  &__refund-title {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $color-text;
+    margin-bottom: $space-5;
+    .material-symbols-outlined { color: $color-accent; font-size: 1.2rem; }
+  }
+
+  &__refund-timeline { display: flex; flex-direction: column; gap: 0; margin-bottom: $space-4; }
+
+  &__refund-note {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-2;
+    font-size: 0.8rem;
+    color: $color-text-muted;
+    line-height: 1.5;
+    .material-symbols-outlined { font-size: 0.9rem; color: $color-text-dimmed; flex-shrink: 0; }
+  }
+
+  &__cta-row { display: flex; flex-direction: column; gap: $space-3; }
+
+  &__btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-4;
+    border-radius: $radius-md;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__btn-secondary {
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    color: $color-text-muted;
+    padding: $space-3;
+    border-radius: $radius-md;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+  }
+
+  &__btn-ghost {
+    background: transparent;
+    border: none;
+    color: $color-text-dimmed;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { color: $color-accent; }
+  }
+}
+
+// ── Cancelled Timeline Items ──────────────────────────────────
+.cancelled-timeline__item {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  opacity: 0.45;
+  transition: $transition-base;
+  &--done { opacity: 1; }
+}
+
+.cancelled-timeline__icon-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cancelled-timeline__circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid $color-border;
+  background: $color-bg-card;
+  @include flex-center;
+  .material-symbols-outlined { font-size: 0.9rem; color: $color-text-dimmed; }
+
+  &--done {
+    border-color: var(--color-success);
+    background: rgba(74, 222, 128, 0.12);
+    .material-symbols-outlined { color: var(--color-success); }
+  }
+}
+
+.cancelled-timeline__line {
+  width: 2px;
+  height: 32px;
+  background: $color-border;
+  margin: 3px 0;
+  &--done { background: var(--color-success); }
+}
+
+.cancelled-timeline__content {
+  flex: 1;
+  padding-bottom: $space-4;
+}
+
+.cancelled-timeline__label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $color-text-muted;
+  &--done { color: $color-text; }
+}
+
+.cancelled-timeline__desc { font-size: 0.78rem; color: $color-text-dimmed; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: scale(1); }
+}

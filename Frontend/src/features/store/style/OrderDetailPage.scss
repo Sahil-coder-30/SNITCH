@@ -1,0 +1,313 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.order-detail {
+  padding: $space-6;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    margin-bottom: $space-8;
+    flex-wrap: wrap;
+  }
+
+  &__back-btn {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-4;
+    color: $color-text-muted;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-fast;
+    white-space: nowrap;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__id-block { flex: 1; }
+
+  &__order-id {
+    font-family: $font-headline;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: $color-text;
+  }
+
+  &__date { font-size: 0.85rem; color: $color-text-muted; display: block; margin-top: $space-1; }
+
+  &__track-btn {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-3 $space-5;
+    border-radius: $radius-md;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: $space-6;
+    align-items: start;
+    @include respond-to('tablet') { grid-template-columns: 1fr; }
+  }
+
+  &__main { display: flex; flex-direction: column; gap: $space-4; }
+  &__sidebar { display: flex; flex-direction: column; gap: $space-4; position: sticky; top: $space-6; }
+
+  &__card {
+    @include card;
+  }
+
+  &__card-title {
+    font-family: $font-headline;
+    font-size: 1rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-5;
+  }
+
+  &__eta {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 0.85rem;
+    color: $color-text-muted;
+    margin-top: $space-4;
+    padding: $space-3;
+    background: $color-surface;
+    border-radius: $radius-md;
+    .material-symbols-outlined { font-size: 1rem; color: $color-accent; }
+  }
+
+  &__awb {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 0.8rem;
+    color: $color-text-dimmed;
+    margin-top: $space-2;
+    .material-symbols-outlined { font-size: 0.9rem; }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-4 0;
+    border-bottom: 1px solid $color-border;
+    &:last-child { border-bottom: none; padding-bottom: 0; }
+  }
+
+  &__item-image {
+    width: 64px;
+    height: 80px;
+    border-radius: $radius-md;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    @include flex-center;
+    flex-shrink: 0;
+    .material-symbols-outlined { font-size: 1.6rem; color: $color-text-dimmed; }
+  }
+
+  &__item-info { flex: 1; display: flex; flex-direction: column; gap: $space-1; }
+  &__item-name { font-size: 0.95rem; font-weight: 700; color: $color-text; }
+  &__item-meta { font-size: 0.82rem; color: $color-text-muted; }
+  &__item-qty { font-size: 0.8rem; color: $color-text-dimmed; }
+
+  &__item-right { display: flex; flex-direction: column; align-items: flex-end; gap: $space-2; }
+  &__item-price { font-size: 1rem; font-weight: 800; color: $color-text; }
+
+  &__item-actions { display: flex; gap: $space-2; }
+
+  &__action-link {
+    background: none;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    padding: $space-1 $space-3;
+    font-size: 0.78rem;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+  }
+
+  &__address {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  &__addr-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $color-accent;
+    background: $color-accent-dim;
+    padding: 2px $space-2;
+    border-radius: $radius-sm;
+    text-transform: uppercase;
+    margin-bottom: $space-2;
+    letter-spacing: 0.05em;
+  }
+
+  &__addr-name { font-weight: 700; font-size: 0.95rem; color: $color-text; }
+  &__addr-line { font-size: 0.88rem; color: $color-text-muted; }
+  &__addr-phone { font-size: 0.82rem; color: $color-text-dimmed; margin-top: $space-1; }
+
+  &__price-rows { display: flex; flex-direction: column; gap: $space-3; margin-bottom: $space-4; }
+  &__price-row {
+    @include flex-between;
+    font-size: 0.88rem;
+    color: $color-text-muted;
+    &--discount { color: var(--color-success); }
+  }
+  &__free { color: var(--color-success); font-weight: 700; }
+  &__price-divider { height: 1px; background: $color-border; margin: $space-2 0; }
+  &__price-total {
+    @include flex-between;
+    font-size: 1rem;
+    font-weight: 800;
+    color: $color-text;
+    margin-bottom: $space-4;
+  }
+
+  &__payment-chip {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-4;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $color-text-muted;
+    margin-bottom: $space-4;
+    .material-symbols-outlined { font-size: 1.1rem; color: $color-accent; }
+  }
+
+  &__invoice-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    background: transparent;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-3;
+    color: $color-text-muted;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__cancel-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1.5px solid var(--color-error);
+    border-radius: $radius-md;
+    padding: $space-3;
+    color: var(--color-error);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { background: rgba(248, 113, 113, 0.15); }
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__cancelled-note {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-2;
+    padding: $space-4;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    border-radius: $radius-md;
+    font-size: 0.85rem;
+    color: var(--color-error);
+    line-height: 1.5;
+    .material-symbols-outlined { font-size: 1.1rem; flex-shrink: 0; }
+  }
+}
+
+// ── Mini Stepper ──────────────────────────────────────────────
+.mini-stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: $space-2;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-2;
+    flex: 1;
+    min-width: 80px;
+    position: relative;
+  }
+
+  &__circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid $color-border;
+    background: $color-surface;
+    @include flex-center;
+    z-index: 1;
+    transition: $transition-base;
+    .material-symbols-outlined { font-size: 1.1rem; color: $color-text-dimmed; }
+
+    &--done {
+      border-color: var(--color-success);
+      background: rgba(74, 222, 128, 0.12);
+      .material-symbols-outlined { color: var(--color-success); }
+    }
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    color: $color-text-dimmed;
+    text-align: center;
+    line-height: 1.3;
+    white-space: nowrap;
+    &--done { color: var(--color-success); font-weight: 600; }
+  }
+
+  &__line {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: calc(100% - 20px);
+    transform: translateX(10px);
+    height: 2px;
+    background: $color-border;
+    &--done { background: var(--color-success); }
+  }
+}

@@ -1,0 +1,249 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.order-tracking {
+  padding: $space-6;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $space-8;
+    flex-wrap: wrap;
+    gap: $space-4;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-4;
+    color: $color-text-muted;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__awb {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 0.85rem;
+    color: $color-text-muted;
+    .material-symbols-outlined { font-size: 1rem; color: $color-accent; }
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: $space-6;
+    align-items: start;
+    @include respond-to('tablet') { grid-template-columns: 1fr; }
+  }
+
+  &__stepper-card {
+    @include card;
+    padding: $space-8;
+  }
+
+  &__title {
+    font-family: $font-headline;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-3;
+  }
+
+  &__eta {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 0.9rem;
+    color: $color-text-muted;
+    margin-bottom: $space-8;
+    padding: $space-3;
+    background: $color-surface;
+    border-radius: $radius-md;
+    border: 1px solid $color-border;
+    .material-symbols-outlined { font-size: 1.1rem; color: $color-accent; }
+  }
+
+  &__sidebar { display: flex; flex-direction: column; gap: $space-4; position: sticky; top: $space-6; }
+
+  &__info-card { @include card; }
+
+  &__info-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: $space-3;
+  }
+
+  &__info-text {
+    font-size: 0.88rem;
+    color: $color-text;
+    line-height: 1.6;
+    &--muted { color: $color-text-muted; }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-2 0;
+    border-bottom: 1px solid $color-border;
+    &:last-child { border-bottom: none; }
+  }
+
+  &__item-img {
+    width: 40px;
+    height: 50px;
+    border-radius: $radius-sm;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    @include flex-center;
+    .material-symbols-outlined { font-size: 1.1rem; color: $color-text-dimmed; }
+  }
+
+  &__item-name { font-size: 0.85rem; font-weight: 600; color: $color-text; }
+  &__item-meta { font-size: 0.75rem; color: $color-text-muted; }
+
+  &__courier {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+    margin-bottom: $space-4;
+    .material-symbols-outlined { font-size: 1.4rem; color: $color-accent; }
+  }
+
+  &__awb-val {
+    font-size: 0.8rem;
+    color: $color-text-dimmed;
+    font-family: monospace;
+    letter-spacing: 0.06em;
+  }
+
+  &__external-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    background: transparent;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-3;
+    color: $color-text-muted;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+}
+
+// ── Tracking Stepper ──────────────────────────────────────────
+.tracking-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tracking-step {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  position: relative;
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  &__circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid $color-border;
+    background: $color-surface;
+    @include flex-center;
+    position: relative;
+    z-index: 1;
+    transition: $transition-base;
+    .material-symbols-outlined { font-size: 1.3rem; color: $color-text-dimmed; }
+
+    &--done {
+      border-color: var(--color-success);
+      background: rgba(74, 222, 128, 0.12);
+      .material-symbols-outlined { color: var(--color-success); }
+    }
+
+    &--current {
+      border-color: $color-accent;
+      background: $color-accent-dim;
+      box-shadow: 0 0 0 6px $color-accent-glow;
+      .material-symbols-outlined { color: $color-accent; }
+    }
+  }
+
+  &__pulse {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid $color-accent;
+    opacity: 0.4;
+    animation: pulse-ring 1.5s ease-out infinite;
+  }
+
+  &__line {
+    width: 2px;
+    flex: 1;
+    min-height: 48px;
+    background: $color-border;
+    transition: $transition-slow;
+    margin: 4px 0;
+
+    &--done { background: var(--color-success); }
+  }
+
+  &__content {
+    flex: 1;
+    padding: $space-2 0 $space-8;
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  &__label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $color-text-dimmed;
+    transition: $transition-fast;
+    &--active { color: $color-text; }
+  }
+
+  &__desc { font-size: 0.82rem; color: $color-text-muted; }
+
+  &__time {
+    font-size: 0.78rem;
+    color: $color-text-dimmed;
+    margin-top: $space-1;
+  }
+
+  &--current &__label { color: $color-accent; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.6; }
+  50%  { transform: scale(1.2); opacity: 0.2; }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}

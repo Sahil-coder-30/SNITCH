@@ -1,0 +1,74 @@
+@import './DashboardTokens.scss';
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: $font-body;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  &__icon {
+    font-size: 12px;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+
+  // ── Status variants ──────────────────────────────────────
+  &--delivered {
+    background: rgba(74, 222, 128, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.25);
+  }
+
+  &--processing {
+    background: rgba(250, 204, 21, 0.12);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.25);
+  }
+
+  &--shipped {
+    background: rgba(96, 165, 250, 0.12);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.25);
+  }
+
+  &--cancelled {
+    background: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.25);
+  }
+
+  &--pending {
+    background: rgba(251, 191, 36, 0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.25);
+  }
+
+  &--returns {
+    background: rgba(167, 139, 250, 0.12);
+    color: #a78bfa;
+    border: 1px solid rgba(167, 139, 250, 0.25);
+  }
+
+  &--active {
+    background: rgba(74, 222, 128, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.25);
+  }
+
+  &--draft {
+    background: rgba(var(--color-rgb-text), 0.06);
+    color: rgba(var(--color-rgb-text), 0.5);
+    border: 1px solid rgba(var(--color-rgb-text), 0.12);
+  }
+
+  &--out-of-stock {
+    background: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.25);
+  }
+}

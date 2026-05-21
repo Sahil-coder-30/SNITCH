@@ -1,0 +1,66 @@
+@use 'sass:color';
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(var(--color-rgb-text), 0.05);
+  border-radius: 4px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      transparent 0,
+      rgba(var(--color-rgb-text), 0.05) 20%,
+      rgba(var(--color-rgb-text), 0.1) 60%,
+      transparent 100%
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  &--circle {
+    border-radius: 50%;
+  }
+
+  &--rounded {
+    border-radius: 12px;
+  }
+
+  &--accent {
+    background-color: rgba(204, 255, 0, 0.1);
+    &::after {
+        background-image: linear-gradient(
+            90deg,
+            transparent 0,
+            rgba(204, 255, 0, 0.05) 20%,
+            rgba(204, 255, 0, 0.2) 60%,
+            transparent 100%
+        );
+    }
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// Layout helpers for skeletons
+.skeleton-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

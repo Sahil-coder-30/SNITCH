@@ -1,0 +1,225 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.refund-page {
+  padding: $space-6;
+  max-width: 700px;
+  margin: 0 auto;
+
+  &__header { margin-bottom: $space-8; }
+
+  &__title {
+    font-family: $font-headline;
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-2;
+  }
+
+  &__subtitle { font-size: 0.95rem; color: $color-text-muted; }
+
+  &__layout { display: flex; flex-direction: column; gap: $space-6; }
+
+  &__summary-card {
+    @include card;
+    display: flex;
+    align-items: center;
+    gap: $space-5;
+    background: linear-gradient(135deg, rgba(var(--color-rgb-accent), 0.06) 0%, $color-bg-card 100%);
+    border-color: $color-accent-dim;
+  }
+
+  &__summary-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $color-accent-dim;
+    border: 2px solid $color-accent;
+    @include flex-center;
+    flex-shrink: 0;
+    .material-symbols-outlined { font-size: 1.8rem; color: $color-accent; }
+  }
+
+  &__summary-info { flex: 1; }
+
+  &__refund-amount {
+    font-family: $font-headline;
+    font-size: 2rem;
+    font-weight: 900;
+    color: $color-text;
+    display: block;
+  }
+
+  &__refund-label { font-size: 0.85rem; color: $color-text-muted; }
+
+  &__status-badge {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: $space-2 $space-4;
+    border-radius: $radius-full;
+    &--processing {
+      background: rgba(250, 204, 21, 0.12);
+      color: #facc15;
+      border: 1px solid rgba(250, 204, 21, 0.3);
+    }
+    &--completed {
+      background: rgba(74, 222, 128, 0.12);
+      color: var(--color-success);
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+  }
+
+  &__details-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+    @include respond-to('mobile') { grid-template-columns: 1fr; }
+  }
+
+  &__detail {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    padding: $space-4;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+  }
+
+  &__detail-label { font-size: 0.75rem; color: $color-text-dimmed; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  &__detail-val { font-size: 0.88rem; color: $color-text; font-weight: 600; }
+
+  &__timeline-card { @include card; }
+
+  &__timeline-title {
+    font-family: $font-headline;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-6;
+  }
+
+  &__note {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+    padding: $space-4;
+    background: rgba(var(--color-rgb-accent), 0.06);
+    border: 1px solid $color-accent-dim;
+    border-radius: $radius-md;
+    font-size: 0.85rem;
+    color: $color-text-muted;
+    line-height: 1.6;
+    .material-symbols-outlined { font-size: 1.1rem; color: $color-accent; flex-shrink: 0; }
+    strong { color: $color-accent; }
+  }
+
+  &__cta-row { display: flex; gap: $space-3; flex-wrap: wrap; }
+
+  &__btn-primary {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-3 $space-6;
+    border-radius: $radius-md;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; }
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    color: $color-text-muted;
+    padding: $space-3 $space-5;
+    border-radius: $radius-md;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+}
+
+// ── Refund Timeline ───────────────────────────────────────────
+.refund-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.refund-timeline__item {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-4;
+  opacity: 0.5;
+  transition: $transition-base;
+  &--done { opacity: 1; }
+  &--current .refund-timeline__circle { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.08); }
+}
+
+.refund-timeline__icon-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.refund-timeline__circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid $color-border;
+  background: $color-surface;
+  @include flex-center;
+  z-index: 1;
+  transition: $transition-base;
+  .material-symbols-outlined { font-size: 1rem; color: $color-text-dimmed; }
+
+  &--done {
+    border-color: var(--color-success);
+    background: rgba(74, 222, 128, 0.12);
+    .material-symbols-outlined { color: var(--color-success); }
+  }
+
+  &--current {
+    border-color: $color-accent;
+    background: $color-accent-dim;
+    .material-symbols-outlined { color: $color-accent; }
+  }
+}
+
+.refund-timeline__line {
+  width: 2px;
+  height: 40px;
+  background: $color-border;
+  margin: 3px 0;
+  &--done { background: var(--color-success); }
+}
+
+.refund-timeline__content {
+  flex: 1;
+  padding-bottom: $space-6;
+}
+
+.refund-timeline__step-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text-muted;
+  &--done { color: $color-text; font-weight: 700; }
+}
+
+.refund-timeline__step-date {
+  font-size: 0.78rem;
+  color: $color-text-dimmed;
+}

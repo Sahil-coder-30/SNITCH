@@ -1,0 +1,210 @@
+@import '../../../../components/dashboard/DashboardTokens.scss';
+
+.seller-products {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+
+  // ── Top bar ────────────────────────────────────────────────
+  &__topbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-4;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__count {
+    font-size: 1rem;
+    color: $color-text-muted;
+    font-weight: 600;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-3;
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      color: $color-text-muted;
+    }
+
+    input {
+      background: none;
+      border: none;
+      outline: none;
+      font-family: $font-body;
+      font-size: 13px;
+      color: $color-text;
+      width: 160px;
+
+      &::placeholder { color: $color-text-dimmed; }
+    }
+  }
+
+  &__filter {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text-muted;
+    font-family: $font-body;
+    font-size: 13px;
+    padding: $space-2 $space-3;
+    cursor: pointer;
+    outline: none;
+
+    &:focus { border-color: $color-accent; }
+  }
+
+  &__view-toggle {
+    display: flex;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    overflow: hidden;
+  }
+
+  &__view-btn {
+    width: 36px;
+    height: 36px;
+    @include flex-center;
+    background: $color-surface;
+    border: none;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &--active {
+      background: $color-accent-dim;
+      color: $color-accent;
+    }
+
+    &:hover:not(&--active) {
+      background: $color-surface-hover;
+      color: $color-text;
+    }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-4;
+    background: $color-accent;
+    color: #000;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: $radius-md;
+    transition: $transition-fast;
+    white-space: nowrap;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &:hover { background: #e8c88a; }
+  }
+
+  // ── Grid ───────────────────────────────────────────────────
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-5;
+
+    @media (max-width: 1200px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 768px)  { grid-template-columns: 1fr; }
+  }
+
+  // ── List ───────────────────────────────────────────────────
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    padding: $space-3;
+  }
+
+  // ── Empty State ────────────────────────────────────────────
+  .product-empty {
+    padding: $space-16 $space-8;
+    @include flex-center;
+    flex-direction: column;
+    text-align: center;
+    gap: $space-4;
+    background: $color-bg-card;
+    border: 2px dashed $color-border;
+    border-radius: $radius-xl;
+    min-height: 400px;
+
+    &__icon-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: $radius-full;
+      background: $color-surface;
+      @include flex-center;
+      margin-bottom: $space-2;
+    }
+
+    &__icon {
+      font-size: 40px;
+      color: $color-text-dimmed;
+    }
+
+    &__title {
+      font-family: $font-headline;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $color-text;
+      margin: 0;
+    }
+
+    &__text {
+      font-size: 0.95rem;
+      color: $color-text-muted;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    &__btn {
+      @include flex-center;
+      gap: $space-2;
+      padding: $space-3 $space-6;
+      background: $color-accent;
+      color: #000;
+      font-weight: 800;
+      border-radius: $radius-md;
+      text-decoration: none;
+      transition: $transition-base;
+      margin-top: $space-3;
+
+      &:hover {
+        background: #e8c88a;
+        transform: translateY(-2px);
+        box-shadow: $shadow-card;
+      }
+    }
+  }
+}

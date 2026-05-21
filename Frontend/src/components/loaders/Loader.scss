@@ -1,0 +1,75 @@
+.vanguard-loader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* The Vanguard Dual-Spin Ring Loader */
+    .vg-ring {
+        position: relative;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: #CCFF00;
+        border-bottom-color: rgba(204, 255, 0, 0.2);
+        animation: vgSpin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        
+        &::before {
+            content: "";
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            border-left-color: rgba(var(--color-rgb-text), 0.4);
+            animation: vgSpinReverse 0.6s linear infinite;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background-color: #CCFF00;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #CCFF00;
+            animation: vgPulse 1s infinite alternate;
+        }
+    }
+
+    /* Size variants */
+    &.size-small .vg-ring { width: 24px; height: 24px; border-width: 1px; }
+    &.size-small .vg-ring::before { top: 2px; left: 2px; right: 2px; bottom: 2px; }
+    
+    &.size-medium .vg-ring { width: 44px; height: 44px; }
+    
+    &.size-large .vg-ring { width: 80px; height: 80px; border-width: 2px; }
+    &.size-large .vg-ring::before { top: 8px; left: 8px; right: 8px; bottom: 8px; }
+    &.size-large .vg-ring::after { width: 6px; height: 6px; }
+
+    @keyframes vgSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes vgSpinReverse {
+        0% { transform: rotate(360deg); }
+        100% { transform: rotate(0deg); }
+    }
+    @keyframes vgPulse {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+        100% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+    }
+}
+
+/* Optional Full Screen Overlay */
+.vg-fullscreen-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(var(--color-rgb-bg),0.9);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

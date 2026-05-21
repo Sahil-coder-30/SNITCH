@@ -1,0 +1,92 @@
+@import './auth-card';
+
+.verifyotp-container {
+  @extend %auth-card-page;
+
+  .otp-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.625rem;
+    margin-bottom: 2rem;
+
+    .otp-input {
+      width: 100%;
+      aspect-ratio: 1 / 1.1;
+      background: rgba(var(--color-rgb-text),0.04);
+      border: 1px solid rgba(var(--color-rgb-text),0.1);
+      color: var(--color-text);
+      font-size: 1.5rem;
+      text-align: center;
+      outline: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      caret-color: var(--color-accent);
+      -webkit-font-smoothing: antialiased;
+
+      &:focus {
+        border-color: var(--color-accent);
+        background: rgba(var(--color-rgb-accent),0.04);
+        box-shadow: 0 0 0 1px rgba(var(--color-rgb-accent),0.2);
+        transform: translateY(-2px);
+      }
+
+      &.filled {
+        border-color: rgba(var(--color-rgb-accent),0.4);
+        color: var(--color-accent);
+      }
+    }
+  }
+
+  .success-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(var(--color-rgb-accent),0.05);
+    border: 1px solid rgba(var(--color-rgb-accent),0.15);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+
+    .success-icon {
+      font-size: 1rem;
+      color: var(--color-accent);
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .success-text-sm {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: rgba(var(--color-rgb-accent),0.8);
+      text-transform: uppercase;
+    }
+  }
+
+  .highlight { color: var(--color-accent); font-weight: 700; }
+
+  .resend-row {
+    margin-top: 1.5rem;
+    text-align: center;
+
+    .footer-text {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(var(--color-rgb-text),0.4);
+      text-transform: uppercase;
+    }
+
+    .resend-btn {
+      background: none;
+      border: none;
+      color: var(--color-text);
+      cursor: pointer;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(var(--color-rgb-text),0.2);
+      padding-bottom: 2px;
+      margin-left: 0.4rem;
+      transition: color 0.3s;
+      &:hover { color: var(--color-accent); }
+      &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+  }
+}

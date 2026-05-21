@@ -1,0 +1,287 @@
+@import './DashboardTokens.scss';
+
+.navbar {
+  height: $navbar-height;
+  background: $color-bg-elevated;
+  border-bottom: 1px solid $color-border;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 $space-6;
+  gap: $space-4;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  // ── Left ────────────────────────────────────────────────
+  &__left { display: flex; align-items: center; }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0;
+
+    &-group {
+      display: flex;
+      align-items: center;
+    }
+
+    &-item {
+      font-size: 13px;
+      font-weight: 600;
+      color: $color-text-muted;
+      white-space: nowrap;
+
+      &--active { color: $color-text; }
+    }
+
+    &-sep {
+      font-size: 16px;
+      color: $color-text-dimmed;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  }
+
+  // ── Center: Search ──────────────────────────────────────
+  &__center { display: flex; justify-content: center; }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-full;
+    padding: $space-2 $space-4;
+    width: 320px;
+    transition: $transition-fast;
+
+    @include respond-to('tablet') { width: 220px; }
+    @include respond-to('mobile') { width: 140px; padding: $space-1 $space-2; }
+
+    &:focus-within {
+      border-color: $color-accent;
+      background: $color-accent-glow;
+      width: 380px;
+      @include respond-to('tablet') { width: 260px; }
+      @include respond-to('mobile') { width: 180px; }
+    }
+
+    &-icon {
+      font-size: 18px;
+      color: $color-text-muted;
+      flex-shrink: 0;
+    }
+
+    &-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: $color-text;
+      font-family: $font-body;
+      font-size: 13px;
+      width: 100%;
+
+      &::placeholder { color: $color-text-dimmed; }
+    }
+
+    &-kbd {
+      font-size: 10px;
+      color: $color-text-dimmed;
+      background: $color-surface;
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      padding: 2px 5px;
+      font-family: $font-body;
+      white-space: nowrap;
+      @include respond-to('mobile') { display: none; }
+    }
+  }
+
+  // ── Right: Actions ──────────────────────────────────────
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $space-2;
+    @include respond-to('mobile') { gap: $space-1; }
+  }
+
+  &__action-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text-muted;
+    cursor: pointer;
+    text-decoration: none;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { 
+      font-size: 20px; 
+      line-height: 1;
+      display: block;
+    }
+
+    &:hover {
+      background: $color-surface-hover;
+      color: $color-text;
+      border-color: $color-border-strong;
+      transform: translateY(-1px);
+    }
+  }
+
+  &__theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md !important;
+    background: $color-surface !important;
+    border: 1px solid $color-border !important;
+    
+    .icon {
+      font-size: 20px !important;
+    }
+
+    &:hover {
+      background: $color-surface-hover !important;
+      border-color: $color-border-strong !important;
+    }
+  }
+
+  &__action-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: $color-accent;
+    color: #000;
+    font-size: 9px;
+    font-weight: 800;
+    font-family: $font-body;
+    border-radius: $radius-full;
+    min-width: 16px;
+    height: 16px;
+    @include flex-center;
+    padding: 0 3px;
+    border: 1px solid $color-bg-elevated;
+  }
+
+  // ── Avatar ──────────────────────────────────────────────
+  &__avatar-wrapper { position: relative; }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-full;
+    padding: 4px 10px 4px 4px;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+      border-color: $color-accent;
+      background: $color-accent-glow;
+    }
+
+    &-initials {
+      width: 28px;
+      height: 28px;
+      border-radius: $radius-full;
+      background: $color-accent-dim;
+      border: 1px solid $color-accent;
+      @include flex-center;
+      font-family: $font-headline;
+      font-weight: 900;
+      font-size: 11px;
+      color: $color-accent;
+    }
+
+    &-caret {
+      font-size: 16px;
+      color: $color-text-muted;
+    }
+  }
+
+  // ── Dropdown ────────────────────────────────────────────
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 200px;
+    background: $color-bg-elevated;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lg;
+    overflow: hidden;
+    animation: dropdownFade 0.15s ease;
+
+    @keyframes dropdownFade {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    &-header {
+      padding: $space-4 $space-4;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    &-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: $color-text;
+    }
+
+    &-role {
+      font-size: 10px;
+      color: $color-accent;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    &-divider {
+      height: 1px;
+      background: $color-border;
+      margin: 0;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      padding: $space-3 $space-4;
+      text-decoration: none;
+      color: $color-text-muted;
+      font-size: 13px;
+      font-weight: 600;
+      transition: $transition-fast;
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+
+      .material-symbols-outlined { font-size: 18px; }
+
+      &:hover {
+        background: $color-surface;
+        color: $color-text;
+      }
+
+      &--danger {
+        color: rgba(248, 113, 113, 0.7);
+        &:hover { background: rgba(248,113,113,0.08); color: #f87171; }
+      }
+    }
+  }
+}

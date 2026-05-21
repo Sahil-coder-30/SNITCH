@@ -1,0 +1,185 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.payment-failed {
+  padding: $space-6;
+  @include flex-center;
+  min-height: calc(100vh - 64px);
+
+  &__card {
+    @include card;
+    max-width: 560px;
+    width: 100%;
+    text-align: center;
+    padding: $space-12 $space-8;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &__icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto $space-6;
+  }
+
+  &__icon-svg { width: 80px; height: 80px; }
+
+  &__circle {
+    stroke: var(--color-error);
+    stroke-width: 2;
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: dash-circle 0.6s ease forwards 0.2s;
+  }
+
+  &__cross {
+    stroke: var(--color-error);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: dash-check 0.4s ease forwards 0.7s;
+  }
+
+  &__heading {
+    font-family: $font-headline;
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-3;
+  }
+
+  &__subtitle {
+    font-size: 0.95rem;
+    color: $color-text-muted;
+    margin-bottom: $space-6;
+    line-height: 1.6;
+  }
+
+  &__reason-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+    border-radius: $radius-full;
+    color: var(--color-error);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: $space-2 $space-5;
+    margin-bottom: $space-6;
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__order-info {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-4;
+    margin-bottom: $space-6;
+    text-align: left;
+  }
+
+  &__info-row {
+    @include flex-between;
+    font-size: 0.88rem;
+    padding: $space-2 0;
+    border-bottom: 1px solid $color-border;
+    &:last-child { border-bottom: none; }
+    span { color: $color-text-muted; }
+    strong { color: $color-text; }
+  }
+
+  &__suggestions { margin-bottom: $space-8; text-align: left; }
+
+  &__suggestions-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $color-text;
+    margin-bottom: $space-3;
+  }
+
+  &__suggestion-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: $space-2;
+      font-size: 0.85rem;
+      color: $color-text-muted;
+      .material-symbols-outlined { font-size: 1rem; color: var(--color-success); flex-shrink: 0; }
+    }
+  }
+
+  &__cta-row {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    margin-bottom: $space-5;
+  }
+
+  &__btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-4;
+    border-radius: $radius-md;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; transform: translateY(-1px); }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    color: $color-text-muted;
+    padding: $space-3;
+    border-radius: $radius-md;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__support-note {
+    font-size: 0.82rem;
+    color: $color-text-muted;
+  }
+
+  &__support-link {
+    background: none;
+    border: none;
+    color: $color-accent;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dash-circle {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes dash-check {
+  to { stroke-dashoffset: 0; }
+}

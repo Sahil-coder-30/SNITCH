@@ -1,0 +1,107 @@
+@import '../../../../components/dashboard/DashboardTokens.scss';
+
+.wishlist {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+
+  &__header  { @include flex-between; flex-wrap: wrap; gap: $space-3; }
+
+  &__title {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: $color-text;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__count {
+    font-size: 1rem;
+    color: $color-text-muted;
+    font-weight: 600;
+    font-family: $font-body;
+  }
+
+  &__move-all {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-5;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &:hover { border-color: $color-accent; color: $color-accent; background: $color-accent-glow; }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $space-5;
+
+    @media (max-width: 1280px) { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 900px)  { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    position: relative;
+  }
+
+  &__low-stock {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 11px;
+    font-weight: 700;
+    color: $color-warning;
+    background: rgba($color-warning, 0.08);
+    border: 1px solid rgba($color-warning, 0.2);
+    border-radius: $radius-md;
+    padding: $space-2 $space-3;
+
+    .material-symbols-outlined {
+      font-size: 14px;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+  }
+
+  &__move-to-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    width: 100%;
+    padding: $space-3;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: 800;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 16px; }
+
+    &:hover {
+      background: $color-accent;
+      border-color: $color-accent;
+      color: #000;
+    }
+  }
+}

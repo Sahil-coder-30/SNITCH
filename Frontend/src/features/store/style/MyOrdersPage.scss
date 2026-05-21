@@ -1,0 +1,197 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.my-orders {
+  padding: $space-6;
+  max-width: 900px;
+  margin: 0 auto;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $space-6;
+    flex-wrap: wrap;
+    gap: $space-4;
+  }
+
+  &__title {
+    font-family: $font-headline;
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: $color-text;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-4;
+    min-width: 280px;
+    transition: $transition-fast;
+    &:focus-within { border-color: $color-accent; }
+
+    .material-symbols-outlined { color: $color-text-dimmed; font-size: 1.1rem; }
+
+    input {
+      background: none;
+      border: none;
+      outline: none;
+      color: $color-text;
+      font-size: 0.9rem;
+      flex: 1;
+      &::placeholder { color: $color-text-muted; }
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: $space-2;
+    margin-bottom: $space-6;
+    flex-wrap: wrap;
+  }
+
+  &__tab {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-full;
+    padding: $space-2 $space-5;
+    color: $color-text-muted;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    &--active { border-color: $color-accent; color: $color-accent; background: $color-accent-glow; }
+  }
+
+  &__tab-count {
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-full;
+    padding: 2px 7px;
+    font-size: 0.72rem;
+    .my-orders__tab--active & { background: $color-accent-dim; border-color: $color-accent; }
+  }
+
+  &__list { display: flex; flex-direction: column; gap: $space-4; }
+
+  &__empty {
+    @include flex-center;
+    flex-direction: column;
+    gap: $space-4;
+    padding: $space-12 0;
+    color: $color-text-muted;
+    text-align: center;
+    .material-symbols-outlined { font-size: 3.5rem; color: $color-text-dimmed; }
+    h3 { font-size: 1.1rem; color: $color-text; }
+    p { font-size: 0.9rem; }
+  }
+}
+
+// ── Order Card ────────────────────────────────────────────────
+.order-card {
+  @include card;
+  cursor: pointer;
+  transition: $transition-base;
+  &:hover { transform: translateY(-2px); border-color: $color-border-strong; box-shadow: $shadow-lg; }
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $space-4;
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+
+  &__id-block { display: flex; flex-direction: column; gap: $space-1; }
+
+  &__id {
+    font-family: $font-headline;
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: $color-text;
+    letter-spacing: 0.03em;
+  }
+
+  &__date { font-size: 0.78rem; color: $color-text-muted; }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: $space-2 $space-3;
+    border-radius: $radius-full;
+    border: 1px solid;
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__items { display: flex; flex-direction: column; gap: $space-3; margin-bottom: $space-4; }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__item-image {
+    width: 52px;
+    height: 64px;
+    border-radius: $radius-sm;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    @include flex-center;
+    flex-shrink: 0;
+    .material-symbols-outlined { font-size: 1.3rem; color: $color-text-dimmed; }
+  }
+
+  &__item-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  &__item-name { font-size: 0.9rem; font-weight: 600; color: $color-text; }
+  &__item-meta { font-size: 0.78rem; color: $color-text-muted; }
+  &__item-price { font-size: 0.9rem; font-weight: 700; color: $color-text; white-space: nowrap; }
+
+  &__footer {
+    @include flex-between;
+    padding-top: $space-4;
+    border-top: 1px solid $color-border;
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+
+  &__footer-info { display: flex; flex-direction: column; gap: $space-1; }
+  &__total { font-size: 1rem; font-weight: 800; color: $color-text; }
+  &__payment { font-size: 0.78rem; color: $color-text-muted; }
+
+  &__actions { display: flex; gap: $space-3; align-items: center; }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    border: none;
+    padding: $space-2 $space-4;
+    border-radius: $radius-md;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: $transition-fast;
+    .material-symbols-outlined { font-size: 1rem; }
+
+    &--primary {
+      background: $color-accent;
+      color: #000;
+      &:hover { opacity: 0.9; }
+    }
+
+    &--ghost {
+      background: $color-surface;
+      border: 1.5px solid $color-border;
+      color: $color-text-muted;
+      &:hover { border-color: $color-accent; color: $color-accent; }
+    }
+  }
+}

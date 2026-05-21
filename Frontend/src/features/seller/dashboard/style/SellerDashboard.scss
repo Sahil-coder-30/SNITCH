@@ -1,0 +1,50 @@
+@import "../../../../components/dashboard/DashboardTokens.scss";
+
+.seller-dashboard {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background: $color-bg;
+  color: $color-text;
+  font-family: $font-body;
+  -webkit-font-smoothing: antialiased;
+
+  @include respond-to("mobile") {
+    flex-direction: column;
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: $space-6;
+
+    @include respond-to("mobile") {
+      padding: $space-4;
+    }
+    @media (min-width: 1440px) {
+      padding: $space-8;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--color-rgb-text), 0.08) transparent;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(var(--color-rgb-text), 0.08);
+      border-radius: 3px;
+    }
+  }
+}

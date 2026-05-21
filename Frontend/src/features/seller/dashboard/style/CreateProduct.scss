@@ -1,0 +1,655 @@
+@import '../../../../components/dashboard/DashboardTokens.scss';
+
+.create-product {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  padding-bottom: 90px; // room for sticky bar
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  &__title {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.75rem;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: $color-text-muted;
+    margin: 0;
+  }
+
+  // ── Two-column layout ──────────────────────────────────────
+  &__layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: $space-6;
+    align-items: start;
+
+    @media (max-width: 1100px) { grid-template-columns: 1fr; }
+  }
+
+  &__form-col {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  &__preview-col {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    position: sticky;
+    top: $space-6;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  // ── Section ────────────────────────────────────────────────
+  &__section {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  &__section-title {
+    font-family: $font-body;
+    font-size: 16px;
+    font-weight: 700;
+    color: $color-text;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__section-num {
+    font-family: $font-headline;
+    font-size: 11px;
+    font-weight: 900;
+    color: $color-accent;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.2);
+    padding: 3px 8px;
+    border-radius: $radius-sm;
+    letter-spacing: 0.05em;
+  }
+
+  // ── Fields ─────────────────────────────────────────────────
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-4;
+
+    @include respond-to('mobile') { grid-template-columns: 1fr; }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+  }
+
+  &__label {
+    @include font-label;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__discount-badge {
+    font-size: 10px;
+    font-weight: 800;
+    color: #4ade80;
+    background: rgba(74,222,128,0.1);
+    padding: 2px 6px;
+    border-radius: $radius-sm;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  &__input,
+  &__select,
+  &__textarea {
+    background: rgba(var(--color-rgb-text),0.04);
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-3 $space-4;
+    color: $color-text;
+    font-family: $font-body;
+    font-size: 14px;
+    outline: none;
+    transition: $transition-fast;
+    width: 100%;
+    resize: vertical;
+
+    &::placeholder { color: $color-text-dimmed; }
+
+    &:focus {
+      border-color: $color-accent;
+      background: $color-accent-glow;
+    }
+
+    &--sm { flex: 1; padding: $space-2 $space-3; font-size: 13px; }
+    &--no-prefix { border-radius: 0 $radius-md $radius-md 0; }
+  }
+
+  &__select { cursor: pointer; }
+
+  &__currency-input {
+    display: flex;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    overflow: hidden;
+    transition: $transition-fast;
+
+    &:focus-within { border-color: $color-accent; }
+  }
+
+  &__currency-symbol {
+    @include flex-center;
+    padding: 0 $space-3;
+    background: $color-surface;
+    border-right: 1px solid $color-border;
+    color: $color-text-muted;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  // ── Tags ───────────────────────────────────────────────────
+  &__tag-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    background: rgba(var(--color-rgb-text),0.04);
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-3;
+    align-items: center;
+
+    &:focus-within { border-color: $color-accent; }
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.2);
+    border-radius: $radius-full;
+    color: $color-accent;
+  }
+
+  &__tag-remove {
+    background: none;
+    border: none;
+    color: $color-accent;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  &__tag-field {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: $font-body;
+    font-size: 13px;
+    color: $color-text;
+    min-width: 80px;
+
+    &::placeholder { color: $color-text-dimmed; }
+  }
+
+  // ── Sizes table ────────────────────────────────────────────
+  &__size-table-wrap { overflow-x: auto; }
+
+  &__size-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      font-size: 11px;
+      font-weight: 700;
+      color: $color-text-dimmed;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: $space-2 $space-3;
+      text-align: left;
+      border-bottom: 1px solid $color-border;
+    }
+
+    td {
+      padding: $space-2 $space-2;
+      border-bottom: 1px solid rgba(var(--color-rgb-text),0.04);
+    }
+
+    tr:last-child td { border-bottom: none; }
+  }
+
+  &__size-label {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    color: $color-text;
+  }
+
+  &__table-input {
+    width: 100%;
+    background: rgba(var(--color-rgb-text),0.04);
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-3;
+    color: $color-text;
+    font-family: $font-body;
+    font-size: 13px;
+    outline: none;
+
+    &:focus { border-color: $color-accent; }
+  }
+
+  // ── Colors ─────────────────────────────────────────────────
+  &__colors {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__color-item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-full;
+    border: 2px solid $color-border-strong;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  &__color-remove {
+    width: 28px;
+    height: 28px;
+    @include flex-center;
+    background: none;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text-muted;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    .material-symbols-outlined { font-size: 16px; }
+
+    &:hover { border-color: #f87171; color: #f87171; }
+  }
+
+  &__add-color {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-accent;
+    background: none;
+    border: 1px dashed rgba($color-accent, 0.3);
+    border-radius: $radius-md;
+    padding: $space-2 $space-3;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &:hover { background: $color-accent-glow; }
+  }
+
+  // ── Toggles ────────────────────────────────────────────────
+  &__toggles {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__toggle-row {
+    @include flex-between;
+    padding: $space-3 $space-4;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+  }
+
+  &__toggle-info { display: flex; flex-direction: column; gap: 2px; }
+  &__toggle-label { font-size: 14px; font-weight: 700; color: $color-text; }
+  &__toggle-desc  { font-size: 12px; color: $color-text-muted; }
+
+  &__toggle {
+    width: 44px;
+    height: 24px;
+    background: rgba(var(--color-rgb-text),0.1);
+    border-radius: $radius-full;
+    position: relative;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &--on { background: $color-accent; }
+
+    &-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: #000;
+      border-radius: $radius-full;
+      transition: $transition-fast;
+
+      .create-product__toggle--on & {
+        left: calc(100% - 21px);
+      }
+    }
+  }
+
+  // ── Visibility toggle ──────────────────────────────────────
+  &__visibility-toggle {
+    display: flex;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  &__visibility-btn {
+    padding: $space-2 $space-5;
+    background: $color-surface;
+    border: none;
+    color: $color-text-muted;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &--active {
+      background: $color-accent;
+      color: #000;
+    }
+
+    &:hover:not(&--active) {
+      background: $color-surface-hover;
+      color: $color-text;
+    }
+  }
+
+  // ── Right column cards ──────────────────────────────────────
+  &__upload-card,
+  &__preview-card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__dropzone {
+    border: 2px dashed rgba($color-accent, 0.25);
+    border-radius: $radius-lg;
+    background: rgba($color-accent, 0.03);
+    padding: $space-8 $space-6;
+    @include flex-center;
+    flex-direction: column;
+    gap: $space-2;
+    cursor: pointer;
+    transition: $transition-fast;
+    text-align: center;
+
+    &:hover {
+      border-color: rgba($color-accent, 0.5);
+      background: $color-accent-glow;
+    }
+
+    &-icon {
+      font-size: 2.5rem;
+      color: $color-accent;
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 48;
+    }
+
+    &-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: $color-text;
+      margin: 0;
+    }
+
+    &-sub {
+      font-size: 13px;
+      color: $color-text-muted;
+      margin: 0;
+    }
+
+    &-hint {
+      font-size: 11px;
+      color: $color-text-dimmed;
+      margin: 0;
+    }
+  }
+
+  &__thumbnails {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $space-2;
+    @include respond-to('mobile') { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  &__thumb {
+    aspect-ratio: 3/4;
+    background: rgba(var(--color-rgb-text),0.04);
+    border: 1px dashed $color-border;
+    border-radius: $radius-md;
+    @include flex-center;
+    flex-direction: column;
+    gap: $space-1;
+    cursor: pointer;
+    position: relative;
+    transition: $transition-fast;
+
+    &:hover { border-color: $color-accent; background: $color-accent-glow; }
+
+    &--primary { border-color: rgba($color-accent, 0.4); border-style: solid; }
+  }
+
+  &__thumb-icon {
+    font-size: 1.25rem;
+    color: rgba(var(--color-rgb-text),0.15);
+  }
+
+  &__primary-badge {
+    position: absolute;
+    bottom: $space-1;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: $color-accent;
+    background: rgba($color-accent, 0.15);
+    padding: 2px 6px;
+    border-radius: $radius-sm;
+    white-space: nowrap;
+  }
+
+  // ── Preview card ───────────────────────────────────────────
+  &__preview-hint {
+    font-size: 12px;
+    color: $color-text-muted;
+    margin: 0;
+  }
+
+  &__preview-product {
+    display: flex;
+    gap: $space-4;
+    padding: $space-4;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+  }
+
+  &__preview-img {
+    width: 72px;
+    height: 90px;
+    background: rgba(var(--color-rgb-text),0.06);
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    @include flex-center;
+    flex-shrink: 0;
+
+    .material-symbols-outlined {
+      font-size: 1.75rem;
+      color: rgba(var(--color-rgb-text),0.15);
+    }
+  }
+
+  &__preview-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  &__preview-brand {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: $color-text-muted;
+    text-transform: uppercase;
+  }
+
+  &__preview-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__preview-price-row {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    flex-wrap: wrap;
+  }
+
+  &__preview-price {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: $color-text;
+  }
+
+  &__preview-original {
+    font-size: 12px;
+    color: $color-text-dimmed;
+    text-decoration: line-through;
+  }
+
+  &__preview-discount {
+    font-size: 10px;
+    font-weight: 800;
+    color: #4ade80;
+    background: rgba(74,222,128,0.1);
+    padding: 2px 5px;
+    border-radius: $radius-sm;
+  }
+
+  &__preview-rating {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    color: $color-text-muted;
+
+    .material-symbols-outlined {
+      font-size: 14px;
+      color: $color-accent;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+  }
+
+  // ── Sticky action bar ──────────────────────────────────────
+  &__action-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: $sidebar-width;
+    background: rgba($color-bg-elevated, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid $color-border;
+    padding: $space-4 $space-8;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $space-3;
+    z-index: 150;
+
+    @include respond-to('tablet') { left: $sidebar-collapsed; padding: $space-4; }
+    @include respond-to('mobile') { left: 0; padding: $space-3; }
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-6;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 800;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition-fast;
+    letter-spacing: 0.02em;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &--ghost {
+      background: none;
+      border: 1px solid $color-border;
+      color: $color-text-muted;
+      &:hover { border-color: $color-border-strong; color: $color-text; }
+    }
+
+    &--outline {
+      background: none;
+      border: 1px solid $color-accent;
+      color: $color-accent;
+      &:hover { background: $color-accent-dim; }
+    }
+
+    &--primary {
+      background: $color-accent;
+      border: 1px solid $color-accent;
+      color: #000;
+      &:hover { background: #e8c88a; }
+    }
+  }
+}

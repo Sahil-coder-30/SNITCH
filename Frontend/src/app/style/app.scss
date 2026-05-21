@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,700;0,800;0,900;1,700;1,900&family=Manrope:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+// ══════════════════════════════════════════════════════════════
+//  2026 PROFESSIONAL ECOMMERCE DESIGN SYSTEM — SNITCH
+// ══════════════════════════════════════════════════════════════
+
+:root {
+  // ── Dark Mode (Default) ──────────────────────────────────────
+  // Foundation
+  --color-bg: #080809;           // Rich, deep anthracite (Modern luxury)
+  --color-bg-elevated: #121214;  // Slightly lifted surface
+  --color-bg-card: rgba(255, 255, 255, 0.03);
+  --color-bg-card-hover: rgba(255, 255, 255, 0.06);
+  --color-surface: #1C1C1E;
+  --color-surface-hover: #2C2C2E;
+
+  // Accents & Brand
+  --color-accent: #E2B87F;       // Refined Champagne Gold (Luxury)
+  --color-accent-dim: rgba(226, 184, 127, 0.15);
+  --color-accent-glow: rgba(226, 184, 127, 0.08);
+  --color-primary: #3E7BFA;      // Electric Cobalt (Trust & Tech)
+  --color-secondary: #7C3AED;    // Royal Violet (Creative/Premium)
+
+  // Feedback & Status
+  --color-success: #34C759;      // iOS-style semantic green
+  --color-warning: #FF9F0A;      // Vibrant orange
+  --color-error: #FF3B30;        // Dynamic "Tomato" red (Conversion CTA)
+  --color-info: #5AC8FA;
+
+  // Typography
+  --color-text: #F5F5F7;         // Crisp off-white (Apple-style)
+  --color-text-muted: #8E8E93;   // Balanced gray
+  --color-text-dimmed: #48484A;  // Low-emphasis
+  --color-text-label: #AEAEB2;
+
+  // Borders & Dividers
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
+
+  // RGB versions for dynamic opacity
+  --color-rgb-bg: 8, 8, 9;
+  --color-rgb-text: 245, 245, 247;
+  --color-rgb-accent: 226, 184, 127;
+
+  // Shadows & Elevation
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.7);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="light"] {
+  // ── Light Mode (The "Bone & Linen" Palette) ───────────────
+  // Foundation
+  --color-bg: #FAF9F6;           // Warm "Bone White" / Parchment
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-card: #FFFFFF;
+  --color-bg-card-hover: #F2F1ED;
+  --color-surface: #F0EEE9;
+  --color-surface-hover: #E8E5DF;
+
+  // Accents & Brand
+  --color-accent: #B08D5B;       // Muted Bronze/Gold (Better contrast)
+  --color-accent-dim: rgba(176, 141, 91, 0.12);
+  --color-accent-glow: rgba(176, 141, 91, 0.06);
+  --color-primary: #0056D2;      // Deep Professional Blue
+  --color-secondary: #5B21B6;
+
+  // Feedback & Status
+  --color-success: #28A745;
+  --color-warning: #F57C00;
+  --color-error: #D70015;        // Deep rich red
+  --color-info: #007AFF;
+
+  // Typography
+  --color-text: #1D1D1F;         // Apple-style text black
+  --color-text-muted: #6E6E73;   // Slate gray
+  --color-text-dimmed: #AEAEB2;
+  --color-text-label: #86868B;
+
+  // Borders & Dividers
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-strong: rgba(0, 0, 0, 0.15);
+
+  // Shadows & Elevation
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.2);
+
+  // RGB versions for dynamic opacity
+  --color-rgb-bg: 250, 249, 246;
+  --color-rgb-text: 29, 29, 31;
+  --color-rgb-accent: 176, 141, 91;
+
+  .theme-light-only { display: block !important; }
+  .theme-dark-only { display: none !important; }
+}
+
+// ── Global Resets ─────────────────────────────────────────────
+.theme-light-only { display: none !important; }
+.theme-dark-only { display: block !important; }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Manrope', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ── Shared UI Utilities ───────────────────────────────────────
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  font-family: 'Material Symbols Outlined', sans-serif;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+  user-select: none;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+button, input, select, textarea { font-family: inherit; }
+a { color: inherit; text-decoration: none; }

@@ -1,0 +1,60 @@
+@import './DashboardTokens.scss';
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $space-12 $space-6;
+  text-align: center;
+  gap: $space-4;
+
+  &__icon-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: $radius-full;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.15);
+    @include flex-center;
+    margin-bottom: $space-2;
+  }
+
+  &__icon {
+    font-size: 2rem;
+    color: $color-accent;
+    font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 48;
+  }
+
+  &__title {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 14px;
+    color: $color-text-muted;
+    max-width: 320px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-6;
+    background: $color-accent;
+    color: #000;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: $radius-md;
+    transition: $transition-fast;
+    margin-top: $space-2;
+
+    &:hover { background: #e8c88a; }
+  }
+}

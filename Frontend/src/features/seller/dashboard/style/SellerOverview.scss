@@ -1,0 +1,438 @@
+@import '../../../../components/dashboard/DashboardTokens.scss';
+
+.seller-overview {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  padding-bottom: $space-10;
+
+  // ── ROW 1: Stat cards ──────────────────────────────────────
+  &__stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 1200px) { grid-template-columns: repeat(2, 1fr); }
+    @include respond-to('mobile') { grid-template-columns: 1fr; }
+  }
+
+  // ── Generic card ───────────────────────────────────────────
+  &__card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+
+    &--chart { flex: 1; }
+    @include respond-to('mobile') { padding: $space-4; }
+  }
+
+  &__card-header {
+    @include flex-between;
+    @include respond-to('mobile') {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $space-3;
+    }
+  }
+
+  &__section-title {
+    font-family: $font-body;
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__filter-select {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text-muted;
+    font-family: $font-body;
+    font-size: 12px;
+    padding: $space-2 $space-3;
+    cursor: pointer;
+    outline: none;
+
+    &:focus { border-color: $color-accent; }
+  }
+
+  &__view-all {
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-accent;
+    text-decoration: none;
+    transition: $transition-fast;
+    &:hover { color: #e8c88a; }
+  }
+
+  // ── ROW 2 ──────────────────────────────────────────────────
+  &__row-2 {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: $space-4;
+
+    @media (max-width: 1100px) { grid-template-columns: 1fr; }
+  }
+
+  // ── Revenue Chart ──────────────────────────────────────────
+  .revenue-chart {
+    &__svg {
+      width: 100%;
+      height: 140px;
+      overflow: visible;
+    }
+
+    &__labels {
+      display: flex;
+      justify-content: space-between;
+      padding-top: $space-2;
+    }
+
+    &__month {
+      font-size: 11px;
+      color: $color-text-muted;
+      font-weight: 600;
+    }
+
+    &--empty {
+      height: 140px;
+      @include flex-center;
+      flex-direction: column;
+      gap: $space-2;
+      color: $color-text-dimmed;
+      border: 1px dashed $color-border;
+      border-radius: $radius-md;
+      
+      .material-symbols-outlined { font-size: 32px; }
+      p { font-size: 13px; font-weight: 600; }
+    }
+  }
+
+  // ── Top Products ───────────────────────────────────────────
+  &__top-products {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__top-product-row {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 0;
+    border-bottom: 1px solid $color-border;
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__top-rank {
+    font-size: 12px;
+    font-weight: 800;
+    color: $color-text-dimmed;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  &__top-thumb {
+    width: 40px;
+    height: 50px;
+    background: rgba(var(--color-rgb-text),0.05);
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    @include flex-center;
+    flex-shrink: 0;
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      color: rgba(var(--color-rgb-text),0.2);
+    }
+  }
+
+  &__top-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__top-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__top-cat {
+    font-size: 11px;
+    color: $color-text-muted;
+  }
+
+  &__top-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  &__top-sold {
+    font-size: 11px;
+    color: $color-text-muted;
+  }
+
+  &__top-revenue {
+    font-size: 13px;
+    font-weight: 800;
+    color: $color-accent;
+  }
+
+  // ── ROW 3 ──────────────────────────────────────────────────
+  &__row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-4;
+
+    @media (max-width: 1100px) { grid-template-columns: 1fr; }
+  }
+
+  // ── Orders Table ───────────────────────────────────────────
+  &__table-wrap {
+    overflow-x: auto;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    th {
+      font-size: 11px;
+      font-weight: 700;
+      color: $color-text-dimmed;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: $space-2 $space-3;
+      text-align: left;
+      border-bottom: 1px solid $color-border;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: $space-3 $space-3;
+      border-bottom: 1px solid rgba(var(--color-rgb-text),0.04);
+      vertical-align: middle;
+      white-space: nowrap;
+
+      &:last-child { text-align: right; }
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(var(--color-rgb-text),0.02); }
+  }
+
+  &__order-id {
+    font-weight: 700;
+    color: $color-accent;
+    font-size: 12px;
+  }
+
+  &__product-name {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: $color-text-muted;
+  }
+
+  &__size-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    color: $color-text-muted;
+  }
+
+  &__date { color: $color-text-muted; font-size: 12px; }
+
+  &__amount {
+    font-weight: 800;
+    color: $color-text;
+    text-align: right;
+  }
+
+  // ── Donut Chart ────────────────────────────────────────────
+  .donut-chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-5;
+
+    &__wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    &__svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(0deg);
+    }
+
+    &__center {
+      position: absolute;
+      inset: 0;
+      @include flex-center;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    &__total {
+      font-family: $font-headline;
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: $color-text;
+    }
+
+    &__total-label {
+      font-size: 11px;
+      color: $color-text-muted;
+    }
+
+    &__legend {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: $space-2;
+    }
+
+    &__legend-item {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+    }
+
+    &__legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: $radius-full;
+      flex-shrink: 0;
+    }
+
+    &__legend-label {
+      flex: 1;
+      font-size: 13px;
+      color: $color-text-muted;
+    }
+
+    &__legend-count {
+      font-size: 13px;
+      font-weight: 800;
+      color: $color-text;
+    }
+
+    &--empty {
+      height: 180px;
+      @include flex-center;
+      color: $color-text-dimmed;
+      font-size: 12px;
+      font-weight: 600;
+      border: 2px dashed $color-border;
+      border-radius: $radius-full;
+      width: 180px;
+    }
+  }
+
+  // ── Low Stock Banner ───────────────────────────────────────
+  &__low-stock {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: $radius-lg;
+    padding: $space-4 $space-6;
+    display: flex;
+    align-items: center;
+    gap: $space-5;
+    flex-wrap: wrap;
+
+    &-left {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+    }
+
+    &-icon {
+      font-size: 20px;
+      color: $color-warning;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    &-text {
+      font-size: 14px;
+      color: rgba(var(--color-rgb-text),0.8);
+
+      strong { color: $color-warning; }
+    }
+
+    &-chips {
+      flex: 1;
+      display: flex;
+      gap: $space-2;
+      flex-wrap: wrap;
+    }
+
+    &-chip {
+      font-size: 12px;
+      font-weight: 700;
+      padding: $space-1 $space-3;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: $radius-full;
+      color: $color-warning;
+    }
+
+    &-cta {
+      font-size: 13px;
+      font-weight: 800;
+      color: $color-warning;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: $transition-fast;
+      &:hover { color: #fbbf24; }
+    }
+  }
+
+  // ── Skeletons & Empty States ───────────────────────────────
+  .seller-stat-skeleton { @include skeleton; }
+  
+  .skeleton-pulse {
+    @include skeleton;
+    height: 100%;
+    width: 100%;
+  }
+
+  .sf-empty-text {
+    padding: $space-8 0;
+    text-align: center;
+    color: $color-text-dimmed;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .sf-empty-table {
+    padding: $space-12;
+    @include flex-center;
+    flex-direction: column;
+    gap: $space-3;
+    color: $color-text-dimmed;
+
+    .material-symbols-outlined { font-size: 48px; opacity: 0.5; }
+    p { font-size: 14px; font-weight: 600; }
+  }
+}

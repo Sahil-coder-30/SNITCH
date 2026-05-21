@@ -1,0 +1,37 @@
+.skeleton-container {
+    background-color: #040404;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    
+    .sk-pulse {
+        background-color: rgba(var(--color-rgb-text), 0.03);
+        border: 1px solid rgba(var(--color-rgb-text), 0.02);
+        animation: skPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .sk-pulse-dark {
+        background-color: rgba(var(--color-rgb-bg),0.3);
+        animation: skPulseDark 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    .sk-neon-line {
+        background-color: rgba(var(--color-rgb-accent), 0.2);
+        animation: skPulseNeon 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes skPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .4; }
+    }
+    
+    @keyframes skPulseDark {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 0.2; }
+    }
+
+    @keyframes skPulseNeon {
+        0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(var(--color-rgb-accent), 0.1); }
+        50% { opacity: 0.3; box-shadow: 0 0 0px rgba(var(--color-rgb-accent), 0); }
+    }
+}

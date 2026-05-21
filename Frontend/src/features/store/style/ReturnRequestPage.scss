@@ -1,0 +1,259 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.return-page {
+  padding: $space-6;
+  max-width: 800px;
+  margin: 0 auto;
+
+  &__header {
+    margin-bottom: $space-8;
+  }
+
+  &__title {
+    font-family: $font-headline;
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-2;
+  }
+
+  &__subtitle { font-size: 0.95rem; color: $color-text-muted; }
+
+  &__form { display: flex; flex-direction: column; gap: $space-6; }
+
+  &__section {
+    @include card;
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $color-text;
+    margin-bottom: $space-5;
+  }
+
+  &__step-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: $color-accent;
+    color: #000;
+    font-size: 0.85rem;
+    font-weight: 900;
+    @include flex-center;
+    flex-shrink: 0;
+  }
+
+  &__order-list { display: flex; flex-direction: column; gap: $space-3; }
+
+  &__order-card {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 $space-4;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    cursor: pointer;
+    background: $color-surface;
+    transition: $transition-fast;
+    input[type="radio"] { accent-color: $color-accent; }
+    &:hover { border-color: $color-accent; }
+    &--selected { border-color: $color-accent; background: $color-accent-glow; }
+  }
+
+  &__order-info { display: flex; flex-direction: column; gap: $space-1; }
+  &__order-id { font-size: 0.9rem; font-weight: 700; color: $color-text; }
+  &__order-date { font-size: 0.78rem; color: $color-text-muted; }
+
+  &__item-list { display: flex; flex-direction: column; gap: $space-3; }
+
+  &__item-card {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-4;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    cursor: pointer;
+    background: $color-surface;
+    transition: $transition-fast;
+    input[type="radio"] { accent-color: $color-accent; }
+    &:hover { border-color: $color-accent; }
+    &--selected { border-color: $color-accent; background: $color-accent-glow; }
+  }
+
+  &__item-image {
+    width: 56px;
+    height: 70px;
+    border-radius: $radius-sm;
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    @include flex-center;
+    .material-symbols-outlined { font-size: 1.4rem; color: $color-text-dimmed; }
+  }
+
+  &__item-info { flex: 1; display: flex; flex-direction: column; gap: $space-1; }
+  &__item-name { font-size: 0.92rem; font-weight: 700; color: $color-text; }
+  &__item-meta { font-size: 0.8rem; color: $color-text-muted; }
+  &__item-price { font-size: 0.9rem; font-weight: 800; color: $color-text; }
+
+  &__reasons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    margin-bottom: $space-4;
+  }
+
+  &__reason-chip {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-4;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-full;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: $color-text-muted;
+    background: $color-surface;
+    transition: $transition-fast;
+    input[type="radio"] { display: none; }
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    &--selected { border-color: $color-accent; color: $color-accent; background: $color-accent-glow; font-weight: 600; }
+  }
+
+  &__details {
+    width: 100%;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-4;
+    color: $color-text;
+    font-size: 0.9rem;
+    resize: vertical;
+    outline: none;
+    transition: $transition-fast;
+    font-family: $font-body;
+    &:focus { border-color: $color-accent; }
+    &::placeholder { color: $color-text-dimmed; }
+    margin-bottom: $space-4;
+  }
+
+  &__photo-upload {
+    border: 2px dashed $color-border;
+    border-radius: $radius-md;
+    padding: $space-8;
+    text-align: center;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent-dim; }
+  }
+
+  &__upload-icon { font-size: 2.5rem; color: $color-text-dimmed; }
+  &__upload-label { font-size: 0.95rem; font-weight: 600; color: $color-text; margin-top: $space-2; display: block; }
+  &__upload-hint { font-size: 0.8rem; color: $color-text-muted; margin-top: $space-1; margin-bottom: $space-4; display: block; }
+
+  &__upload-input { display: none; }
+
+  &__upload-btn {
+    display: inline-block;
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-2 $space-6;
+    color: $color-text-muted;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+  }
+
+  &__submit-btn {
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-4 $space-8;
+    border-radius: $radius-md;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; transform: translateY(-1px); }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  // Success state
+  &__success {
+    @include card;
+    text-align: center;
+    padding: $space-12 $space-8;
+    max-width: 500px;
+    margin: $space-12 auto 0;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+    h2 { font-family: $font-headline; font-size: 1.5rem; font-weight: 900; color: $color-text; margin: $space-4 0 $space-2; }
+    p { font-size: 0.9rem; color: $color-text-muted; margin-bottom: $space-5; line-height: 1.6; }
+  }
+
+  &__success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(74, 222, 128, 0.12);
+    border: 2px solid var(--color-success);
+    @include flex-center;
+    margin: 0 auto;
+    .material-symbols-outlined { font-size: 2.5rem; color: var(--color-success); }
+  }
+
+  &__success-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    padding: $space-3 $space-5;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-size: 0.88rem;
+    color: $color-text-muted;
+    margin-bottom: $space-6;
+    .material-symbols-outlined { font-size: 1rem; color: $color-accent; }
+    strong { color: $color-text; }
+  }
+
+  &__success-btns { display: flex; flex-direction: column; gap: $space-3; }
+
+  &__btn-primary {
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-4;
+    border-radius: $radius-md;
+    font-weight: 800;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; }
+  }
+
+  &__btn-secondary {
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    color: $color-text-muted;
+    padding: $space-3;
+    border-radius: $radius-md;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

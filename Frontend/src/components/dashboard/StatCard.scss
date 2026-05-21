@@ -1,0 +1,103 @@
+@import './DashboardTokens.scss';
+
+.stat-card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $space-2;
+  }
+
+  &__icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.2);
+    @include flex-center;
+  }
+
+  &__icon {
+    font-size: 20px;
+    color: $color-accent;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  }
+
+  &__trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: $radius-full;
+
+    &--up {
+      background: rgba(74, 222, 128, 0.1);
+      color: #4ade80;
+    }
+    &--down {
+      background: rgba(248, 113, 113, 0.1);
+      color: #f87171;
+    }
+
+    &-icon { font-size: 14px; }
+  }
+
+  &__value {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.75rem;
+    color: $color-text;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 13px;
+    color: $color-text-muted;
+    font-weight: 600;
+  }
+
+  &__trend-label {
+    font-size: 11px;
+    color: $color-text-dimmed;
+    margin-top: $space-1;
+  }
+
+  // ── Skeleton ─────────────────────────────────────────────
+  &--skeleton {
+    cursor: default;
+    pointer-events: none;
+
+    &:hover {
+      background: $color-bg-card;
+      border-color: $color-border;
+    }
+  }
+
+  &__skeleton-icon {
+    @include skeleton;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+  }
+
+  &__skeleton-value {
+    @include skeleton;
+    height: 28px;
+    width: 70%;
+    border-radius: $radius-md;
+    margin-top: $space-2;
+  }
+
+  &__skeleton-label {
+    @include skeleton;
+    height: 14px;
+    width: 55%;
+    border-radius: $radius-sm;
+  }
+}

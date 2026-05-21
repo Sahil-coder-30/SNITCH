@@ -1,0 +1,369 @@
+@import '../../../../components/dashboard/DashboardTokens.scss';
+
+.buyer-profile {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+
+  // ── Top row (avatar card + form) ───────────────────────────
+  &__top {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: $space-6;
+    align-items: start;
+
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+  }
+
+  &__left-col,
+  &__right-col { display: flex; flex-direction: column; gap: $space-5; }
+
+  // ── Avatar card ────────────────────────────────────────────
+  &__avatar-card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-3;
+    text-align: center;
+  }
+
+  &__avatar-circle {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    border-radius: $radius-full;
+    background: $color-accent-dim;
+    border: 2px solid $color-accent;
+    @include flex-center;
+    margin-bottom: $space-2;
+  }
+
+  &__avatar-initials {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 2rem;
+    color: $color-accent;
+  }
+
+  &__avatar-edit {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 28px;
+    height: 28px;
+    @include flex-center;
+    background: $color-accent;
+    border: 2px solid $color-bg-elevated;
+    border-radius: $radius-full;
+    cursor: pointer;
+
+    .material-symbols-outlined { font-size: 14px; color: #000; }
+  }
+
+  &__name {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__member-since {
+    font-size: 12px;
+    color: $color-text-muted;
+  }
+
+  &__divider {
+    width: 100%;
+    height: 1px;
+    background: $color-border;
+    margin: $space-2 0;
+  }
+
+  &__quick-stats {
+    display: flex;
+    gap: $space-5;
+    justify-content: center;
+  }
+
+  &__quick-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+    &-value {
+      font-family: $font-headline;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: $color-text;
+    }
+
+    &-label {
+      font-size: 11px;
+      color: $color-text-muted;
+    }
+  }
+
+  &__become-seller {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-4;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.3);
+    border-radius: $radius-md;
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-accent;
+    text-decoration: none;
+    width: 100%;
+    justify-content: center;
+    transition: $transition-fast;
+    margin-top: $space-2;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &:hover { background: rgba($color-accent, 0.2); }
+  }
+
+  // ── Generic card ───────────────────────────────────────────
+  &__card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  &__card-header {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+
+  &__card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-1;
+    padding: $space-2 $space-3;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: 700;
+    color: $color-accent;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 16px; }
+
+    &:hover { background: $color-accent-dim; border-color: rgba($color-accent, 0.3); }
+  }
+
+  // ── Form ───────────────────────────────────────────────────
+  &__form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-4;
+
+    @media (max-width: 600px) { grid-template-columns: 1fr; }
+  }
+
+  &__field { display: flex; flex-direction: column; gap: $space-2; }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: $color-text-muted;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: #4ade80;
+    text-transform: none;
+    letter-spacing: 0;
+
+    .material-symbols-outlined {
+      font-size: 13px;
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+  }
+
+  &__input {
+    background: rgba(var(--color-rgb-text),0.04);
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-3 $space-4;
+    color: $color-text;
+    font-family: $font-body;
+    font-size: 14px;
+    outline: none;
+    transition: $transition-fast;
+
+    &:focus { border-color: $color-accent; background: $color-accent-glow; }
+  }
+
+  &__save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-6;
+    background: $color-accent;
+    color: #000;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition-fast;
+    width: fit-content;
+
+    .material-symbols-outlined { font-size: 18px; }
+
+    &:hover { background: #e8c88a; }
+  }
+
+  // ── Addresses ──────────────────────────────────────────────
+  &__addresses {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 900px) { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 600px) { grid-template-columns: 1fr; }
+  }
+
+  &__address-card {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    padding: $space-4;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    transition: $transition-fast;
+
+    &:hover { border-color: $color-border-strong; }
+  }
+
+  &__address-header { @include flex-between; }
+
+  &__address-type {
+    font-size: 11px;
+    font-weight: 800;
+    color: $color-accent;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.2);
+    padding: 2px 10px;
+    border-radius: $radius-full;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  &__address-actions { display: flex; gap: $space-1; }
+
+  &__address-line {
+    font-size: 13px;
+    color: $color-text-muted;
+    margin: 0;
+  }
+
+  &__address-phone {
+    font-size: 12px;
+    color: $color-text-dimmed;
+    margin: 0;
+    margin-top: $space-1;
+  }
+
+  // ── Payment methods ────────────────────────────────────────
+  &__payments {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+  }
+
+  &__payment-chip {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-4;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    transition: $transition-fast;
+
+    &:hover { border-color: $color-border-strong; }
+  }
+
+  &__payment-icon {
+    width: 44px;
+    height: 44px;
+    @include flex-center;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.2);
+    border-radius: $radius-md;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  &__payment-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__payment-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__payment-id {
+    font-size: 12px;
+    color: $color-text-muted;
+    font-family: monospace;
+    letter-spacing: 0.05em;
+  }
+
+  // ── Icon buttons ───────────────────────────────────────────
+  &__icon-btn {
+    width: 30px;
+    height: 30px;
+    @include flex-center;
+    background: none;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 15px; }
+
+    &:hover { background: $color-surface-hover; color: $color-text; }
+
+    &--danger:hover {
+      background: rgba(248,113,113,0.08);
+      border-color: rgba(248,113,113,0.3);
+      color: #f87171;
+    }
+  }
+}

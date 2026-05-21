@@ -1,0 +1,98 @@
+.verify-container {
+    background-color: #000;
+    color: var(--color-text);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+    .font-headline { font-family: 'Epilogue', sans-serif; }
+    .font-body { font-family: 'Manrope', sans-serif; }
+
+    .text-neon { color: var(--color-accent); }
+    .bg-neon { background-color: var(--color-accent); }
+    
+    .verify-box {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Refined SVG Tick Animation */
+    .success-svg {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 4;
+        stroke: var(--color-accent);
+        stroke-miterlimit: 10;
+        box-shadow: inset 0px 0px 0px rgba(var(--color-rgb-accent), 0);
+        /* Replaced fill and scale with a unified pop, adding glow tracking */
+        animation: softFillPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s forwards, ambientGlow 2s infinite alternate 1.2s;
+    }
+
+    .success-svg__circle {
+        stroke-dasharray: 158; /* Accurately matches circumference for flawless drawing */
+        stroke-dashoffset: 158;
+        stroke-width: 2.5;
+        stroke-miterlimit: 10;
+        stroke: rgba(var(--color-rgb-accent), 0.3);
+        fill: none;
+        animation: strokeCircle 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .success-svg__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 40;
+        stroke-dashoffset: 40;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        animation: strokeCheck 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+    }
+
+    @keyframes strokeCircle {
+        100% {
+            stroke-dashoffset: 0;
+            stroke: var(--color-accent); /* Ignites neon brightness when drawing completes */
+        }
+    }
+
+    @keyframes strokeCheck {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes softFillPop {
+        0% { transform: scale(1); box-shadow: inset 0px 0px 0px rgba(var(--color-rgb-accent), 0); }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1); box-shadow: inset 0px 0px 0px 80px rgba(var(--color-rgb-accent), 0.08); }
+    }
+
+    @keyframes ambientGlow {
+        0% { filter: drop-shadow(0 0 10px rgba(var(--color-rgb-accent), 0.1)); }
+        100% { filter: drop-shadow(0 0 25px rgba(var(--color-rgb-accent), 0.4)); }
+    }
+
+    .animate-fade-up {
+        animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .delay-1000 { animation-delay: 1000ms; }
+    .delay-1200 { animation-delay: 1200ms; }
+    .delay-1400 { animation-delay: 1400ms; }
+
+    @keyframes fadeUp {
+        100% { opacity: 1; transform: translateY(0); }
+    }
+}

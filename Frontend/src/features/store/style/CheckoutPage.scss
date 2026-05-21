@@ -1,0 +1,467 @@
+@import '../../../components/dashboard/DashboardTokens.scss';
+
+.checkout-page {
+  padding: $space-6;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  // ── Step Progress ─────────────────────────────────────────
+  &__steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: $space-10;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: $space-8;
+    align-items: start;
+
+    @include respond-to('tablet') { grid-template-columns: 1fr; }
+  }
+
+  &__main { display: flex; flex-direction: column; gap: 0; }
+
+  &__sidebar { display: flex; flex-direction: column; gap: $space-4; position: sticky; top: $space-6; }
+
+  &__add-address-btn {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: transparent;
+    border: 1.5px dashed $color-border-strong;
+    padding: $space-3 $space-5;
+    border-radius: $radius-md;
+    color: $color-accent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-fast;
+    margin-top: $space-3;
+    &:hover { border-color: $color-accent; background: $color-accent-glow; }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__nav-btns {
+    display: flex;
+    gap: $space-3;
+    flex-direction: column;
+  }
+
+  &__btn-primary {
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-4;
+    border-radius: $radius-md;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    transition: $transition-fast;
+    &:hover { opacity: 0.9; transform: translateY(-1px); }
+    .material-symbols-outlined { font-size: 1.1rem; }
+  }
+
+  &__btn-secondary {
+    background: $color-surface;
+    color: $color-text-muted;
+    border: 1.5px solid $color-border;
+    padding: $space-3;
+    border-radius: $radius-md;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    transition: $transition-fast;
+    &:hover { border-color: $color-accent; color: $color-accent; }
+  }
+}
+
+// ── Step indicator ────────────────────────────────────────────
+.checkout-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+
+  &__circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid $color-border;
+    background: $color-surface;
+    @include flex-center;
+    transition: $transition-base;
+    .material-symbols-outlined { font-size: 1.2rem; color: $color-text-muted; }
+  }
+
+  &__label {
+    font-size: 0.75rem;
+    color: $color-text-muted;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: $transition-fast;
+  }
+
+  &--active &__circle {
+    border-color: $color-accent;
+    background: $color-accent-dim;
+    .material-symbols-outlined { color: $color-accent; }
+  }
+
+  &--active &__label { color: $color-accent; }
+
+  &--done &__circle {
+    border-color: var(--color-success);
+    background: rgba(74, 222, 128, 0.12);
+    .material-symbols-outlined { color: var(--color-success); }
+  }
+
+  &--done &__label { color: var(--color-success); }
+
+  &__connector {
+    width: 60px;
+    height: 2px;
+    background: $color-border;
+    border-radius: 1px;
+    align-self: flex-start;
+    margin-top: 22px;
+    transition: $transition-base;
+    &--done { background: var(--color-success); }
+
+    @include respond-to('mobile') { width: 20px; }
+  }
+}
+
+// ── Checkout Section ──────────────────────────────────────────
+.checkout-section {
+  @include card;
+  margin-bottom: $space-4;
+
+  &__title {
+    font-family: $font-headline;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-5;
+  }
+}
+
+// ── Address Card ──────────────────────────────────────────────
+.address-card {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  padding: $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  cursor: pointer;
+  margin-bottom: $space-3;
+  transition: $transition-fast;
+  background: $color-surface;
+
+  input[type="radio"] { accent-color: $color-accent; margin-top: 2px; flex-shrink: 0; }
+
+  &:hover { border-color: $color-accent; }
+  &--selected { border-color: $color-accent; background: $color-accent-glow; }
+
+  &__body { flex: 1; display: flex; flex-direction: column; gap: $space-1; }
+
+  &__header { display: flex; align-items: center; gap: $space-2; margin-bottom: $space-2; }
+
+  &__type {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $color-accent;
+    background: $color-accent-dim;
+    padding: 2px $space-2;
+    border-radius: $radius-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__default {
+    font-size: 0.72rem;
+    color: var(--color-success);
+    background: rgba(74, 222, 128, 0.1);
+    padding: 2px $space-2;
+    border-radius: $radius-sm;
+  }
+
+  &__name { font-weight: 700; font-size: 0.9rem; color: $color-text; }
+  &__line { font-size: 0.85rem; color: $color-text-muted; }
+  &__phone { font-size: 0.82rem; color: $color-text-dimmed; margin-top: $space-1; }
+}
+
+// ── Add Address Form ──────────────────────────────────────────
+.add-address-form {
+  @include card;
+  margin-top: $space-4;
+  border-style: dashed;
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $color-text;
+    margin-bottom: $space-5;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-4;
+    margin-bottom: $space-5;
+
+    @include respond-to('mobile') { grid-template-columns: 1fr; }
+  }
+
+  &__field { display: flex; flex-direction: column; gap: $space-2; }
+
+  &__field--full { grid-column: 1 / -1; }
+
+  &__label { font-size: 0.8rem; font-weight: 600; color: $color-text-muted; letter-spacing: 0.03em; }
+
+  &__input {
+    background: $color-surface;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-3 $space-4;
+    color: $color-text;
+    font-size: 0.9rem;
+    outline: none;
+    transition: $transition-fast;
+    &:focus { border-color: $color-accent; }
+  }
+
+  &__type-row { display: flex; gap: $space-3; }
+
+  &__type-chip {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-4;
+    border: 1.5px solid $color-border;
+    border-radius: $radius-full;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $color-text-muted;
+    transition: $transition-fast;
+    input[type="radio"] { display: none; }
+    &:has(input:checked) { border-color: $color-accent; color: $color-accent; background: $color-accent-dim; }
+  }
+}
+
+// ── Delivery Option ───────────────────────────────────────────
+.delivery-option {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  cursor: pointer;
+  margin-bottom: $space-3;
+  transition: $transition-fast;
+  background: $color-surface;
+
+  input[type="radio"] { accent-color: $color-accent; }
+  &:hover { border-color: $color-accent; }
+  &--selected { border-color: $color-accent; background: $color-accent-glow; }
+
+  &__body { flex: 1; display: flex; flex-direction: column; gap: $space-1; }
+  &__header { display: flex; align-items: center; gap: $space-2; }
+  &__label { font-weight: 700; font-size: 0.95rem; color: $color-text; }
+  &__badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: $color-accent;
+    color: #000;
+    padding: 2px 6px;
+    border-radius: $radius-sm;
+    letter-spacing: 0.05em;
+  }
+  &__desc { font-size: 0.82rem; color: $color-text-muted; }
+  &__eta {
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+    font-size: 0.8rem;
+    color: $color-text-dimmed;
+    .material-symbols-outlined { font-size: 0.9rem; }
+  }
+  &__fee { font-weight: 800; font-size: 1rem; color: $color-text; white-space: nowrap; }
+  &__fee--free { color: var(--color-success); }
+}
+
+// ── Payment Option ────────────────────────────────────────────
+.payment-option {
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  margin-bottom: $space-3;
+  overflow: hidden;
+  transition: $transition-fast;
+  background: $color-surface;
+
+  &:hover { border-color: $color-accent; }
+  &--selected { border-color: $color-accent; }
+
+  &__label-row {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-4;
+    cursor: pointer;
+    input[type="radio"] { accent-color: $color-accent; }
+  }
+
+  &__icon { font-size: 1.4rem; color: $color-accent; }
+  &__name { font-weight: 700; font-size: 0.95rem; color: $color-text; }
+
+  &__fields {
+    padding: 0 $space-4 $space-4;
+    display: flex;
+    gap: $space-3;
+    align-items: center;
+    &--grid { flex-wrap: wrap; }
+  }
+
+  &__input {
+    flex: 1;
+    background: var(--color-bg);
+    border: 1.5px solid $color-border;
+    border-radius: $radius-md;
+    padding: $space-3 $space-4;
+    color: $color-text;
+    font-size: 0.9rem;
+    outline: none;
+    transition: $transition-fast;
+    &:focus { border-color: $color-accent; }
+    &--full { flex-basis: 100%; }
+  }
+
+  &__verify-btn {
+    background: $color-accent;
+    color: #000;
+    border: none;
+    padding: $space-3 $space-5;
+    border-radius: $radius-md;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  &__cod-note {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: 0 $space-4 $space-4;
+    font-size: 0.85rem;
+    color: $color-text-muted;
+    .material-symbols-outlined { font-size: 1rem; color: var(--color-warning); }
+  }
+}
+
+// ── Order Review ──────────────────────────────────────────────
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+
+  &__block {
+    padding: $space-4;
+    background: $color-surface;
+    border-radius: $radius-md;
+    border: 1px solid $color-border;
+  }
+
+  &__block-title {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: $color-accent;
+    margin-bottom: $space-3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    .material-symbols-outlined { font-size: 1rem; }
+  }
+
+  &__text { font-size: 0.9rem; color: $color-text-muted; line-height: 1.6; }
+}
+
+.review-item {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 0;
+  border-bottom: 1px solid $color-border;
+  &:last-child { border-bottom: none; padding-bottom: 0; }
+
+  &__image {
+    width: 48px;
+    height: 60px;
+    border-radius: $radius-sm;
+    background: $color-bg-card;
+    @include flex-center;
+    .material-symbols-outlined { font-size: 1.2rem; color: $color-text-dimmed; }
+  }
+
+  &__info { flex: 1; display: flex; flex-direction: column; gap: $space-1; }
+  &__name { font-size: 0.9rem; font-weight: 600; color: $color-text; }
+  &__meta { font-size: 0.78rem; color: $color-text-muted; }
+  &__price { font-size: 0.95rem; font-weight: 700; color: $color-text; }
+}
+
+// ── Checkout Summary ──────────────────────────────────────────
+.checkout-summary {
+  @include card;
+
+  &__title {
+    font-family: $font-headline;
+    font-size: 1rem;
+    font-weight: 900;
+    color: $color-text;
+    margin-bottom: $space-4;
+  }
+
+  &__row {
+    @include flex-between;
+    font-size: 0.88rem;
+    color: $color-text-muted;
+    margin-bottom: $space-3;
+    &--discount { color: var(--color-success); }
+  }
+
+  &__free { color: var(--color-success); font-weight: 700; }
+
+  &__divider { height: 1px; background: $color-border; margin: $space-3 0; }
+
+  &__total {
+    @include flex-between;
+    font-size: 1rem;
+    font-weight: 800;
+    color: $color-text;
+    margin-bottom: $space-3;
+  }
+
+  &__savings {
+    font-size: 0.8rem;
+    color: var(--color-success);
+    background: rgba(74, 222, 128, 0.08);
+    padding: $space-2 $space-3;
+    border-radius: $radius-sm;
+    text-align: center;
+  }
+}

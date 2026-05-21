@@ -1,0 +1,446 @@
+@import './DashboardTokens.scss';
+
+.sidebar {
+  width: $sidebar-width;
+  flex-shrink: 0;
+  height: 100vh;
+  background: $color-bg-elevated;
+  border-right: 1px solid $color-border;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 200;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+
+  &--collapsed {
+    width: $sidebar-collapsed;
+
+    .sidebar__brand {
+      justify-content: center;
+      padding: $space-5 0;
+    }
+
+    .sidebar__brand-logo {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      display: none;
+    }
+
+    .sidebar__nav-label {
+      display: none;
+    }
+
+    .sidebar__user {
+      padding: $space-4 $space-3;
+      justify-content: center;
+    }
+
+    .sidebar__user-info {
+      display: none;
+    }
+
+    .sidebar__nav-item {
+      justify-content: center;
+      padding: $space-3 0;
+    }
+
+    .sidebar__nav-icon {
+      margin: 0;
+    }
+
+    .sidebar__badge--dot {
+      right: 50%;
+      margin-right: -12px;
+    }
+
+    @include respond-to('mobile') {
+      transform: translateX(-100%);
+    }
+  }
+
+  @include respond-to('tablet') {
+    width: $sidebar-collapsed;
+
+    .sidebar__brand {
+      justify-content: center;
+      padding: $space-5 0;
+    }
+
+    .sidebar__brand-logo {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      display: none;
+    }
+
+    .sidebar__nav-label {
+      display: none;
+    }
+
+    .sidebar__user {
+      padding: $space-4 $space-3;
+      justify-content: center;
+    }
+
+    .sidebar__user-info {
+      display: none;
+    }
+
+    .sidebar__nav-item {
+      justify-content: center;
+      padding: $space-3 0;
+    }
+
+    .sidebar__nav-icon {
+      margin: 0;
+    }
+
+    .sidebar__badge--dot {
+      right: 50%;
+      margin-right: -12px;
+    }
+  }
+
+  @include respond-to('mobile') {
+    position: fixed;
+    width: $sidebar-width;
+    box-shadow: $shadow-lg;
+    z-index: 1000;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    // Only show the collapse/expand button floating when collapsed
+    &.sidebar--collapsed {
+      .sidebar__brand {
+        position: absolute;
+        left: 100%;
+        top: 0;
+        background: transparent;
+        border: none;
+        width: 60px;
+        border-bottom: none;
+
+        .sidebar__brand-logo {
+          display: none;
+        }
+
+        .sidebar__collapse-btn {
+          background: $color-bg-elevated;
+          border: 1px solid $color-border;
+          border-left: none;
+          border-radius: 0 $radius-md $radius-md 0;
+          box-shadow: $shadow-card;
+          padding: $space-2 $space-3;
+          color: $color-accent;
+        }
+      }
+    }
+  }
+
+  // ── Brand ─────────────────────────────────────────────────
+  &__brand {
+    @include flex-between;
+    padding: $space-5 $space-5;
+    border-bottom: 1px solid $color-border;
+    min-height: 64px;
+
+    &-logo {
+      font-family: $font-headline;
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: -0.05em;
+      color: $color-accent;
+      white-space: nowrap;
+      transition: $transition-base;
+    }
+  }
+
+  &__collapse-btn {
+    background: none;
+    border: none;
+    color: $color-text-muted;
+    cursor: pointer;
+    font-size: 20px;
+    padding: $space-2;
+    border-radius: $radius-md;
+    transition: $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+      color: $color-text;
+      background: $color-surface;
+    }
+  }
+
+  // ── User Identity ─────────────────────────────────────────
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid $color-border;
+  }
+
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    background: $color-accent-dim;
+    border: 1px solid $color-accent;
+    @include flex-center;
+    flex-shrink: 0;
+
+    &-initials {
+      font-family: $font-headline;
+      font-weight: 900;
+      font-size: 13px;
+      color: $color-accent;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  &__user-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: $color-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__user-role {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: $color-accent;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  // ── Navigation ────────────────────────────────────────────
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: $space-4 0;
+    scrollbar-width: thin;
+    scrollbar-color: $color-border transparent;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $color-border;
+      border-radius: 2px;
+    }
+
+    &-label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: $color-text-dimmed;
+      text-transform: uppercase;
+      padding: 0 $space-5 $space-2;
+      margin-bottom: $space-1;
+    }
+
+    &-list {
+      list-style: none;
+      margin: 0;
+      padding: 0 $space-3;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  }
+
+  &__nav-item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 $space-3;
+    border-radius: $radius-md;
+    text-decoration: none;
+    color: $color-text-muted;
+    font-size: 13px;
+    font-weight: 600;
+    transition: $transition-fast;
+    position: relative;
+    white-space: nowrap;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+
+    &:hover {
+      background: $color-surface;
+      color: $color-text;
+    }
+
+    &--active {
+      background: $color-accent-dim;
+      color: $color-accent;
+      border: 1px solid rgba($color-accent, 0.2);
+
+      .sidebar__nav-icon {
+        color: $color-accent;
+      }
+
+      &:hover {
+        background: rgba($color-accent, 0.2);
+        color: $color-accent;
+      }
+    }
+
+    &--cta {
+      background: $color-accent;
+      color: #000 !important;
+      font-weight: 700;
+      margin: $space-2 0;
+
+      .sidebar__nav-icon {
+        color: #000;
+      }
+
+      &:hover {
+        background: #e8c88a;
+        color: #000 !important;
+      }
+    }
+
+    &--logout {
+      color: rgba(248, 113, 113, 0.7);
+
+      &:hover {
+        background: rgba(248, 113, 113, 0.08);
+        color: #f87171;
+      }
+    }
+  }
+
+  &__nav-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  }
+
+  &__nav-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__badge {
+    background: $color-accent;
+    color: #000;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: $font-body;
+    border-radius: $radius-full;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 16px;
+
+    &--dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      padding: 0;
+      min-width: unset;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+    }
+  }
+
+  // ── Footer ─────────────────────────────────────────
+  &__footer {
+    margin-top: auto;
+    padding: $space-3 $space-3 $space-5;
+    border-top: 1px solid $color-border;
+    flex-shrink: 0;
+  }
+
+  // ── Sign-out button ────────────────────────────────────────
+  &__signout-btn {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    width: 100%;
+    padding: $space-3 $space-3;
+    border-radius: $radius-md;
+    border: 1px solid rgba(248, 113, 113, 0.18);
+    background: rgba(248, 113, 113, 0.07);
+    color: rgba(248, 113, 113, 0.85);
+    font-size: 13px;
+    font-weight: 700;
+    font-family: $font-body;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    transition: background 0.18s ease,
+                border-color 0.18s ease,
+                color 0.18s ease,
+                box-shadow 0.18s ease,
+                transform 0.15s ease;
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      flex-shrink: 0;
+      color: rgba(248, 113, 113, 0.85);
+      margin: 0;
+      transition: color 0.18s ease, transform 0.18s ease;
+    }
+
+    &:hover {
+      background: rgba(248, 113, 113, 0.14);
+      border-color: rgba(248, 113, 113, 0.4);
+      color: #f87171;
+      box-shadow: 0 4px 16px rgba(248, 113, 113, 0.15);
+      transform: translateY(-1px);
+
+      .material-symbols-outlined {
+        color: #f87171;
+        transform: translateX(-2px);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  }
+
+  &__signout-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // Collapsed: center icon, hide label
+  &--collapsed &__signout-btn {
+    justify-content: center;
+    padding: $space-3;
+    gap: 0;
+  }
+
+  &--collapsed &__signout-label {
+    display: none;
+  }
+}

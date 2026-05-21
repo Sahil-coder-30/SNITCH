@@ -1,0 +1,124 @@
+@import '../../../../components/dashboard/DashboardTokens.scss';
+
+.seller-earnings {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+
+  &__header { @include flex-between; flex-wrap: wrap; gap: $space-4; }
+
+  &__title {
+    font-family: $font-headline;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__payout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-3 $space-6;
+    background: $color-accent;
+    color: #000;
+    font-family: $font-body;
+    font-size: 13px;
+    font-weight: 800;
+    border: none;
+    border-radius: $radius-md;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    .material-symbols-outlined { font-size: 18px; }
+    &:hover { background: #e8c88a; }
+  }
+
+  &__summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-4;
+
+    @media (max-width: 900px) { grid-template-columns: 1fr; }
+  }
+
+  &__card {
+    @include card;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__card-header { @include flex-between; }
+
+  &__section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0;
+  }
+
+  &__select {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    color: $color-text-muted;
+    font-family: $font-body;
+    font-size: 12px;
+    padding: $space-2 $space-3;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .earnings-bar {
+    &__svg {
+      width: 100%;
+      overflow: visible;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    th {
+      font-size: 11px;
+      font-weight: 700;
+      color: $color-text-dimmed;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: $space-3 $space-4;
+      text-align: left;
+      border-bottom: 1px solid $color-border;
+    }
+
+    td {
+      padding: $space-4 $space-4;
+      border-bottom: 1px solid rgba(var(--color-rgb-text),0.04);
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(var(--color-rgb-text),0.02); }
+  }
+
+  &__amount { font-weight: 800; color: $color-accent; }
+
+  &__status {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: $radius-full;
+
+    &--completed  { background: rgba(74,222,128,0.1); color: #4ade80; }
+    &--processing { background: rgba(250,204,21,0.1); color: #facc15; }
+  }
+
+  &__txid {
+    font-size: 12px;
+    color: $color-text-muted;
+    font-family: monospace;
+    letter-spacing: 0.05em;
+  }
+}

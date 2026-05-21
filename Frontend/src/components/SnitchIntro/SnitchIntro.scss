@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&family=Manrope:wght@300;400;600;800&display=swap');
+
+.snitch-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .font-headline { font-family: 'Epilogue', sans-serif; }
+
+    /* Watermark text with skeleton shimmer */
+    .intro-watermark-text {
+        font-size: 33vw;
+        line-height: 0.88;
+        letter-spacing: 0.02em;
+        user-select: none;
+        white-space: nowrap;
+        font-family: 'Epilogue', sans-serif;
+        font-weight: 900;
+        
+        /* The base outline */
+        -webkit-text-stroke: 1.5px rgba(204, 255, 0, 0.15);
+        
+        /* The shimmer gradient matching text shape */
+        background: linear-gradient(
+            110deg,
+            rgba(204, 255, 0, 0.05) 0%,
+            rgba(204, 255, 0, 0.05) 35%,
+            rgba(204, 255, 0, 0.8) 48%,
+            rgba(var(--color-rgb-text), 1) 50%,
+            rgba(204, 255, 0, 0.8) 52%,
+            rgba(204, 255, 0, 0.05) 65%,
+            rgba(204, 255, 0, 0.05) 100%
+        );
+        background-size: 300% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent; /* fallback */
+        
+        /* Shimmer animation */
+        animation: textShimmer 2s linear infinite;
+        filter: drop-shadow(0 0 15px rgba(204, 255, 0, 0.1));
+    }
+
+    @keyframes textShimmer {
+        0% {
+            background-position: -150% center;
+        }
+        100% {
+            background-position: 150% center;
+        }
+    }
+
+    /* Wrap letters if we still need layout positioning, but no GSAP opacity needed */
+    .intro-letter {
+        display: inline-block;
+        transform-origin: center center;
+    }
+
+    /* Skip button */
+    .intro-skip {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        font-family: 'Manrope', sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(var(--color-rgb-text), 0.3);
+        cursor: pointer;
+        border: none;
+        background: none;
+        transition: color 0.3s ease;
+        opacity: 0;
+
+        &:hover {
+            color: #CCFF00;
+        }
+    }
+}

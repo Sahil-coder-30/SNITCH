@@ -1,0 +1,131 @@
+import React from 'react'
+import './style/app.scss'
+import { Routes, Route } from 'react-router-dom'
+
+// ── Public Storefront ──────────────────────────────────────────
+import StoreFront     from '../features/store/components/StoreFront'
+
+// ── Auth ───────────────────────────────────────────────────────
+import Login          from '../features/auth/components/Login'
+import Register       from '../features/auth/components/Register'
+import VerifyEmail    from '../features/auth/components/VerifyEmail'
+import ForgotPassword from '../features/auth/components/ForgotPassword'
+import ResetPassword  from '../features/auth/components/ResetPassword'
+import VerifyOtp      from '../features/auth/components/VerifyOtp'
+import SetPassword    from '../features/auth/components/SetPassword'
+
+// ── Seller Dashboard ───────────────────────────────────────────
+import SellerOverview  from '../features/seller/dashboard/components/SellerOverview'
+import SellerProducts  from '../features/seller/dashboard/components/SellerProducts'
+import CreateProduct   from '../features/seller/dashboard/components/CreateProduct'
+import SellerOrders    from '../features/seller/dashboard/components/SellerOrders'
+import SellerEarnings  from '../features/seller/dashboard/components/SellerEarnings'
+
+// ── Buyer Dashboard ────────────────────────────────────────────
+import BrowseProducts  from '../features/buyer/dashboard/components/BrowseProducts'
+import BuyerOrders     from '../features/buyer/dashboard/components/BuyerOrders'
+import Wishlist        from '../features/buyer/dashboard/components/Wishlist'
+import BuyerProfile    from '../features/buyer/dashboard/components/BuyerProfile'
+
+// ── Buyer Order Flow ───────────────────────────────────────────
+import CartPage           from '../features/store/components/cart/CartPage'
+import CheckoutPage       from '../features/store/components/checkout/CheckoutPage'
+import OrderSuccessPage   from '../features/store/components/orders/OrderSuccessPage'
+import MyOrdersPage       from '../features/store/components/orders/MyOrdersPage'
+import OrderDetailPage    from '../features/store/components/orders/OrderDetailPage'
+import OrderTrackingPage  from '../features/store/components/orders/OrderTrackingPage'
+import ReturnRequestPage  from '../features/store/components/returns/ReturnRequestPage'
+import WriteReviewPage    from '../features/store/components/returns/WriteReviewPage'
+import RefundStatusPage   from '../features/store/components/returns/RefundStatusPage'
+import PaymentFailedPage  from '../features/store/components/errors/PaymentFailedPage'
+import OrderCancelledPage from '../features/store/components/errors/OrderCancelledPage'
+import ProductPage        from '../features/store/components/product/ProductPage'
+
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getMe } from '../features/auth/services/auth.api'
+import { setUser, setLoading } from '../features/auth/slice/auth.slice'
+import ProtectedRoute from '../features/auth/components/ProtectedRoute'
+import GuestRoute     from '../features/auth/components/GuestRoute'
+
+const App = () => {
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const response = await getMe();
+        dispatch(setUser(response.user));
+      } catch (error) {
+        console.error("Auth initialization failed:", error);
+        dispatch(setUser(null));
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    initAuth();
+  }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#0a0a0b]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D4AF7A]"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Routes>
+        {/* ── Public Storefront (redirect logged-in users to dashboard) ── */}
+        <Route element={<GuestRoute />}>
+          <Route path="/" element={<StoreFront />} />
+          <Route path="/product/:id" element={<ProductPage />} />
+        </Route>
+
+        {/* ── Auth (Unauthenticated only) ─────────────── */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/api/auth/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/set-password" element={<SetPassword />} />
+
+        {/* ── Seller Dashboard (Protected) ──────────── */}
+        <Route element={<ProtectedRoute allowedRoles={['SELLER']} />}>
+          <Route path="/seller" element={<SellerOverview />} />
+          <Route path="/seller/products" element={<SellerProducts />} />
+          <Route path="/seller/products/new" element={<CreateProduct />} />
+          <Route path="/seller/orders" element={<SellerOrders />} />
+          <Route path="/seller/earnings" element={<SellerEarnings />} />
+        </Route>
+
+        {/* ── Buyer Dashboard & Flow (Protected) ───────── */}
+        <Route element={<ProtectedRoute allowedRoles={['BUYER']} />}>
+          <Route path="/buyer" element={<BrowseProducts />} />
+          <Route path="/buyer/orders" element={<BuyerOrders />} />
+          <Route path="/buyer/wishlist" element={<Wishlist />} />
+          <Route path="/buyer/profile" element={<BuyerProfile />} />
+          <Route path="/buyer/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order-success" element={<OrderSuccessPage />} />
+          <Route path="/buyer/all-orders" element={<MyOrdersPage />} />
+          <Route path="/buyer/orders/:id" element={<OrderDetailPage />} />
+          <Route path="/buyer/track/:id" element={<OrderTrackingPage />} />
+          <Route path="/buyer/return" element={<ReturnRequestPage />} />
+          <Route path="/buyer/review" element={<WriteReviewPage />} />
+          <Route path="/buyer/refund-status" element={<RefundStatusPage />} />
+        </Route>
+
+        {/* ── Errors/Status (Public or Auth depending on context) ── */}
+        <Route path="/payment-failed" element={<PaymentFailedPage />} />
+        <Route path="/order-cancelled" element={<OrderCancelledPage />} />
+      </Routes>
+    </div>
+  )
+}
+
+export default App

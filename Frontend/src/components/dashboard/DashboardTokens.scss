@@ -1,0 +1,169 @@
+// ============================================================
+//  SNITCH Dashboard — Design Tokens (SCSS Variables)
+//  2026 Professional Update
+// ============================================================
+
+// ── Color Tokens ─────────────────────────────────────────────
+$color-bg:            var(--color-bg);       
+$color-bg-elevated:   var(--color-bg-elevated);       
+$color-bg-card:       var(--color-bg-card);
+$color-bg-card-hover: var(--color-bg-card-hover);
+$color-surface:       var(--color-surface);
+$color-surface-hover: var(--color-surface-hover);
+
+$color-accent:        var(--color-accent);       
+$color-accent-dim:    var(--color-accent-dim);
+$color-accent-glow:   var(--color-accent-glow);
+
+$color-text:          var(--color-text);
+$color-text-muted:    var(--color-text-muted);
+$color-text-dimmed:   var(--color-text-dimmed);
+$color-text-label:    var(--color-text-label);
+
+$color-border:        var(--color-border);
+$color-border-strong: var(--color-border-strong);
+
+// Status colors (Linked to global semantic tokens)
+$color-delivered:     var(--color-success);       
+$color-processing:    var(--color-warning);       
+$color-shipped:       var(--color-primary);       
+$color-cancelled:     var(--color-error);       
+$color-draft:         var(--color-text-dimmed);
+$color-warning:       var(--color-warning);
+$color-out-of-stock:  var(--color-error);
+
+// ── Spacing (8px grid) ───────────────────────────────────────
+$space-1:   4px;
+$space-2:   8px;
+$space-3:   12px;
+$space-4:   16px;
+$space-5:   20px;
+$space-6:   24px;    // card padding
+$space-8:   32px;
+$space-10:  40px;
+$space-12:  48px;
+$space-16:  64px;    // navbar height
+
+// ── Layout ───────────────────────────────────────────────────
+$sidebar-width:       240px;
+$sidebar-collapsed:   64px;
+$navbar-height:       64px;
+
+// ── Border Radius ────────────────────────────────────────────
+$radius-sm:   4px;
+$radius-md:   8px;
+$radius-lg:   12px;
+$radius-xl:   16px;
+$radius-full: 9999px;
+
+// ── Typography ───────────────────────────────────────────────
+$font-headline: 'Epilogue', sans-serif;
+$font-body:     'Manrope', sans-serif;
+
+// ── Shadows ──────────────────────────────────────────────────
+$shadow-card:   var(--shadow-card);
+$shadow-lg:     var(--shadow-lg);
+
+// ── Transitions ──────────────────────────────────────────────
+$transition-fast:   all 0.15s ease;
+$transition-base:   all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-slow:   all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+// ── Mixins ───────────────────────────────────────────────────
+@mixin card {
+  background: $color-bg-card;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-6;
+  transition: $transition-base;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background: $color-bg-card-hover;
+    border-color: $color-border-strong;
+    transform: translateY(-2px);
+    box-shadow: $shadow-card;
+  }
+}
+
+@mixin font-headline {
+  font-family: $font-headline;
+  font-weight: 800;
+}
+
+@mixin font-label {
+  font-family: $font-body;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: $color-text-muted;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ── Skeleton shimmer ─────────────────────────────────────────
+@mixin skeleton {
+  background: linear-gradient(
+    90deg,
+    $color-bg-card 25%,
+    $color-surface 50%,
+    $color-bg-card 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: $radius-md;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ── Status badge mixin ───────────────────────────────────────
+@mixin status-badge($color) {
+  background: rgba($color, 0.1);
+  color: $color;
+  border: 1px solid rgba($color, 0.15);
+  backdrop-filter: blur(4px);
+}
+
+// ── Breakpoints ──────────────────────────────────────────────
+$bp-mobile: 768px;
+$bp-tablet: 1024px;
+$bp-desktop: 1440px;
+
+@mixin respond-to($bp) {
+  @if $bp == 'mobile' {
+    @media (max-width: $bp-mobile) { @content; }
+  }
+  @else if $bp == 'tablet' {
+    @media (max-width: $bp-tablet) { @content; }
+  }
+}
+
+// ── Clothing image placeholder ────────────────────────────────
+@mixin clothing-placeholder($ratio: '3/4') {
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+  &::after {
+    content: '🧥';
+    font-size: 2rem;
+    opacity: 0.3;
+  }
+}
