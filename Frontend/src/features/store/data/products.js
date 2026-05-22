@@ -1,12 +1,17 @@
 // ── SNITCH Public Store — UI Constants ───────────────────
 
 export const CATEGORIES = [
-  { id: 'all',        label: 'All',           icon: 'grid_view' },
-  { id: 'tshirts',    label: 'T-Shirts',      icon: 'checkroom' },
-  { id: 'hoodies',    label: 'Hoodies',       icon: 'dry_cleaning' },
-  { id: 'joggers',    label: 'Joggers',       icon: 'sports' },
-  { id: 'jackets',    label: 'Jackets',       icon: 'outdoor_grill' },
-  { id: 'accessories',label: 'Accessories',   icon: 'watch' },
+  { id: 'all',        label: 'All' },
+  { id: 'tshirts',    label: 'T-Shirts' },
+  { id: 'shirts',     label: 'Shirts' },
+  { id: 'jeans',      label: 'Jeans' },
+  { id: 'trousers',   label: 'Trousers' },
+  { id: 'jackets',    label: 'Jackets' },
+  { id: 'coats',      label: 'Coats' },
+  { id: 'dresses',    label: 'Dresses' },
+  { id: 'skirts',     label: 'Skirts' },
+  { id: 'shoes',      label: 'Shoes' },
+  { id: 'accessories',label: 'Accessories' },
 ];
 
 export const SORT_OPTIONS = [
@@ -20,11 +25,51 @@ export const SORT_OPTIONS = [
 export const BANNERS = [
   { 
     id: 1, 
-    image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1200&q=80',
-    title: 'The Winter Collection',
-    subtitle: 'Stay warm without sacrificing style. Premium outerwear for the modern wardrobe.',
-    accent: '#ffffff',
-    gradient: 'linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.2))'
+    image: '/assets/nano_banner_hoodie.png',
+    title: 'NANO BANANA PRO: HOODIES',
+    subtitle: 'Experience ultimate comfort with our oversized fleece-lined dark hoodies.',
+    accent: '#FFE066',
+    gradient: 'linear-gradient(135deg, #060606 0%, #121212 50%, #202020 100%)'
+  },
+  { 
+    id: 2, 
+    image: '/assets/nano_banner_sweatshirt.png',
+    title: 'ESSENTIAL SWEATSHIRTS',
+    subtitle: 'Minimalist pastel sweatshirts detailed with high-density embroidered signature logo.',
+    accent: '#FFE066',
+    gradient: 'linear-gradient(135deg, #1A1A1D 0%, #2A2A2E 50%, #3A3A40 100%)'
+  },
+  { 
+    id: 3, 
+    image: '/assets/nano_banner_cap.png',
+    title: 'WASHED DAD CAPS',
+    subtitle: 'Classic 6-panel canvas hats in distressed black, featuring our signature neon icon.',
+    accent: '#FFE066',
+    gradient: 'linear-gradient(135deg, #0A0A0A 0%, #171717 50%, #252525 100%)'
+  },
+  { 
+    id: 4, 
+    image: '/assets/nano_banner_tees.png',
+    title: 'GRAPHIC STREET TEES',
+    subtitle: 'Heavyweight organic cotton streetwear t-shirts with striking neon graphic chest prints.',
+    accent: '#FFE066',
+    gradient: 'linear-gradient(135deg, #0E0E10 0%, #1C1C20 50%, #2D2D34 100%)'
+  },
+  { 
+    id: 5, 
+    image: '/assets/nano_banner_flatlay.png',
+    title: 'THE COMPLETE UTILITY KIT',
+    subtitle: 'Complete your style with our coordinated streetwear sets, beanies, caps, and straps.',
+    accent: '#FFE066',
+    gradient: 'linear-gradient(135deg, #0F0F10 0%, #1E1E22 50%, #2E2E36 100%)'
+  },
+  { 
+    id: 6, 
+    image: '/assets/nano_banner_studio.png',
+    title: 'NEW STREETWEAR ARRIVALS',
+    subtitle: 'Explore our limited edition drop featuring premium utility outerwear and track pants.',
+    accent: '#FFE066',
+    gradient: 'linear-gradient(135deg, #050505 0%, #141416 50%, #222226 100%)'
   }
 ];
 

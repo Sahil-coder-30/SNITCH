@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAuth } from '../Hooks/auth.hooks';
 import { setError as setGlobalError } from '../slice/auth.slice';
 import ThemeToggle from '../../../components/ThemeToggle/ThemeToggle';
+import api from '../services/auth.api';
 import '../style/Login.scss';
 
 const Login = () => {
@@ -14,6 +15,7 @@ const Login = () => {
   
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [needsPasswordInfo, setNeedsPasswordInfo] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -44,6 +46,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
+      setNeedsPasswordInfo('');
       dispatch(setGlobalError(null));
       const loggedUser = await authLogin(formData.email, formData.password);
       if (loggedUser?.role === 'SELLER') {
@@ -52,6 +55,12 @@ const Login = () => {
         navigate('/buyer');
       }
     } catch (err) {
+      // Detect the Google-OAuth "no password yet" 403 scenario
+      if (err.status === 403 && err.data?.needsPassword) {
+        const redirectEmail = err.data?.email || formData.email;
+        navigate(`/set-password?email=${encodeURIComponent(redirectEmail)}`);
+        return;
+      }
       // Error is already handled by useAuth dispatching to Redux
     } finally {
       setLoading(false);

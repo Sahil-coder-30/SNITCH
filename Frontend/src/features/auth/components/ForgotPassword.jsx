@@ -128,7 +128,7 @@ const ForgotPassword = () => {
       <div className="fp-gradient" />
 
       {/* Nav */}
-      <nav className="fp-nav animate-fade-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <nav className="fp-nav animate-fade-up" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'auto' }}>
         <a className="fp-brand font-headline" href="/">SNITCH</a>
         <ThemeToggle />
       </nav>

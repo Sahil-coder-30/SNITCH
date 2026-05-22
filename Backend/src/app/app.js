@@ -4,6 +4,8 @@ import { errorHandler } from "../error/catch.error.js";
 import authRouter from "../routes/auth.routes.js";
 import passport from "../config/passport.js";
 import productRouter from "../routes/product.routes.js";
+import profileRouter from "../routes/profile.routes.js";
+import bannerRouter from "../routes/banner.routes.js";
 import cors from 'cors';
 import morgan from "morgan";
 
@@ -22,6 +24,8 @@ app.use(passport.initialize());
 
 app.use("/api/products" , productRouter);
 app.use("/api/auth" , authRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/banners", bannerRouter);
 
 // error handler must be last
 app.use(errorHandler);

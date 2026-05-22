@@ -3,7 +3,8 @@ import './style/app.scss'
 import { Routes, Route } from 'react-router-dom'
 
 // ── Public Storefront ──────────────────────────────────────────
-import StoreFront     from '../features/store/components/StoreFront'
+import StoreFront        from '../features/store/components/StoreFront'
+import SearchResultsPage from '../features/store/components/search/SearchResultsPage'
 
 // ── Auth ───────────────────────────────────────────────────────
 import Login          from '../features/auth/components/Login'
@@ -20,6 +21,8 @@ import SellerProducts  from '../features/seller/dashboard/components/SellerProdu
 import CreateProduct   from '../features/seller/dashboard/components/CreateProduct'
 import SellerOrders    from '../features/seller/dashboard/components/SellerOrders'
 import SellerEarnings  from '../features/seller/dashboard/components/SellerEarnings'
+import SellerProfile   from '../features/seller/dashboard/components/SellerProfile'
+import AdminBanners   from '../features/seller/dashboard/components/AdminBanners'
 
 // ── Buyer Dashboard ────────────────────────────────────────────
 import BrowseProducts  from '../features/buyer/dashboard/components/BrowseProducts'
@@ -82,8 +85,12 @@ const App = () => {
         {/* ── Public Storefront (redirect logged-in users to dashboard) ── */}
         <Route element={<GuestRoute />}>
           <Route path="/" element={<StoreFront />} />
-          <Route path="/product/:id" element={<ProductPage />} />
         </Route>
+
+        {/* ── Public Product Details (accessible to anyone) ── */}
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/product" element={<ProductPage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
 
         {/* ── Auth (Unauthenticated only) ─────────────── */}
         <Route path="/login" element={<Login />} />
@@ -101,6 +108,7 @@ const App = () => {
           <Route path="/seller/products/new" element={<CreateProduct />} />
           <Route path="/seller/orders" element={<SellerOrders />} />
           <Route path="/seller/earnings" element={<SellerEarnings />} />
+          <Route path="/seller/profile" element={<SellerProfile />} />
         </Route>
 
         {/* ── Buyer Dashboard & Flow (Protected) ───────── */}
@@ -119,6 +127,9 @@ const App = () => {
           <Route path="/buyer/review" element={<WriteReviewPage />} />
           <Route path="/buyer/refund-status" element={<RefundStatusPage />} />
         </Route>
+
+        {/* ── Admin Banners (Public for now, auth added later) ── */}
+        <Route path="/admin/banners" element={<AdminBanners />} />
 
         {/* ── Errors/Status (Public or Auth depending on context) ── */}
         <Route path="/payment-failed" element={<PaymentFailedPage />} />

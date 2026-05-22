@@ -1,112 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BuyerDashboard from './BuyerDashboard';
 import { CATEGORIES, SORT_OPTIONS, BANNERS } from '../../../store/data/products';
 import { useBrowseProducts } from '../Hooks/useBrowseProducts';
+import { DoublyCircularLinkedList } from '../../../../utils/circularLinkedList';
+import { getActiveBanners } from '../../../seller/dashboard/services/banner.api.js';
+import { HeroBannerSkeleton, ProductCardSkeleton } from '../../../../components/loaders/ComponentSkeletons';
 import '../style/BrowseProducts.scss';
 
-// ── Helpers ───────────────────────────────────────────────────
-const formatPrice = (p) => `₹${p.toLocaleString('en-IN')}`;
-const stars = (r) => {
-  const full = Math.floor(r);
-  const half = r - full >= 0.5;
-  return { full, half, empty: 5 - full - (half ? 1 : 0) };
-};
-
-// ── Star Rating ───────────────────────────────────────────────
-const StarRating = ({ rating, count, small }) => {
-  const { full, half, empty } = stars(rating);
-  return (
-    <div className={`sf-stars ${small ? 'sf-stars--sm' : ''}`}>
-      {Array.from({ length: full  }).map((_, i) => <span key={`f${i}`} className="sf-star sf-star--full">★</span>)}
-      {half &&                                      <span className="sf-star sf-star--half">★</span>}
-      {Array.from({ length: empty }).map((_, i) => <span key={`e${i}`} className="sf-star sf-star--empty">★</span>)}
-      {count !== undefined && <span className="sf-star-count">{count.toLocaleString()}</span>}
-    </div>
-  );
-};
-
-// ── Badge ─────────────────────────────────────────────────────
-const Badge = ({ label, type }) => {
-  if (!label) return null;
-  return <span className={`sf-badge sf-badge--${type}`}>{label}</span>;
-};
-
-// ── Product Card ──────────────────────────────────────────────
-const ProductCard = ({ product, onSelect }) => {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <article
-      className={`sf-card ${!product.inStock ? 'sf-card--oos' : ''}`}
-      onClick={() => onSelect(product)}
-      tabIndex={0}
-      onKeyDown={e => e.key === 'Enter' && onSelect(product)}
-      aria-label={`View ${product.name}`}
-    >
-      <div className="sf-card__img-wrap">
-        {imgError ? (
-          <div className="sf-card__img-fallback">
-            <span className="material-symbols-outlined">checkroom</span>
-          </div>
-        ) : (
-          <img
-            src={product.image}
-            alt={product.name}
-            className="sf-card__img"
-            loading="lazy"
-            onError={() => setImgError(true)}
-          />
-        )}
-        <Badge label={product.badge} type={product.badgeType} />
-        {!product.inStock && <div className="sf-card__oos-overlay">Out of Stock</div>}
-        <button
-          className="sf-card__wishlist"
-          onClick={e => { e.stopPropagation(); }}
-          aria-label="Add to wishlist"
-        >
-          <span className="material-symbols-outlined">favorite</span>
-        </button>
-      </div>
-
-      <div className="sf-card__body">
-        <p className="sf-card__brand">{product.brand}</p>
-        <h3 className="sf-card__name">{product.name}</h3>
-        <StarRating rating={product.rating} count={product.reviewCount} small />
-
-        <div className="sf-card__price-row">
-          <span className="sf-card__price">{formatPrice(product.price)}</span>
-          <span className="sf-card__original">{formatPrice(product.originalPrice)}</span>
-          <span className="sf-card__discount">{product.discount}% off</span>
-        </div>
-
-        {product.colors.length > 0 && (
-          <div className="sf-card__colors">
-            {product.colors.slice(0, 4).map((c, i) => (
-              <span key={i} className="sf-card__color-dot" style={{ background: c }} title={product.colorNames[i]} />
-            ))}
-            {product.colors.length > 4 && <span className="sf-card__color-more">+{product.colors.length - 4}</span>}
-          </div>
-        )}
-
-        <p className="sf-card__delivery">
-          <span className="material-symbols-outlined">local_shipping</span>
-          Free delivery in {product.deliveryDays} days
-        </p>
-      </div>
-    </article>
-  );
-};
+import ProductCard from '../../../store/components/shared/ProductCard';
 
 // ── Hero Banner Carousel ───────────────────────────────────────
-const HeroBanner = ({ onShopNow }) => {
-  const [active, setActive] = useState(0);
-  const b = BANNERS[active];
+const HeroBanner = ({ onShopNow, loading = false, banners = [] }) => {
+  const bannerList = useMemo(() => new DoublyCircularLinkedList(banners), [banners]);
+  const [activeNode, setActiveNode] = useState(null);
+
+  useEffect(() => {
+    setActiveNode(bannerList.head);
+  }, [bannerList]);
+
+  useEffect(() => {
+    if (loading || !activeNode || banners.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveNode(node => node.next);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [loading, activeNode, banners.length]);
+
+  if (loading) return <HeroBannerSkeleton />;
+  if (banners.length === 0 || !activeNode) return null;
+
+  const b = activeNode.value;
+  const imgUrl = b.imageUrl || b.image;
+  const bannerId = b._id || b.id;
 
   return (
     <section className="sf-hero" style={{ background: b.gradient, margin: '0 -1.5rem 2rem', height: '380px' }}>
       <div className="sf-hero__overlay" />
-      <img src={b.image} alt="" className="sf-hero__img" key={b.id} />
+      {imgUrl && <img src={imgUrl} alt="" className="sf-hero__img" key={bannerId} />}
+      
+      {/* Navigation Arrows */}
+      <button 
+        className="sf-hero__nav-btn sf-hero__nav-btn--prev" 
+        onClick={() => setActiveNode(activeNode.prev)}
+        aria-label="Previous banner"
+      >
+        <span className="material-symbols-outlined">chevron_left</span>
+      </button>
+      
+      <button 
+        className="sf-hero__nav-btn sf-hero__nav-btn--next" 
+        onClick={() => setActiveNode(activeNode.next)}
+        aria-label="Next banner"
+      >
+        <span className="material-symbols-outlined">chevron_right</span>
+      </button>
+
       <div className="sf-hero__content">
         <p className="sf-hero__eyebrow" style={{ color: b.accent }}>Member Exclusive</p>
         <h1 className="sf-hero__title" style={{ fontSize: '2.5rem' }}>{b.title}</h1>
@@ -116,9 +65,22 @@ const HeroBanner = ({ onShopNow }) => {
           style={{ borderColor: b.accent, color: b.accent }}
           onClick={onShopNow}
         >
-          Explore Collection
+          {b.cta || 'Explore Collection'}
           <span className="material-symbols-outlined">arrow_forward</span>
         </button>
+      </div>
+
+      {/* Dots Indicator */}
+      <div className="sf-hero__dots">
+        {bannerList.toNodeArray().map((node, i) => (
+          <button
+            key={i}
+            className={`sf-hero__dot ${activeNode === node ? 'active' : ''}`}
+            style={activeNode === node ? { background: b.accent } : {}}
+            onClick={() => setActiveNode(node)}
+            aria-label={`Banner ${i + 1}`}
+          />
+        ))}
       </div>
     </section>
   );
@@ -130,7 +92,6 @@ const BrowseProducts = () => {
     loading,
     error,
     category,
-    setCategory,
     sort,
     setSort,
     productsRef,
@@ -138,16 +99,49 @@ const BrowseProducts = () => {
     scrollToProducts
   } = useBrowseProducts();
 
+  const [banners, setBanners] = useState([]);
+  const [bannersLoading, setBannersLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchActiveBanners = async () => {
+      try {
+        const activeBanners = await getActiveBanners();
+        if (isMounted) {
+          if (activeBanners && activeBanners.length > 0) {
+            setBanners(activeBanners);
+          } else {
+            setBanners(BANNERS);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching active banners:', err);
+        if (isMounted) {
+          setBanners(BANNERS);
+        }
+      } finally {
+        if (isMounted) {
+          setBannersLoading(false);
+        }
+      }
+    };
+
+    fetchActiveBanners();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   if (error) return <div className="sf-error">Error: {error}</div>;
 
   const handleProductSelect = (product) => {
-    navigate(`/product/${product.id}`);
+    navigate(`/product?id=${product.id}`);
   };
 
   return (
     <BuyerDashboard>
       <div className="browse-products-new">
-        <HeroBanner onShopNow={scrollToProducts} />
+        <HeroBanner onShopNow={scrollToProducts} loading={bannersLoading} banners={banners} />
 
         <section className="sf-products-section" ref={productsRef}>
           <div className="sf-toolbar">
@@ -168,8 +162,8 @@ const BrowseProducts = () => {
 
           <div className="sf-grid">
             {loading ? (
-              [1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="skeleton-pulse" style={{ height: '400px', borderRadius: '12px' }} />
+              Array.from({ length: 6 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
               ))
             ) : filteredProducts.length > 0 ? (
               filteredProducts.map(p => (

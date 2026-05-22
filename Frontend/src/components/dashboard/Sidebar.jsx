@@ -5,20 +5,22 @@ import { useAuth } from '../../features/auth/Hooks/auth.hooks';
 import './Sidebar.scss';
 
 const SellerNav = [
-  { icon: 'dashboard',          label: 'Overview',            path: '/seller',              active: true },
+  { icon: 'dashboard',          label: 'Overview',            path: '/seller' },
   { icon: 'checkroom',          label: 'My Products',         path: '/seller/products' },
   { icon: 'add_circle',         label: 'Create Product',      path: '/seller/products/new', cta: true },
   { icon: 'inventory_2',        label: 'Orders',              path: '/seller/orders' },
+  { icon: 'view_carousel',      label: 'Manage Banners',      path: '/admin/banners' },
   { icon: 'chat_bubble',        label: 'Messages',            path: '/seller/messages',     badge: 3 },
   { icon: 'payments',           label: 'Earnings & Payouts',  path: '/seller/earnings' },
   { icon: 'star',               label: 'Reviews & Ratings',   path: '/seller/reviews' },
   { icon: 'campaign',           label: 'Promotions',          path: '/seller/promotions' },
+  { icon: 'person',             label: 'My Profile',          path: '/seller/profile' },
   { icon: 'store',              label: 'Store Settings',      path: '/seller/settings' },
   { icon: 'notifications',      label: 'Notifications',       path: '/seller/notifications', badge: 5 },
 ];
 
 const BuyerNav = [
-  { icon: 'home',               label: 'Browse Products',     path: '/buyer',               active: true },
+  { icon: 'home',               label: 'Browse Products',     path: '/buyer' },
   { icon: 'inventory_2',        label: 'My Orders',           path: '/buyer/orders' },
   { icon: 'favorite',           label: 'Wishlist',            path: '/buyer/wishlist',       badge: 12 },
   { icon: 'shopping_cart',      label: 'My Cart',             path: '/buyer/cart',           badge: 3 },
@@ -34,14 +36,20 @@ const Sidebar = ({ role = 'seller' }) => {
     if (typeof window !== 'undefined') return window.innerWidth < 1024;
     return false;
   });
-  const navItems = role === 'seller' ? SellerNav : BuyerNav;
-  const userName  = role === 'seller' ? 'Arjun Mehta'  : 'Priya Sharma';
-  const roleLabel = role === 'seller' ? 'Seller Account' : 'Buyer Account';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector(state => state.auth);
   const { authLogout } = useAuth();
+
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const navItems = (role === 'seller' ? SellerNav : BuyerNav).map(item => ({
+    ...item,
+    active: currentPath === item.path
+  }));
+
+  const userName = user?.username || (role === 'seller' ? 'Arjun Mehta' : 'Priya Sharma');
+  const roleLabel = role === 'seller' ? 'Seller Account' : 'Buyer Account';
 
   const handleLogout = async () => {
     await authLogout();
@@ -65,21 +73,23 @@ const Sidebar = ({ role = 'seller' }) => {
       {/* User Identity */}
       <div className="sidebar__user">
         <div className="sidebar__avatar">
-          <span className="sidebar__avatar-initials">
-            {userName.split(' ').map(n => n[0]).join('')}
-          </span>
+          {user?.profilePicture ? (
+            <img src={user.profilePicture} alt={userName} className="sidebar__avatar-img" />
+          ) : (
+            <span className="sidebar__avatar-initials">
+              {userName.split(' ').filter(Boolean).map(n => n[0]).join('')}
+            </span>
+          )}
         </div>
-        {!collapsed && (
-          <div className="sidebar__user-info">
-            <span className="sidebar__user-name">{userName}</span>
-            <span className="sidebar__user-role">{roleLabel}</span>
-          </div>
-        )}
+        <div className="sidebar__user-info">
+          <span className="sidebar__user-name">{userName}</span>
+          <span className="sidebar__user-role">{roleLabel}</span>
+        </div>
       </div>
 
       {/* Navigation */}
       <nav className="sidebar__nav">
-        {!collapsed && <span className="sidebar__nav-label">Navigation</span>}
+        <span className="sidebar__nav-label">Navigation</span>
         <ul className="sidebar__nav-list">
           {navItems.map((item) => (
             <li key={item.label}>
@@ -89,12 +99,12 @@ const Sidebar = ({ role = 'seller' }) => {
                 title={collapsed ? item.label : ''}
               >
                 <span className="material-symbols-outlined sidebar__nav-icon">{item.icon}</span>
-                {!collapsed && <span className="sidebar__nav-text">{item.label}</span>}
-                {!collapsed && item.badge && (
-                  <span className="sidebar__badge">{item.badge}</span>
-                )}
-                {collapsed && item.badge && (
-                  <span className="sidebar__badge sidebar__badge--dot" />
+                <span className="sidebar__nav-text">{item.label}</span>
+                {item.badge && (
+                  <>
+                    <span className="sidebar__badge">{item.badge}</span>
+                    <span className="sidebar__badge sidebar__badge--dot" />
+                  </>
                 )}
               </a>
             </li>

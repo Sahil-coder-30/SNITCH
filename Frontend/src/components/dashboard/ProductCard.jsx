@@ -1,7 +1,7 @@
 import React from "react";
 import StatusBadge from "./StatusBadge";
 import "./ProductCard.scss";
-import { ProductCardSkeleton } from "../loaders/ComponentSkeletons";
+import { DashboardProductCardSkeleton } from "../loaders/ComponentSkeletons";
 
 // variant: 'grid' | 'list'
 const ProductCard = ({
@@ -20,24 +20,37 @@ const ProductCard = ({
   badge = null, // 'NEW' | 'SALE'
   onClick = null,
   loading = false,
+  image = null,
 }) => {
-  if (loading) return <ProductCardSkeleton />;
+  if (loading) return <DashboardProductCardSkeleton />;
   const discountPct = originalPrice
     ? Math.round(100 - (price / originalPrice) * 100)
     : null;
 
-  const ClothingPlaceholder = () => (
-    <div className="product-card__image-placeholder">
-      <span className="material-symbols-outlined product-card__image-icon">
-        checkroom
-      </span>
-    </div>
-  );
+  const ClothingImage = () => {
+    if (image) {
+      return (
+        <img 
+          src={image} 
+          alt={name} 
+          className="product-card__image" 
+          style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+        />
+      );
+    }
+    return (
+      <div className="product-card__image-placeholder">
+        <span className="material-symbols-outlined product-card__image-icon">
+          checkroom
+        </span>
+      </div>
+    );
+  };
 
   if (variant === "list") {
     return (
       <div className="product-card product-card--list">
-        <ClothingPlaceholder />
+        <ClothingImage />
         <div className="product-card__list-body">
           <div className="product-card__list-info">
             <span className="product-card__name">{name}</span>
@@ -85,7 +98,7 @@ const ProductCard = ({
       style={onClick ? { cursor: "pointer" } : {}}
     >
       <div className="product-card__image-wrap">
-        <ClothingPlaceholder />
+        <ClothingImage />
 
         {/* Top-left badge */}
         {(badge || status === "out-of-stock") && (

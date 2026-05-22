@@ -115,4 +115,199 @@ export const uploadImagesController = async (req, res, next) => {
     }
 };
 
+export const getProductsController = async (req, res, next) => {
+    try {
+        const { category, search, sort } = req.query;
+        const query = {};
+
+        // Category filter
+        if (category && category !== 'all') {
+            query["category.name"] = new RegExp(`^${category}$`, "i");
+        }
+
+        // Search query
+        if (search) {
+            query.$or = [
+                { title: new RegExp(search, "i") },
+                { brand: new RegExp(search, "i") },
+                { description: new RegExp(search, "i") }
+            ];
+        }
+
+        let products = await productModel.find(query);
+
+        // Sorting
+        if (sort === "price-asc") {
+            products.sort((a, b) => (a.price?.amount || 0) - (b.price?.amount || 0));
+        } else if (sort === "price-desc") {
+            products.sort((a, b) => (b.price?.amount || 0) - (a.price?.amount || 0));
+        } else if (sort === "rating") {
+            products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        } else if (sort === "newest") {
+            products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+
+        // Map database schema to storefront UI representation
+        const mappedProducts = products.map(product => {
+            const isSale = product.discountPercent > 0;
+            const colors = [];
+            const colorNames = [];
+
+            if (product.stock) {
+                product.stock.forEach(item => {
+                    if (item.colors) {
+                        item.colors.forEach(c => {
+                            if (c.hex && !colors.includes(c.hex)) {
+                                colors.push(c.hex);
+                                colorNames.push(c.name || 'Color');
+                            }
+                        });
+                    }
+                });
+            }
+
+            return {
+                id: product._id,
+                name: product.title,
+                brand: product.brand,
+                price: product.price ? product.price.amount : 0,
+                originalPrice: product.originalPrice ? product.originalPrice.amount : (product.price ? product.price.amount : 0),
+                discount: product.discountPercent || 0,
+                category: product.category ? product.category.name : '',
+                rating: product.rating || 4.5,
+                reviewCount: product.reviewCount || 0,
+                image: product.coverImage,
+                badge: product.badge,
+                badgeType: product.badge === 'new-arrival' ? 'new' : (isSale ? 'sale' : 'new'),
+                inStock: product.stock ? product.stock.some(s => s.quantity > 0) : false,
+                colors,
+                colorNames,
+                deliveryDays: 3
+            };
+        });
+
+        res.status(200).json({ products: mappedProducts });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getSellerProductsController = async (req, res, next) => {
+    try {
+        const sellerId = req.user.id;
+        const products = await productModel.find({ seller: sellerId });
+
+        const mappedProducts = products.map(product => {
+            const totalStock = product.stock 
+                ? product.stock.reduce((sum, item) => sum + (item.quantity || 0), 0)
+                : 0;
+
+            return {
+                id: product._id,
+                name: product.title,
+                brand: product.brand,
+                category: product.category ? product.category.for : "Mens",
+                subCategory: product.category ? product.category.name : 'Tshirts',
+                price: product.price ? product.price.amount : 0,
+                originalPrice: product.originalPrice ? product.originalPrice.amount : null,
+                stock: totalStock,
+                rating: product.rating || 4.5,
+                reviewCount: product.reviewCount || 0,
+                status: totalStock > 0 ? "active" : "out-of-stock",
+                badge: product.badge ? product.badge.toUpperCase() : null,
+                image: product.coverImage
+            };
+        });
+
+        res.status(200).json(mappedProducts);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getProductByIdController = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const product = await productModel.findById(id).populate("seller", "username email verified");
+
+        if (!product) {
+            const err = new Error("Product not found");
+            err.statusCode = 404;
+            return next(err);
+        }
+
+        const colorImages = [];
+        const colorMap = {};
+
+        if (product.stock) {
+            product.stock.forEach(item => {
+                if (item.colors) {
+                    item.colors.forEach(c => {
+                        if (c.images) {
+                            c.images.forEach(img => {
+                                if (img && !colorImages.includes(img)) {
+                                    colorImages.push(img);
+                                }
+                            });
+                        }
+                        if (!colorMap[c.name]) {
+                            colorMap[c.name] = {
+                                name: c.name,
+                                hex: c.hex,
+                                available: item.quantity > 0,
+                                images: c.images || []
+                            };
+                        } else if (item.quantity > 0) {
+                            colorMap[c.name].available = true;
+                        }
+                    });
+                }
+            });
+        }
+
+        const images = [product.coverImage, ...colorImages].filter(Boolean);
+
+        const sizes = (product.stock || []).map(item => ({
+            label: item.size,
+            available: item.quantity > 0
+        }));
+
+        const mappedProduct = {
+            id: product._id,
+            name: product.title,
+            brand: product.brand,
+            description: product.description,
+            price: product.price ? product.price.amount : 0,
+            originalPrice: product.originalPrice ? product.originalPrice.amount : (product.price ? product.price.amount : 0),
+            discount: product.discountPercent || 0,
+            category: product.category ? `${product.category.for} / ${product.category.name}` : '',
+            rating: product.rating || 4.5,
+            reviewCount: product.reviewCount || 0,
+            sku: product._id.toString().substring(18).toUpperCase(),
+            image: product.coverImage,
+            images: images.length > 0 ? images : [product.coverImage],
+            badge: product.badge,
+            sizes,
+            colors: Object.values(colorMap),
+            delivery: { estimatedDays: "3 Days" },
+            seller: product.seller ? {
+                id: product.seller._id,
+                username: product.seller.username,
+                email: product.seller.email,
+                verified: product.seller.verified || false
+            } : null,
+            highlights: [
+                "100% Authentic SNITCH Product",
+                "Premium quality tailoring",
+                "Designed for regular & comfort fit"
+            ]
+        };
+
+        res.status(200).json(mappedProduct);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 

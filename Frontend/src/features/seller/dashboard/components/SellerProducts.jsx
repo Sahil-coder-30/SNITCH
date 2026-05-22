@@ -31,7 +31,7 @@ const SellerProducts = () => {
         {products.length > 0 ? (
           <div className={`${viewMode === 'grid' ? 'seller-products__grid' : 'seller-products__list'}`}>
             {products.map(p => (
-              <ProductCard key={p.name} variant={viewMode} {...p} />
+              <ProductCard key={p.id} variant={viewMode} {...p} />
             ))}
           </div>
         ) : (

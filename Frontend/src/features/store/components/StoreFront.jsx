@@ -1,137 +1,83 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { CATEGORIES, SORT_OPTIONS } from '../data/products';
+import { CATEGORIES, SORT_OPTIONS, BANNERS } from '../data/products';
+import { DoublyCircularLinkedList } from '../../../utils/circularLinkedList';
 import { fetchProducts, updateFilters } from '../slice/product.slice';
 import BuyerDashboard from '../../buyer/dashboard/components/BuyerDashboard';
+import ProductCard from './shared/ProductCard';
 import '../style/StoreFront.scss';
 
 import { 
   ProductCardSkeleton, 
-  CategorySkeleton, 
   HeroBannerSkeleton, 
   SkeletonGrid 
 } from '../../../components/loaders/ComponentSkeletons';
 
+import { getActiveBanners } from '../../seller/dashboard/services/banner.api.js';
+
 // ── Helpers ───────────────────────────────────────────────────
-const formatPrice = (p) => `₹${p?.toLocaleString('en-IN') || '0'}`;
-const stars = (r) => {
-  const full = Math.floor(r || 0);
-  const half = (r || 0) - full >= 0.5;
-  return { full, half, empty: 5 - full - (half ? 1 : 0) };
+const CATEGORY_ICONS = {
+  all: 'grid_view',
+  tshirts: 'checkroom',
+  shirts: 'dry_cleaning',
+  jeans: 'layers',
+  trousers: 'straighten',
+  jackets: 'ac_unit',
+  coats: 'legend_toggle',
+  dresses: 'woman',
+  skirts: 'palette',
+  shoes: 'steps',
+  accessories: 'watch'
 };
 
-// ── Star Rating ───────────────────────────────────────────────
-const StarRating = ({ rating, count, small }) => {
-  const { full, half, empty } = stars(rating);
-  return (
-    <div className={`sf-stars ${small ? 'sf-stars--sm' : ''}`}>
-      {Array.from({ length: full  }).map((_, i) => <span key={`f${i}`} className="sf-star sf-star--full">★</span>)}
-      {half &&                                      <span className="sf-star sf-star--half">★</span>}
-      {Array.from({ length: empty }).map((_, i) => <span key={`e${i}`} className="sf-star sf-star--empty">★</span>)}
-      {count !== undefined && <span className="sf-star-count">{count.toLocaleString()}</span>}
-    </div>
-  );
-};
-
-// ── Badge ─────────────────────────────────────────────────────
-const Badge = ({ label, type }) => {
-  if (!label) return null;
-  return <span className={`sf-badge sf-badge--${type}`}>{label}</span>;
-};
-
-// ── Product Card ──────────────────────────────────────────────
-const ProductCard = ({ product, onSelect, loading = false }) => {
-  const [imgError, setImgError] = useState(false);
-
-  if (loading) return <ProductCardSkeleton />;
-  if (!product) return null;
-
-  return (
-    <article
-      className={`sf-card ${!product.inStock ? 'sf-card--oos' : ''}`}
-      onClick={() => onSelect(product)}
-      tabIndex={0}
-      onKeyDown={e => e.key === 'Enter' && onSelect(product)}
-      aria-label={`View ${product.name}`}
-    >
-      <div className="sf-card__img-wrap">
-        {imgError || !product.image ? (
-          <div className="sf-card__img-fallback">
-            <span className="material-symbols-outlined">checkroom</span>
-          </div>
-        ) : (
-          <img
-            src={product.image}
-            alt={product.name}
-            className="sf-card__img"
-            loading="lazy"
-            onError={() => setImgError(true)}
-          />
-        )}
-        <Badge label={product.badge} type={product.badgeType} />
-        {!product.inStock && <div className="sf-card__oos-overlay">Out of Stock</div>}
-        <button
-          className="sf-card__wishlist"
-          onClick={e => { e.stopPropagation(); }}
-          aria-label="Add to wishlist"
-        >
-          <span className="material-symbols-outlined">favorite</span>
-        </button>
-      </div>
-
-      <div className="sf-card__body">
-        <p className="sf-card__brand">{product.brand}</p>
-        <h3 className="sf-card__name">{product.name}</h3>
-        <StarRating rating={product.rating} count={product.reviewCount} small />
-
-        <div className="sf-card__price-row">
-          <span className="sf-card__price">{formatPrice(product.price)}</span>
-          {product.originalPrice > product.price && (
-            <>
-              <span className="sf-card__original">{formatPrice(product.originalPrice)}</span>
-              <span className="sf-card__discount">{product.discount}% off</span>
-            </>
-          )}
-        </div>
-
-        {product.colors?.length > 0 && (
-          <div className="sf-card__colors">
-            {product.colors.slice(0, 4).map((c, i) => (
-              <span key={i} className="sf-card__color-dot" style={{ background: c }} title={product.colorNames?.[i] || ''} />
-            ))}
-            {product.colors.length > 4 && <span className="sf-card__color-more">+{product.colors.length - 4}</span>}
-          </div>
-        )}
-
-        <p className="sf-card__delivery">
-          <span className="material-symbols-outlined">local_shipping</span>
-          Free delivery in {product.deliveryDays || 3} days
-        </p>
-      </div>
-    </article>
-  );
-};
 
 // ── Hero Banner Carousel ───────────────────────────────────────
 const HeroBanner = ({ onShopNow, loading = false, banners = [] }) => {
-  const [active, setActive] = useState(0);
+  const bannerList = useMemo(() => new DoublyCircularLinkedList(banners), [banners]);
+  const [activeNode, setActiveNode] = useState(null);
 
   useEffect(() => {
-    if (loading || banners.length <= 1) return;
-    const timer = setInterval(() => setActive(a => (a + 1) % banners.length), 4500);
+    setActiveNode(bannerList.head);
+  }, [bannerList]);
+
+  useEffect(() => {
+    if (loading || !activeNode || banners.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveNode(node => node.next);
+    }, 4500);
     return () => clearInterval(timer);
-  }, [loading, banners.length]);
+  }, [loading, activeNode, banners.length]);
 
   if (loading) return <HeroBannerSkeleton />;
-  if (banners.length === 0) return null;
+  if (banners.length === 0 || !activeNode) return null;
 
-  const b = banners[active];
+  const b = activeNode.value;
+  const imgUrl = b.imageUrl || b.image;
+  const bannerId = b._id || b.id;
 
   return (
     <section className="sf-hero" style={{ background: b.gradient }}>
       <div className="sf-hero__overlay" />
-      {b.image && <img src={b.image} alt="" className="sf-hero__img" key={b.id} />}
+      {imgUrl && <img src={imgUrl} alt="" className="sf-hero__img" key={bannerId} />}
+      
+      {/* Navigation Arrows */}
+      <button 
+        className="sf-hero__nav-btn sf-hero__nav-btn--prev" 
+        onClick={() => setActiveNode(activeNode.prev)}
+        aria-label="Previous banner"
+      >
+        <span className="material-symbols-outlined">chevron_left</span>
+      </button>
+      
+      <button 
+        className="sf-hero__nav-btn sf-hero__nav-btn--next" 
+        onClick={() => setActiveNode(activeNode.next)}
+        aria-label="Next banner"
+      >
+        <span className="material-symbols-outlined">chevron_right</span>
+      </button>
+
       <div className="sf-hero__content">
         <p className="sf-hero__eyebrow" style={{ color: b.accent }}>SNITCH — New Collection</p>
         <h2 className="sf-hero__title">{b.title}</h2>
@@ -141,17 +87,17 @@ const HeroBanner = ({ onShopNow, loading = false, banners = [] }) => {
           style={{ borderColor: b.accent, color: b.accent }}
           onClick={onShopNow}
         >
-          {b.cta}
+          {b.cta || 'Explore Collection'}
           <span className="material-symbols-outlined">arrow_forward</span>
         </button>
       </div>
       <div className="sf-hero__dots">
-        {banners.map((_, i) => (
+        {bannerList.toNodeArray().map((node, i) => (
           <button
             key={i}
-            className={`sf-hero__dot ${active === i ? 'active' : ''}`}
-            style={ active === i ? { background: b.accent } : {} }
-            onClick={() => setActive(i)}
+            className={`sf-hero__dot ${activeNode === node ? 'active' : ''}`}
+            style={ activeNode === node ? { background: b.accent } : {} }
+            onClick={() => setActiveNode(node)}
             aria-label={`Banner ${i + 1}`}
           />
         ))}
@@ -170,12 +116,45 @@ const StoreFront = () => {
 
   const productsRef = useRef(null);
 
+  const [banners, setBanners] = useState([]);
+  const [bannersLoading, setBannersLoading] = useState(true);
+
   useEffect(() => {
     dispatch(fetchProducts(filters));
   }, [dispatch, category, sort, search]);
 
+  useEffect(() => {
+    let isMounted = true;
+    const fetchActiveBanners = async () => {
+      try {
+        const activeBanners = await getActiveBanners();
+        if (isMounted) {
+          if (activeBanners && activeBanners.length > 0) {
+            setBanners(activeBanners);
+          } else {
+            setBanners(BANNERS);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching active banners:', error);
+        if (isMounted) {
+          setBanners(BANNERS);
+        }
+      } finally {
+        if (isMounted) {
+          setBannersLoading(false);
+        }
+      }
+    };
+
+    fetchActiveBanners();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const handleProductSelect = (product) => {
-    navigate(`/product/${product.id}`);
+    navigate(`/product?id=${product.id}`);
   };
 
   const handleCategoryChange = (catId) => {
@@ -194,51 +173,13 @@ const StoreFront = () => {
   // Use the categories from the data/constants file
   const categoriesList = CATEGORIES;
 
-  // Static fallback banners for now (until API is ready)
-  const banners = [
-    {
-      id: 'b1',
-      title: 'THE 2026 COLLECTION',
-      subtitle: 'Elevated essentials for the modern narrative',
-      cta: 'Shop Now',
-      gradient: 'linear-gradient(135deg, #080809 0%, #121214 50%, #1C1C1E 100%)',
-      accent: '#E2B87F',
-      image: null
-    }
-  ];
-
   return (
     <BuyerDashboard>
       <div className="sf-container">
 
-
-      {/* ── Quick Categories ───────────────────────────── */}
-      <section className="sf-quick-cats" aria-label="Categories">
-        <div className="sf-quick-cats__inner">
-          {loading && products.length === 0 ? (
-            <SkeletonGrid count={6} columns={6}>
-              <CategorySkeleton />
-            </SkeletonGrid>
-          ) : (
-            categoriesList.map(cat => (
-              <button 
-                key={cat.id} 
-                className={`sf-quick-cat ${category === cat.id ? 'active' : ''}`}
-                onClick={() => handleCategoryChange(cat.id)}
-              >
-                <div className="sf-quick-cat__icon-wrap">
-                  <span className="material-symbols-outlined">{cat.icon}</span>
-                </div>
-                <span className="sf-quick-cat__label">{cat.label}</span>
-              </button>
-            ))
-          )}
-        </div>
-      </section>
-
-      <div className="sf-main">
+        <div className="sf-main">
         {/* ── Hero Banner ───────────────────────────── */}
-        <HeroBanner onShopNow={scrollToProducts} loading={loading && products.length === 0} banners={banners} />
+        <HeroBanner onShopNow={scrollToProducts} loading={bannersLoading} banners={banners} />
 
         {/* ── Value Props ───────────────────────────── */}
         <section className="sf-value-props" aria-label="Why shop with us">

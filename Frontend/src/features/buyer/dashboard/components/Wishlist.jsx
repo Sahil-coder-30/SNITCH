@@ -4,6 +4,8 @@ import ProductCard    from '../../../../components/dashboard/ProductCard';
 import Pagination     from '../../../../components/dashboard/Pagination';
 import EmptyState     from '../../../../components/dashboard/EmptyState';
 import { useWishlist } from '../Hooks/useWishlist';
+import { WishlistItemSkeleton } from '../../../../components/loaders/ComponentSkeletons';
+import Skeleton from '../../../../components/loaders/Skeleton';
 import '../style/Wishlist.scss';
 
 const Wishlist = () => {
@@ -12,7 +14,21 @@ const Wishlist = () => {
   if (loading) {
     return (
       <BuyerDashboard breadcrumb={['Home', 'Wishlist']}>
-        <div className="wishlist-loading">Loading wishlist...</div>
+        <div className="wishlist">
+          <div className="wishlist__header">
+            <h1 className="wishlist__title">
+              My Wishlist
+              <span className="wishlist__count" style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '8px' }}>
+                <Skeleton width="40px" height="1.2rem" />
+              </span>
+            </h1>
+          </div>
+          <div className="wishlist__grid">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <WishlistItemSkeleton key={i} />
+            ))}
+          </div>
+        </div>
       </BuyerDashboard>
     );
   }

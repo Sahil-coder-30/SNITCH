@@ -104,9 +104,9 @@ export const authRegisterController = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    err.statusCode = err.statusCode || 500;
-    err.message = err.message || "Something went wrong while logging in.";
-    return next(err);
+    error.statusCode = error.statusCode || 500;
+    error.message = error.message || "Something went wrong while registering.";
+    return next(error);
   }
 };
 
@@ -140,9 +140,9 @@ export const authVerifyEmailController = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    err.statusCode = err.statusCode || 500;
-    err.message = err.message || "Something went wrong while logging in.";
-    return next(err);
+    error.statusCode = error.statusCode || 500;
+    error.message = error.message || "Something went wrong while verifying email.";
+    return next(error);
   }
 };
 
@@ -162,9 +162,9 @@ export const authLoginController = async (req, res, next) => {
       });
     }
     if(!user.password){
-      res.status(403).json({
-        message :"user have not created the password yet login with google or create one...",
-        id : user._id,
+      return res.status(403).json({
+        message :"This account was created with Google. Please set a password first before logging in normally.",
+        needsPassword : true,
         email : user.email,
       })
     }
@@ -231,18 +231,12 @@ export const authCreatePassword = async (req , res, next)=>{
     })
   }
 
-  const isSamePassword = await bcrypt.compare(password, user.password);
-  if (isSamePassword) {
-    return res.status(400).json({
-      message: "New password cannot be the same as the old password.",
-    });
-  }
-  
+  // Skip same-password check — user has no password yet (Google OAuth flow)
   const hashedPassword = await bcrypt.hash(password, 10);
   user.password = hashedPassword;
-  user.save();
+  await user.save();
 
-  return res.status(409).json({
+  return res.status(200).json({
     message : "password created successfully you can login now...",
     user : {
       id : user._id,
@@ -283,6 +277,7 @@ export const authGoogleCallbackController = async (req, res, next) => {
       const token = jwt.sign({
         id : newUser._id,
         email : newUser.email,
+        role : newUser.role,
       }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
       res.cookie("token", token, {
@@ -306,6 +301,7 @@ export const authGoogleCallbackController = async (req, res, next) => {
     const token = jwt.sign({
       id : alreadyUser._id,
       email : alreadyUser.email,
+      role : alreadyUser.role,
     }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
     
@@ -671,11 +667,14 @@ export async function authResetPasswordController(req, res, next) {
       return next(err);
     }
 
-    const isSamePassword = await bcrypt.compare(password, user.password);
-    if (isSamePassword) {
-      const err = new Error("New password cannot be the same as the old password.");
-      err.statusCode = 400;
-      return next(err);
+    // Only check same-password if user already has a password hash
+    if (user.password) {
+      const isSamePassword = await bcrypt.compare(password, user.password);
+      if (isSamePassword) {
+        const err = new Error("New password cannot be the same as the old password.");
+        err.statusCode = 400;
+        return next(err);
+      }
     }
 
     user.password = await bcrypt.hash(password, 10);

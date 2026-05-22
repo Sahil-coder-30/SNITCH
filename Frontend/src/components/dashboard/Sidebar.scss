@@ -19,42 +19,68 @@
     width: $sidebar-collapsed;
 
     .sidebar__brand {
-      justify-content: center;
-      padding: $space-5 0;
+      padding: $space-5 14px;
     }
 
     .sidebar__brand-logo {
       opacity: 0;
       width: 0;
+      transform: translateX(-10px);
       overflow: hidden;
-      display: none;
+      pointer-events: none;
     }
 
     .sidebar__nav-label {
-      display: none;
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
     .sidebar__user {
-      padding: $space-4 $space-3;
-      justify-content: center;
+      padding: $space-4 13px;
+      gap: 0;
     }
 
     .sidebar__user-info {
-      display: none;
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
     .sidebar__nav-item {
-      justify-content: center;
-      padding: $space-3 0;
+      padding: $space-3 10px;
+      gap: 0;
     }
 
-    .sidebar__nav-icon {
-      margin: 0;
+    .sidebar__nav-text {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
-    .sidebar__badge--dot {
-      right: 50%;
-      margin-right: -12px;
+    .sidebar__badge {
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+
+      &--dot {
+        opacity: 1;
+        transform: scale(1);
+        right: 50%;
+        margin-right: -12px;
+      }
+    }
+
+    .sidebar__signout-label {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
     @include respond-to('mobile') {
@@ -66,42 +92,68 @@
     width: $sidebar-collapsed;
 
     .sidebar__brand {
-      justify-content: center;
-      padding: $space-5 0;
+      padding: $space-5 14px;
     }
 
     .sidebar__brand-logo {
       opacity: 0;
       width: 0;
+      transform: translateX(-10px);
       overflow: hidden;
-      display: none;
+      pointer-events: none;
     }
 
     .sidebar__nav-label {
-      display: none;
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
     .sidebar__user {
-      padding: $space-4 $space-3;
-      justify-content: center;
+      padding: $space-4 13px;
+      gap: 0;
     }
 
     .sidebar__user-info {
-      display: none;
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
     .sidebar__nav-item {
-      justify-content: center;
-      padding: $space-3 0;
+      padding: $space-3 10px;
+      gap: 0;
     }
 
-    .sidebar__nav-icon {
-      margin: 0;
+    .sidebar__nav-text {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
-    .sidebar__badge--dot {
-      right: 50%;
-      margin-right: -12px;
+    .sidebar__badge {
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+
+      &--dot {
+        opacity: 1;
+        transform: scale(1);
+        right: 50%;
+        margin-right: -12px;
+      }
+    }
+
+    .sidebar__signout-label {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
   }
 
@@ -142,10 +194,12 @@
 
   // ── Brand ─────────────────────────────────────────────────
   &__brand {
-    @include flex-between;
+    display: flex;
+    align-items: center;
     padding: $space-5 $space-5;
     border-bottom: 1px solid $color-border;
     min-height: 64px;
+    transition: padding 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
     &-logo {
       font-family: $font-headline;
@@ -154,7 +208,14 @@
       letter-spacing: -0.05em;
       color: $color-accent;
       white-space: nowrap;
-      transition: $transition-base;
+      overflow: hidden;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1;
+      width: auto;
+      transform: translateX(0);
+      display: inline-block;
     }
   }
 
@@ -166,8 +227,11 @@
     font-size: 20px;
     padding: $space-2;
     border-radius: $radius-md;
-    transition: $transition-fast;
+    transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.15s ease,
+                color 0.15s ease;
     flex-shrink: 0;
+    margin-left: auto;
 
     &:hover {
       color: $color-text;
@@ -182,6 +246,8 @@
     gap: $space-3;
     padding: $space-4 $space-5;
     border-bottom: 1px solid $color-border;
+    transition: padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                gap 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   &__avatar {
@@ -200,6 +266,13 @@
       color: $color-accent;
       letter-spacing: 0.05em;
     }
+
+    &-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: $radius-full;
+    }
   }
 
   &__user-info {
@@ -207,6 +280,13 @@
     flex-direction: column;
     gap: 2px;
     overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
   }
 
   &__user-name {
@@ -224,6 +304,9 @@
     color: $color-accent;
     text-transform: uppercase;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   // ── Navigation ────────────────────────────────────────────
@@ -255,6 +338,15 @@
       text-transform: uppercase;
       padding: 0 $space-5 $space-2;
       margin-bottom: $space-1;
+      white-space: nowrap;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1;
+      transform: translateX(0);
+      overflow: hidden;
     }
 
     &-list {
@@ -277,7 +369,10 @@
     color: $color-text-muted;
     font-size: 13px;
     font-weight: 600;
-    transition: $transition-fast;
+    transition: padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                gap 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.15s ease,
+                color 0.15s ease;
     position: relative;
     white-space: nowrap;
     width: 100%;
@@ -343,6 +438,13 @@
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
   }
 
   &__badge {
@@ -356,6 +458,10 @@
     min-width: 18px;
     text-align: center;
     line-height: 16px;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    transform: scale(1);
 
     &--dot {
       width: 8px;
@@ -366,6 +472,11 @@
       position: absolute;
       top: 6px;
       right: 6px;
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 
@@ -394,7 +505,9 @@
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
-    transition: background 0.18s ease,
+    transition: padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                gap 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.18s ease,
                 border-color 0.18s ease,
                 color 0.18s ease,
                 box-shadow 0.18s ease,
@@ -431,16 +544,18 @@
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
   }
 
   // Collapsed: center icon, hide label
   &--collapsed &__signout-btn {
-    justify-content: center;
-    padding: $space-3;
+    padding: $space-3 10px;
     gap: 0;
-  }
-
-  &--collapsed &__signout-label {
-    display: none;
   }
 }

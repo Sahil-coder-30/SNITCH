@@ -64,14 +64,8 @@ const sellerApi = {
    * Fetches the seller's product list.
    */
   getProducts: async () => {
-    // const response = await axios.get('/api/seller/products');
-    // return response.data;
-    return [
-      { name: 'Oversized Hoodie', category: "Men's / Tops", price: '₹899', stock: 22, rating: 4.6, reviews: 134, status: 'Active' },
-      { name: 'Cargo Jogger Pants', category: "Men's / Bottoms", price: '₹749', stock: 14, rating: 4.7, reviews: 203, status: 'Active' },
-      { name: 'Floral Sundress', category: "Women's / Dress", price: '₹1,299', stock: 5, rating: 4.4, reviews: 78, status: 'Active' },
-      { name: 'Denim Jacket', category: "Unisex / Outerwear", price: '₹2,199', stock: 3, rating: 4.9, reviews: 84, status: 'Active' },
-    ];
+    const response = await axios.get('/api/products/seller', { withCredentials: true });
+    return response.data;
   },
 
   /**
@@ -102,6 +96,29 @@ const sellerApi = {
         { date: '10 Feb 2025', amount: '₹18,400', method: 'UPI',           status: 'processing', txId: 'TXN807622' },
       ]
     };
+  },
+
+  /**
+   * Fetches the seller's profile information.
+   */
+  getProfile: async () => {
+    const response = await axios.get('/api/profile', { withCredentials: true });
+    return response.data.profile;
+  },
+
+  /**
+   * Updates the seller's profile information.
+   */
+  updateProfile: async (data) => {
+    const headers = {};
+    if (data instanceof FormData) {
+      headers['Content-Type'] = 'multipart/form-data';
+    }
+    const response = await axios.put('/api/profile', data, {
+      headers,
+      withCredentials: true
+    });
+    return response.data;
   }
 };
 

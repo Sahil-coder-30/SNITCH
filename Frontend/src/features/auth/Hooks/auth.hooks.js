@@ -117,8 +117,8 @@ export const useAuth = () => {
     const authResetPassword = async (email, otp, password, confirmPass) => {
         try {
             dispatch(setLoading(true));
-            const result = await resetPassword(email, otp, password, confirmPass);
-            dispatch(setUser(result));
+            // Returns { message } only — not a user object, so don't setUser
+            return await resetPassword(email, otp, password, confirmPass);
         } catch (error) {
             dispatch(setError(error.message));
             throw error;

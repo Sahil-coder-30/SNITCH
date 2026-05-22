@@ -2,6 +2,7 @@ import React from 'react';
 import BuyerDashboard from './BuyerDashboard';
 import StatusBadge    from '../../../../components/dashboard/StatusBadge';
 import { useBuyerOrders } from '../Hooks/useBuyerOrders';
+import { OrderCardSkeleton } from '../../../../components/loaders/ComponentSkeletons';
 import '../style/BuyerOrders.scss';
 
 const tabs = ['All Orders', 'Active', 'Delivered', 'Cancelled', 'Returns & Refunds'];
@@ -43,7 +44,7 @@ const BuyerOrders = () => {
         {/* Order Cards */}
         <div className="buyer-orders__list">
           {loading ? (
-            [1, 2, 3].map(i => <div key={i} className="skeleton-pulse" style={{ height: '220px', borderRadius: '12px', marginBottom: '1.5rem' }} />)
+            Array.from({ length: 3 }).map((_, i) => <OrderCardSkeleton key={i} />)
           ) : orders.length > 0 ? (
             orders.map(order => (
               <div key={order.id} className="buyer-orders__card">

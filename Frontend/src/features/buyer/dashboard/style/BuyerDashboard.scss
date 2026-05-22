@@ -24,7 +24,6 @@
     // Transition must match sidebar duration so content resizes in sync
     transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                 width   0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow: hidden;                 // prevent grid from overflowing during animation
 
     &--has-sidebar {
       padding-left: $space-6;
@@ -46,7 +45,7 @@
 
 // ── App Bar (all inner pages — app-style, no search) ──────────
 .app-bar {
-  height: 60px;
+  height: 64px;
   display: flex;
   align-items: center;
   gap: $space-2;
@@ -104,28 +103,102 @@
     gap: $space-1;
     flex-shrink: 0;
   }
+
+  &--mobile-only {
+    @media (min-width: 1025px) {
+      display: none !important;
+    }
+  }
 }
+
+// ── Global Nav overrides ───────────────────────────────────────
+.sf-nav.sf-nav--desktop-only {
+  @media (max-width: 1024px) {
+    display: none !important;
+  }
+}
+
+.sf-nav {
+  .sf-nav__actions {
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .sf-nav__action-btn#nav-wishlist-btn {
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .sf-nav__action-btn--profile {
+    padding: 0 0.85rem 0 0.45rem;
+    height: 40px;
+    border-radius: 50px;
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--color-border-strong);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sf-nav__profile-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-strong);
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .material-symbols-outlined {
+      font-size: 16px;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
 
 // ── Buyer Sidebar (Account Section) ───────────────────────────
 .buyer-sidebar {
   width: 260px;
   flex-shrink: 0;
-  padding: $space-6 0;
+  padding: $space-4 0;
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  top: 64px;
+  height: calc(100vh - 64px);
+  overflow: hidden;
   transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
 
-  &::-webkit-scrollbar        { width: 3px; }
-  &::-webkit-scrollbar-track  { background: transparent; }
-  &::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 2px; }
+  &__scrollable {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+
+    &::-webkit-scrollbar        { width: 3px; }
+    &::-webkit-scrollbar-track  { background: transparent; }
+    &::-webkit-scrollbar-thumb  { background: var(--color-border); border-radius: 2px; }
+  }
 
   @media (max-width: 1024px) {
     display: none;
@@ -135,10 +208,10 @@
   &__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 0 $space-3 $space-4;
     border-bottom: 1px solid var(--color-border);
     margin-bottom: $space-4;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   &__title {
@@ -148,9 +221,19 @@
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--color-text-dimmed);
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
+    display: inline-block;
   }
 
   &__toggle {
+    margin-left: auto;
     flex-shrink: 0;
     background: none;
     border: none;
@@ -159,7 +242,9 @@
     padding: $space-1;
     border-radius: $radius-md;
     @include flex-center;
-    transition: all 0.2s ease;
+    transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.15s ease,
+                color 0.15s ease;
     line-height: 1;
 
     .material-symbols-outlined { font-size: 20px; }
@@ -190,7 +275,10 @@
     font-weight: 600;
     font-family: $font-body;
     text-decoration: none;
-    transition: all 0.18s ease;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                gap 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.15s ease,
+                color 0.15s ease;
     position: relative;
     white-space: nowrap;
     // button resets (safe to have on <a> too — no visual effect)
@@ -203,7 +291,7 @@
     .material-symbols-outlined {
       font-size: 20px;
       flex-shrink: 0;
-      transition: color 0.18s ease;
+      transition: color 0.15s ease;
     }
 
     &:hover {
@@ -237,6 +325,176 @@
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
+  }
+
+  // ── Search Container ─────────────────────────────────────
+  &__search-container {
+    padding: 0 $space-3 $space-4;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: $space-4;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-3;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    transition: $transition-fast;
+
+    &:focus-within {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 2px var(--color-accent-glow);
+    }
+
+    &-icon {
+      color: var(--color-text-muted);
+      font-size: 18px;
+    }
+
+    &-input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--color-text);
+      font-size: 13px;
+      font-family: $font-body;
+      outline: none;
+      width: 100%;
+
+      &::placeholder {
+        color: var(--color-text-dimmed);
+      }
+    }
+  }
+
+  &__search-collapsed {
+    width: 100%;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+      background: var(--color-surface-hover);
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+  }
+
+  // ── Section Title ────────────────────────────────────────
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 $space-3;
+    margin-bottom: $space-6;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &__section-title {
+    font-family: $font-headline;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text-dimmed);
+    margin-bottom: $space-2;
+    padding-left: $space-2;
+    white-space: nowrap;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    transform: translateX(0);
+    overflow: hidden;
+  }
+
+  // ── Categories List ──────────────────────────────────────
+  &__categories-section {
+    border-top: 1px solid var(--color-border);
+    padding-top: $space-4;
+    margin-top: $space-2;
+  }
+
+  &__categories {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__category-btn {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-2 $space-3;
+    border-radius: $radius-md;
+    color: var(--color-text-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: $font-body;
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                gap 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.15s ease,
+                color 0.15s ease,
+                border-color 0.15s ease;
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: color 0.15s ease;
+    }
+
+    &:hover {
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    &.active {
+      background: var(--color-accent-dim);
+      color: var(--color-accent);
+      border: 1px solid rgba(var(--color-rgb-accent, 212, 175, 122), 0.12);
+
+      .material-symbols-outlined {
+        color: var(--color-accent);
+        font-variation-settings: 'FILL' 1;
+      }
+    }
+  }
+
+  &__category-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
   }
 
   // ── Footer ─────────────────────────────────────────
@@ -245,97 +503,335 @@
     padding: $space-4 $space-3 $space-3;
     border-top: 1px solid var(--color-border);
     flex-shrink: 0;
+    position: relative;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  // ── Sign-out button ────────────────────────────────
-  &__signout-btn {
+  // ── Settings button ────────────────────────────────
+  &__settings-btn {
     display: flex;
     align-items: center;
     gap: $space-3;
     width: 100%;
-    padding: $space-3 $space-3;
+    padding: $space-3;
     border-radius: $radius-md;
-    border: 1px solid rgba(248, 113, 113, 0.18);
-    background: rgba(248, 113, 113, 0.07);
-    color: rgba(248, 113, 113, 0.85);
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     font-family: $font-body;
     cursor: pointer;
     text-align: left;
     white-space: nowrap;
-    transition: background 0.18s ease,
-                border-color 0.18s ease,
-                color 0.18s ease,
-                box-shadow 0.18s ease,
-                transform 0.15s ease;
+    transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                gap 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.15s ease,
+                background 0.15s ease,
+                color 0.15s ease;
 
     .material-symbols-outlined {
       font-size: 18px;
       flex-shrink: 0;
-      color: rgba(248, 113, 113, 0.85);
-      transition: color 0.18s ease, transform 0.18s ease;
+      color: var(--color-text-muted);
+      transition: transform 0.3s ease, color 0.15s ease;
     }
 
-    &:hover {
-      background: rgba(248, 113, 113, 0.14);
-      border-color: rgba(248, 113, 113, 0.4);
-      color: #f87171;
-      box-shadow: 0 4px 16px rgba(248, 113, 113, 0.15);
-      transform: translateY(-1px);
+    &:hover, &.active {
+      background: var(--color-surface);
+      border-color: var(--color-accent);
+      color: var(--color-text);
 
       .material-symbols-outlined {
-        color: #f87171;
-        transform: translateX(-2px);
+        color: var(--color-accent);
+        transform: rotate(45deg);
       }
-    }
-
-    &:active {
-      transform: translateY(0);
-      box-shadow: none;
     }
   }
 
-  &__signout-label {
+  &__settings-label {
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
+    width: auto;
+    transform: translateX(0);
+  }
+
+  // ── Interactive Settings Popover ────────────────────────
+  &__settings-popover {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: $space-3;
+    right: $space-3;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-strong);
+    border-radius: $radius-lg;
+    padding: $space-3;
+    box-shadow: $shadow-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    z-index: 500;
+    animation: popoverFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    &--collapsed {
+      left: calc(100% + 12px);
+      bottom: 0;
+      width: 240px;
+      right: auto;
+    }
+
+    .settings-popover {
+      &__profile {
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+        padding: $space-1;
+      }
+
+      &__avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: $radius-full;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        @include flex-center;
+        overflow: hidden;
+        flex-shrink: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .material-symbols-outlined {
+          font-size: 20px;
+          color: var(--color-text-muted);
+        }
+      }
+
+      &__info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      &__name {
+        font-family: $font-headline;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-text);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &__role {
+        font-size: 11px;
+        color: var(--color-text-dimmed);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &__divider {
+        border: 0;
+        height: 1px;
+        background: var(--color-border);
+        margin: $space-1 0;
+      }
+
+      &__theme {
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+        padding: $space-2 $space-1;
+
+        .material-symbols-outlined {
+          font-size: 18px;
+          color: var(--color-text-muted);
+        }
+      }
+
+      &__theme-label {
+        flex: 1;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--color-text);
+      }
+
+      // Sliding Toggle Switch
+      &__switch {
+        position: relative;
+        width: 42px;
+        height: 22px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: $radius-full;
+        cursor: pointer;
+        padding: 0;
+        transition: $transition-fast;
+        outline: none;
+
+        &--active {
+          background: var(--color-accent-dim);
+          border-color: var(--color-accent);
+
+          .settings-popover__switch-handle {
+            transform: translateX(20px);
+            background: var(--color-accent);
+          }
+        }
+      }
+
+      &__switch-handle {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        border-radius: $radius-full;
+        background: var(--color-text-muted);
+        transition: $transition-base;
+      }
+
+      &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      &__link, &__logout-btn, &__login-btn {
+        display: flex;
+        align-items: center;
+        gap: $space-2;
+        padding: $space-2;
+        border-radius: $radius-md;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: $font-body;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        width: 100%;
+        transition: $transition-fast;
+
+        .material-symbols-outlined {
+          font-size: 16px;
+        }
+      }
+
+      &__link {
+        color: var(--color-text-muted);
+        &:hover {
+          background: var(--color-surface);
+          color: var(--color-text);
+        }
+      }
+
+      &__login-btn {
+        color: var(--color-accent);
+        background: var(--color-accent-dim);
+        border: 1px solid rgba(var(--color-rgb-accent, 212, 175, 122), 0.15);
+        justify-content: center;
+        &:hover {
+          background: var(--color-accent);
+          color: var(--color-bg);
+        }
+      }
+
+      &__logout-btn {
+        color: rgba(248, 113, 113, 0.85);
+        &:hover {
+          background: rgba(248, 113, 113, 0.08);
+          color: #f87171;
+        }
+      }
+    }
   }
 
   // ── Collapsed state ────────────────────────────────
   &--collapsed {
     width: 64px;
-    padding: $space-6 0;
 
     .buyer-sidebar__header {
-      justify-content: center;
-      padding: 0 0 $space-4;
-      border-bottom: 1px solid var(--color-border);
-      margin-bottom: $space-4;
+      padding: 0 18px $space-4;
+    }
+
+    .buyer-sidebar__title {
+      opacity: 0;
+      width: 0;
+      transform: translateX(-10px);
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .buyer-sidebar__section-title {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
+    }
+
+    .buyer-sidebar__category-btn {
+      padding: $space-2 11px;
+      gap: 0;
+    }
+
+    .buyer-sidebar__category-label {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
     .buyer-sidebar__link {
-      justify-content: center;
-      padding: $space-3;
+      padding: $space-3 22px;
       gap: 0;
-      text-align: center;
-      width: 100%;
     }
 
-    .buyer-sidebar__footer {
-      padding: $space-3 $space-2 $space-3;
+    .buyer-sidebar__link-text {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      transform: translateX(-10px);
     }
 
-    .buyer-sidebar__signout-btn {
-      justify-content: center;
-      padding: $space-3;
+    .buyer-sidebar__settings-btn {
+      padding: $space-3 11px;
       gap: 0;
-      border-radius: $radius-md;
 
-      .buyer-sidebar__signout-label {
-        display: none;
+      .buyer-sidebar__settings-label {
+        opacity: 0;
+        width: 0;
+        pointer-events: none;
+        transform: translateX(-10px);
       }
     }
+  }
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

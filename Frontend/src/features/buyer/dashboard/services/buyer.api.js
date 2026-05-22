@@ -115,39 +115,51 @@ const buyerApi = {
    * Fetches the buyer's profile information.
    */
   getProfile: async () => {
-    // const response = await axios.get('/api/buyer/profile');
-    // return response.data;
-    return {
-      name: 'Priya Sharma',
-      email: 'priya.sharma@email.com',
-      phone: '+91 98765 43210',
-      dob: '1998-07-15',
-      gender: 'Female',
-      memberSince: 'March 2023',
-      stats: {
-        orders: 14,
-        wishlist: 12,
-        reviews: 6
-      },
-      addresses: [
-        { type: 'Home', line1: '42, Green Park Extension', line2: 'New Delhi – 110016, Delhi', phone: '+91 98765 43210' },
-        { type: 'Work', line1: '14th Floor, Cyber Hub Tower B', line2: 'Gurugram – 122002, Haryana', phone: '+91 91234 56789' },
-        { type: 'Other', line1: 'H-5, Lajpat Nagar III', line2: 'New Delhi – 110024, Delhi', phone: '+91 98765 43210' },
-      ],
-      paymentMethods: [
-        { type: 'card', label: 'Visa', last4: '4242', icon: '💳' },
-        { type: 'upi',  label: 'UPI',  id: 'priya@upi', icon: '₹' },
-      ]
-    };
+    const response = await axios.get('/api/profile', { withCredentials: true });
+    return response.data.profile;
   },
 
   /**
    * Updates the buyer's profile information.
    */
   updateProfile: async (data) => {
-    // const response = await axios.patch('/api/buyer/profile', data);
-    // return response.data;
-    return { success: true, message: 'Profile updated successfully' };
+    const headers = {};
+    if (data instanceof FormData) {
+      headers['Content-Type'] = 'multipart/form-data';
+    }
+    const response = await axios.put('/api/profile', data, {
+      headers,
+      withCredentials: true
+    });
+    return response.data;
+  },
+
+  /**
+   * Address Book CRUD
+   */
+  addAddress: async (addressData) => {
+    const response = await axios.post('/api/profile/address', addressData, { withCredentials: true });
+    return response.data;
+  },
+  updateAddress: async (addressId, addressData) => {
+    const response = await axios.put(`/api/profile/address/${addressId}`, addressData, { withCredentials: true });
+    return response.data;
+  },
+  deleteAddress: async (addressId) => {
+    const response = await axios.delete(`/api/profile/address/${addressId}`, { withCredentials: true });
+    return response.data;
+  },
+
+  /**
+   * Payment Methods CRUD
+   */
+  addPaymentMethod: async (paymentData) => {
+    const response = await axios.post('/api/profile/payment', paymentData, { withCredentials: true });
+    return response.data;
+  },
+  deletePaymentMethod: async (paymentId) => {
+    const response = await axios.delete(`/api/profile/payment/${paymentId}`, { withCredentials: true });
+    return response.data;
   },
 
   /**
