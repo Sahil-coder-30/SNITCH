@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuth } from '../Hooks/auth.hooks';
 import { setError as setGlobalError } from '../slice/auth.slice';
@@ -10,8 +10,12 @@ import '../style/Login.scss';
 const Login = () => {
   const { authLogin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { user, error } = useSelector((state) => state.auth);
+
+  // Where to redirect after login: state.from (from ProtectedRoute) or ?redirect= query param
+  const redirectTo = location.state?.from || new URLSearchParams(location.search).get('redirect') || null;
   
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,13 +29,15 @@ const Login = () => {
   // Redirect if already logged in
   React.useEffect(() => {
     if (user) {
-      if (user.role === 'SELLER') {
+      if (redirectTo) {
+        navigate(redirectTo, { replace: true });
+      } else if (user.role === 'SELLER') {
         navigate('/seller');
       } else {
         navigate('/buyer');
       }
     }
-  }, [user, navigate]);
+  }, [user, navigate, redirectTo]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -49,7 +55,9 @@ const Login = () => {
       setNeedsPasswordInfo('');
       dispatch(setGlobalError(null));
       const loggedUser = await authLogin(formData.email, formData.password);
-      if (loggedUser?.role === 'SELLER') {
+      if (redirectTo) {
+        navigate(redirectTo, { replace: true });
+      } else if (loggedUser?.role === 'SELLER') {
         navigate('/seller');
       } else {
         navigate('/buyer');

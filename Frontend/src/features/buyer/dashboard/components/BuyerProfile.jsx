@@ -23,6 +23,7 @@ const BuyerProfile = () => {
   const [profilePhone, setProfilePhone] = useState('');
   const [profileDob, setProfileDob] = useState('');
   const [profileGender, setProfileGender] = useState('Prefer not to say');
+  const [isEditing, setIsEditing] = useState(false);
   
   // Status feedback
   const [saveStatus, setSaveStatus] = useState({ type: '', message: '' });
@@ -55,6 +56,17 @@ const BuyerProfile = () => {
     }
   }, [profile]);
 
+  const isChanged = () => {
+    if (!profile) return false;
+    return (
+      profileName !== (profile.name || '') ||
+      profileEmail !== (profile.email || '') ||
+      profilePhone !== (profile.phone || '') ||
+      profileDob !== (profile.dob || '') ||
+      profileGender !== (profile.gender || 'Prefer not to say')
+    );
+  };
+
   if (loading || !profile) {
     return (
       <BuyerDashboard breadcrumb={['Home', 'My Profile']}>
@@ -76,6 +88,7 @@ const BuyerProfile = () => {
     const res = await updateProfile(formData);
     if (res.success) {
       setSaveStatus({ type: 'success', message: 'Profile updated successfully!' });
+      setIsEditing(false);
       setTimeout(() => setSaveStatus({ type: '', message: '' }), 3000);
     } else {
       setSaveStatus({ type: 'error', message: res.error || 'Failed to update profile.' });
@@ -207,7 +220,20 @@ const BuyerProfile = () => {
           {/* Right: Edit Form */}
           <div className="buyer-profile__right-col">
             <div className="buyer-profile__card">
-              <h2 className="buyer-profile__card-title">Personal Information</h2>
+              <div className="buyer-profile__card-header">
+                <h2 className="buyer-profile__card-title">Personal Information</h2>
+                {!isEditing && (
+                  <button 
+                    type="button" 
+                    className="buyer-profile__edit-trigger-btn"
+                    onClick={() => setIsEditing(true)}
+                    title="Edit Details"
+                  >
+                    <span className="material-symbols-outlined">edit</span>
+                    Edit Details
+                  </button>
+                )}
+              </div>
               <form onSubmit={handleSaveProfile} className="buyer-profile__modal-form">
                 <div className="buyer-profile__form-grid">
                   <div className="buyer-profile__field">
@@ -218,6 +244,7 @@ const BuyerProfile = () => {
                       value={profileName} 
                       onChange={(e) => setProfileName(e.target.value)} 
                       required
+                      disabled={!isEditing}
                     />
                   </div>
                   <div className="buyer-profile__field">
@@ -234,6 +261,7 @@ const BuyerProfile = () => {
                       value={profileEmail} 
                       onChange={(e) => setProfileEmail(e.target.value)} 
                       required
+                      disabled={!isEditing}
                     />
                   </div>
                   <div className="buyer-profile__field">
@@ -243,6 +271,7 @@ const BuyerProfile = () => {
                       className="buyer-profile__input" 
                       value={profilePhone} 
                       onChange={(e) => setProfilePhone(e.target.value)} 
+                      disabled={!isEditing}
                     />
                   </div>
                   <div className="buyer-profile__field">
@@ -252,6 +281,7 @@ const BuyerProfile = () => {
                       className="buyer-profile__input" 
                       value={profileDob} 
                       onChange={(e) => setProfileDob(e.target.value)} 
+                      disabled={!isEditing}
                     />
                   </div>
                   <div className="buyer-profile__field">
@@ -260,6 +290,7 @@ const BuyerProfile = () => {
                       className="buyer-profile__input" 
                       value={profileGender} 
                       onChange={(e) => setProfileGender(e.target.value)}
+                      disabled={!isEditing}
                     >
                       <option value="Female">Female</option>
                       <option value="Male">Male</option>
@@ -269,20 +300,38 @@ const BuyerProfile = () => {
                   </div>
                 </div>
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <button type="submit" className="buyer-profile__save-btn" disabled={saveStatus.type === 'loading'}>
-                    Save Changes
-                    <span className="material-symbols-outlined">check</span>
-                  </button>
-                  {saveStatus.message && (
-                    <span style={{ 
-                      fontSize: '13px', 
-                      color: saveStatus.type === 'error' ? '#f87171' : saveStatus.type === 'success' ? '#4ade80' : '#D4AF7A' 
-                    }}>
-                      {saveStatus.message}
-                    </span>
-                  )}
-                </div>
+                {isEditing && (
+                  <div className="buyer-profile__form-actions">
+                    {isChanged() && (
+                      <button type="submit" className="buyer-profile__save-btn" disabled={saveStatus.type === 'loading'}>
+                        Save Changes
+                        <span className="material-symbols-outlined">check</span>
+                      </button>
+                    )}
+                    <button 
+                      type="button" 
+                      className="buyer-profile__cancel-edit-btn" 
+                      onClick={() => {
+                        setProfileName(profile.name || '');
+                        setProfileEmail(profile.email || '');
+                        setProfilePhone(profile.phone || '');
+                        setProfileDob(profile.dob || '');
+                        setProfileGender(profile.gender || 'Prefer not to say');
+                        setIsEditing(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    {saveStatus.message && (
+                      <span style={{ 
+                        fontSize: '13px', 
+                        color: saveStatus.type === 'error' ? '#f87171' : saveStatus.type === 'success' ? '#4ade80' : '#D4AF7A' 
+                      }}>
+                        {saveStatus.message}
+                      </span>
+                    )}
+                  </div>
+                )}
               </form>
             </div>
           </div>

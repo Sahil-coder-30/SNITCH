@@ -24,7 +24,14 @@ const productSchema = new mongoose.Schema(
     rating: { type: Number, default: 0, min: 0, max: 5 },
     reviewCount: { type: Number, default: 0 },
 
-    stock: [
+    styleCode: { type: String, required: true, index: true },
+
+    color: {
+      name: { type: String, required: true },
+      hex: { type: String, required: true },
+    },
+
+    sizes: [
       {
         size: {
           type: String,
@@ -32,15 +39,10 @@ const productSchema = new mongoose.Schema(
           enum: ["XS", "S", "M", "L", "XL", "XXL"],
         },
         quantity: { type: Number, required: true, min: 0 },
-        colors: [
-          {
-            name: { type: String, required: true },
-            hex: { type: String, required: true },
-            images: [{ type: String, required: true }], // plain URL strings
-          },
-        ],
       },
     ],
+
+    images: [{ type: String, required: true }],
 
     coverImage: { type: String, required: true }, // plain URL
 

@@ -235,8 +235,58 @@ async function seedDatabase() {
     });
     console.log(`Deleted ${deleteResult.deletedCount} existing Nano Banana products.`);
 
+    // Transform nanoProducts from the old nested structure to Color-as-Product format
+    const transformedProducts = [];
+    nanoProducts.forEach((orig, index) => {
+      const styleCode = `ST-NANO-${1000 + index}`;
+      const colorMap = {}; // name -> { name, hex, images, sizes: [] }
+
+      orig.stock.forEach(sizeItem => {
+        if (sizeItem.colors) {
+          sizeItem.colors.forEach(colorItem => {
+            if (!colorMap[colorItem.name]) {
+              colorMap[colorItem.name] = {
+                name: colorItem.name,
+                hex: colorItem.hex,
+                images: colorItem.images || [],
+                sizes: []
+              };
+            }
+            colorMap[colorItem.name].sizes.push({
+              size: sizeItem.size,
+              quantity: sizeItem.quantity
+            });
+          });
+        }
+      });
+
+      Object.values(colorMap).forEach(variant => {
+        transformedProducts.push({
+          title: `${orig.title} - ${variant.name}`,
+          brand: orig.brand,
+          description: orig.description,
+          originalPrice: orig.originalPrice,
+          price: orig.price,
+          discountPercent: orig.discountPercent,
+          rating: orig.rating || 4.5,
+          reviewCount: orig.reviewCount || 0,
+          coverImage: variant.images[0] || orig.coverImage,
+          category: orig.category,
+          badge: orig.badge,
+          seller: orig.seller,
+          styleCode: styleCode,
+          color: {
+            name: variant.name,
+            hex: variant.hex
+          },
+          sizes: variant.sizes,
+          images: variant.images
+        });
+      });
+    });
+
     // Insert new ones
-    const createdProducts = await ProductModel.insertMany(nanoProducts);
+    const createdProducts = await ProductModel.insertMany(transformedProducts);
     console.log(`Successfully seeded ${createdProducts.length} new Nano Banana products!`);
 
     process.exit(0);

@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateFilters } from '../../../store/slice/product.slice';
 import { CATEGORIES } from '../../../store/data/products';
 import { useAuth } from '../../../../features/auth/Hooks/auth.hooks';
+import { useCart } from '../../../cart/hooks/cart.hooks';
+import { useWishlist } from '../../../wishlist/hooks/wishlist.hooks';
 import '../style/BuyerDashboard.scss';
 import '../../../store/style/StoreFront.scss';
 
@@ -63,8 +65,23 @@ const BuyerDashboard = ({ children }) => {
 
   const { filters } = useSelector(state => state.products);
   const { user } = useSelector(state => state.auth);
-  const cartCount = 3;
+  const { authFetchCart } = useCart();
+  const { authFetchWishlist } = useWishlist();
+  const cartCount = useSelector(state => state.cart?.itemCount || 0);
+  const wishlistCount = useSelector(state => state.wishlist?.items?.length || 0);
   const { authLogout } = useAuth();
+  
+  const [animateCart, setAnimateCart] = useState(false);
+  const prevCartCount = useRef(cartCount);
+
+  useEffect(() => {
+    if (cartCount > prevCartCount.current) {
+      setAnimateCart(true);
+      const timer = setTimeout(() => setAnimateCart(false), 800);
+      return () => clearTimeout(timer);
+    }
+    prevCartCount.current = cartCount;
+  }, [cartCount]);
 
   const userName = user?.username || 'Guest';
 
@@ -162,6 +179,14 @@ const BuyerDashboard = ({ children }) => {
     }
   }, []);
 
+  // Sync cart and wishlist count on load or user change
+  useEffect(() => {
+    if (user && user.role === 'BUYER') {
+      authFetchCart().catch(err => console.error('Error fetching cart:', err));
+      authFetchWishlist().catch(err => console.error('Error fetching wishlist:', err));
+    }
+  }, [user]);
+
   const toggleTheme = () => {
     if (isLight) {
       document.documentElement.removeAttribute('data-theme');
@@ -189,8 +214,8 @@ const BuyerDashboard = ({ children }) => {
   // Dynamic menu items based on whether user is logged in
   const menuItems = [
     { label: 'Home',        icon: 'home',        path: user ? '/buyer' : '/' },
-    { label: 'My Cart',     icon: 'shopping_cart',path: '/buyer/cart'     },
-    { label: 'Wishlist',    icon: 'favorite',    path: '/buyer/wishlist' },
+    { label: 'My Cart',     icon: 'shopping_cart',path: user ? '/buyer/cart'    : '/login?redirect=/buyer/cart', badge: user ? cartCount : 0 },
+    { label: 'Wishlist',    icon: 'favorite',    path: user ? '/buyer/wishlist' : '/login?redirect=/buyer/wishlist', badge: user ? wishlistCount : 0 },
     ...(user ? [
       { label: 'My Orders',   icon: 'inventory_2', path: '/buyer/orders'   },
       { label: 'My Profile',  icon: 'person',      path: '/buyer/profile'  },
@@ -272,14 +297,29 @@ const BuyerDashboard = ({ children }) => {
 
           <nav className="sf-nav__actions" aria-label="User actions">
             {/* Wishlist Button */}
-            <Link to="/buyer/wishlist" className="sf-nav__action-btn" id="nav-wishlist-btn" aria-label="Wishlist" title="Wishlist">
+            <Link to={user ? '/buyer/wishlist' : '/login?redirect=/buyer/wishlist'} className="sf-nav__action-btn" id="nav-wishlist-btn" aria-label="Wishlist" title="Wishlist">
               <span className="material-symbols-outlined">favorite</span>
+              {wishlistCount > 0 && (
+                <span className="sf-nav__cart-badge">
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
 
             {/* Cart Button */}
-            <Link to="/buyer/cart" className="sf-nav__action-btn" id="nav-cart-btn" aria-label={`Cart (${cartCount})`} title="Cart">
+            <Link 
+              to={user ? '/buyer/cart' : '/login?redirect=/buyer/cart'} 
+              className={`sf-nav__action-btn ${animateCart ? 'sf-nav__action-btn--pop' : ''}`} 
+              id="nav-cart-btn" 
+              aria-label={`Cart (${cartCount})`} 
+              title="Cart"
+            >
               <span className="material-symbols-outlined">shopping_cart</span>
-              {cartCount > 0 && <span className="sf-nav__cart-badge">{cartCount}</span>}
+              {cartCount > 0 && (
+                <span className={`sf-nav__cart-badge ${animateCart ? 'sf-nav__cart-badge--pop' : ''}`}>
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {/* Profile / Account Button */}
@@ -398,6 +438,20 @@ const BuyerDashboard = ({ children }) => {
                   >
                     <span className="material-symbols-outlined">{item.icon}</span>
                     <span className="buyer-sidebar__link-text">{item.label}</span>
+                    {item.badge > 0 && (
+                      <span className="buyer-sidebar__badge" style={{
+                        marginLeft: 'auto',
+                        background: 'var(--color-accent)',
+                        color: 'var(--color-bg)',
+                        fontSize: '10px',
+                        fontWeight: '700',
+                        padding: '2px 6px',
+                        borderRadius: '10px',
+                        lineHeight: '1.2'
+                      }}>
+                        {item.badge}
+                      </span>
+                    )}
                   </Link>
                 ))}
               </nav>

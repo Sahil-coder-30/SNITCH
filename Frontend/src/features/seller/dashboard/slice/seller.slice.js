@@ -12,12 +12,15 @@ const sellerSlice = createSlice({
   reducers: {
     setProducts(state, action) {
       state.products = action.payload;
+      state.error = null;
     },
     setOrders(state, action) {
       state.orders = action.payload;
+      state.error = null;
     },
     setEarnings(state, action) {
       state.earnings = action.payload;
+      state.error = null;
     },
     setLoading(state, action) {
       state.isLoading = action.payload;
@@ -25,8 +28,11 @@ const sellerSlice = createSlice({
     setError(state, action) {
       state.error = action.payload;
     },
+    clearError(state) {
+      state.error = null;
+    },
   },
 });
 
-export const { setProducts, setOrders, setEarnings, setLoading, setError } = sellerSlice.actions;
+export const { setProducts, setOrders, setEarnings, setLoading, setError, clearError } = sellerSlice.actions;
 export default sellerSlice.reducer;

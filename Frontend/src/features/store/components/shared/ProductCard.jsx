@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ProductCardSkeleton } from '../../../../components/loaders/ComponentSkeletons';
+import { useWishlist } from '../../../wishlist/hooks/wishlist.hooks';
 
 // ── Helpers ───────────────────────────────────────────────────
 const formatPrice = (p) => `₹${p?.toLocaleString('en-IN') || '0'}`;
@@ -31,6 +32,7 @@ export const Badge = ({ label, type }) => {
 // ── Product Card ──────────────────────────────────────────────
 const ProductCard = ({ product, onSelect, loading = false }) => {
   const [imgError, setImgError] = useState(false);
+  const { toggleWishlist, isInWishlist, isLoading: wishlistLoading } = useWishlist();
 
   if (loading) return <ProductCardSkeleton />;
   if (!product) return null;
@@ -60,11 +62,25 @@ const ProductCard = ({ product, onSelect, loading = false }) => {
         <Badge label={product.badge} type={product.badgeType} />
         {!product.inStock && <div className="sf-card__oos-overlay">Out of Stock</div>}
         <button
-          className="sf-card__wishlist"
-          onClick={e => { e.stopPropagation(); }}
-          aria-label="Add to wishlist"
+          className={`sf-card__wishlist ${isInWishlist(product._id || product.id) ? 'sf-card__wishlist--active' : ''}`}
+          onClick={e => {
+            e.stopPropagation();
+            if (!wishlistLoading) toggleWishlist(product);
+          }}
+          aria-label={isInWishlist(product._id || product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+          title={isInWishlist(product._id || product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <span className="material-symbols-outlined">favorite</span>
+          <span
+            className="material-symbols-outlined"
+            style={{
+              fontVariationSettings: isInWishlist(product._id || product.id)
+                ? "'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24"
+                : "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24",
+              color: isInWishlist(product._id || product.id) ? '#ef4444' : 'inherit',
+            }}
+          >
+            favorite
+          </span>
         </button>
       </div>
 

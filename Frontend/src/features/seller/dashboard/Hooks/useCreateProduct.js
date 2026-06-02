@@ -5,42 +5,35 @@ export const useCreateProduct = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
 
-  const submitProduct = async (formData, sizes, colors, coverImage) => {
+  const submitProduct = async (formData, sizes, color, coverImage, variantImages) => {
     setIsSubmitting(true);
     let uploadedCoverUrl = "";
+    let uploadedVariantUrls = [];
 
     try {
       // Step 1: Upload Cover Image
-      setUploadStatus("Uploading Cover Architecture...");
+      setUploadStatus("Uploading Cover Image...");
       const coverData = new FormData();
       coverData.append('images', coverImage);
       const coverRes = await uploadImages(coverData);
       uploadedCoverUrl = coverRes.urls[0];
 
       // Step 2: Upload Variant Images
-      const finalColors = [...colors];
-      for (let j = 0; j < finalColors.length; j++) {
-        const colorState = finalColors[j];
-        const filesToUpload = colorState.files ? colorState.files.slice(0, 7) : [];
-        if (filesToUpload.length > 0) {
-          setUploadStatus(`Synthing Media for ${colorState.name} (${j + 1}/${finalColors.length})`);
-          const colorForm = new FormData();
-          filesToUpload.forEach(file => colorForm.append('images', file));
-          const colorRes = await uploadImages(colorForm);
-          finalColors[j].images = colorRes.urls;
-        } else {
-          finalColors[j].images = [];
-        }
+      if (variantImages && variantImages.length > 0) {
+        setUploadStatus("Uploading Variant Media...");
+        const variantData = new FormData();
+        variantImages.forEach(img => variantData.append('images', img));
+        const variantRes = await uploadImages(variantData);
+        uploadedVariantUrls = variantRes.urls;
       }
 
-      setUploadStatus("Configuring Storefront Topology...");
+      setUploadStatus("Creating Product Document...");
 
-      const compiledStock = sizes
-        .filter(s => s.quantity > 0)
-        .map(sizeItem => ({
-          size: sizeItem.size,
-          quantity: Number(sizeItem.quantity),
-          colors: finalColors.map(c => ({ name: c.name, hex: c.hex, images: c.images || [] }))
+      const parsedSizes = sizes
+        .filter(s => Number(s.quantity) > 0)
+        .map(s => ({
+          size: s.size,
+          quantity: Number(s.quantity)
         }));
 
       const payload = {
@@ -49,11 +42,17 @@ export const useCreateProduct = () => {
         description: formData.description,
         originalPrice: { amount: Number(formData.originalPrice), currency: "INR" },
         price: { amount: Number(formData.price), currency: "INR" },
-        discountPercent: formData.discountPercent || 0,
+        discountPercent: Number(formData.discountPercent) || 0,
         category: { for: formData.categoryFor, name: formData.categoryName },
         badge: formData.badge,
         coverImage: uploadedCoverUrl,
-        stock: compiledStock
+        styleCode: formData.styleCode,
+        color: {
+          name: color.name,
+          hex: color.hex
+        },
+        sizes: parsedSizes,
+        images: uploadedVariantUrls
       };
 
       const result = await createProduct(payload);
@@ -66,7 +65,7 @@ export const useCreateProduct = () => {
       setIsSubmitting(false);
       return { 
         success: false, 
-        error: err.response?.data?.errors?.[0]?.message || err.response?.data?.message || 'Error configuring product details' 
+        error: err.response?.data?.errors?.[0]?.message || err.response?.data?.message || 'Error creating product.' 
       };
     }
   };

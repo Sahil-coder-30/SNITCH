@@ -60,7 +60,15 @@ export const CategorySkeleton = () => (
  * Hero Banner Skeleton
  */
 export const HeroBannerSkeleton = () => (
-    <div className="sf-hero" style={{ background: 'rgba(var(--color-rgb-text), 0.03)', height: '500px' }}>
+    <div 
+      className="sf-hero" 
+      style={{ 
+        background: 'rgba(var(--color-rgb-text), 0.03)', 
+        height: '380px', 
+        borderRadius: '16px',
+        marginBottom: '2rem'
+      }}
+    >
         <div className="sf-hero__content">
             <Skeleton width="150px" height="1rem" accent />
             <Skeleton width="400px" height="4rem" className="mt-6" />

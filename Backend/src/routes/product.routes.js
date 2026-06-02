@@ -5,10 +5,15 @@ import {
     uploadImagesController,
     getProductsController,
     getSellerProductsController,
-    getProductByIdController
+    getProductByIdController,
+    createStyleCodeController,
+    getStyleCodesController,
+    createProductReviewController,
+    getSuggestedProductsController
 } from '../controllers/products.controller.js';
 import { searchProductsController } from '../controllers/search.controller.js';
 import { productCreationAuth } from "../middleware/product.middleware.js";
+import { identifyUser } from "../middleware/identifyUser.middleware.js";
 import { productValidationRules, validateProduct } from '../validators/product.validator.js';
 
 const upload = multer({
@@ -29,8 +34,18 @@ productRouter.get("/search", searchProductsController);
 // Seller dashboard routes (needs authentication, must be before /:id)
 productRouter.get("/seller", productCreationAuth, getSellerProductsController);
 
+// StyleCode Passbook routes
+productRouter.post("/stylecodes", productCreationAuth, createStyleCodeController);
+productRouter.get("/stylecodes", productCreationAuth, getStyleCodesController);
+
 // Public route to fetch a single product details
 productRouter.get("/:id", getProductByIdController);
+
+// Public route to fetch suggested related products
+productRouter.get("/:id/suggested", getSuggestedProductsController);
+
+// Authenticated route to submit a review for a product
+productRouter.post("/:id/reviews", identifyUser, createProductReviewController);
 
 productRouter.post(
     "/upload_images",

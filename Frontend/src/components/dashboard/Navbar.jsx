@@ -3,11 +3,13 @@ import { useSelector } from 'react-redux';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import './Navbar.scss';
 import { useAuth } from '../../features/auth/Hooks/auth.hooks';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Navbar = ({ breadcrumb = ['Dashboard', 'Overview'] }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const { itemCount } = useSelector((state) => state.cart);
+  const { items: wishlistItems } = useSelector((state) => state.wishlist);
   
   const role = user?.role?.toLowerCase() || 'buyer';
   const userName = user?.username || 'Guest';
@@ -70,14 +72,16 @@ const Navbar = ({ breadcrumb = ['Dashboard', 'Overview'] }) => {
             <a href="/buyer/support" className="navbar__action-btn" aria-label="Support" title="Customer Support">
               <span className="material-symbols-outlined">support_agent</span>
             </a>
-            <a href="/buyer/wishlist" className="navbar__action-btn" aria-label="Wishlist" title="Wishlist">
+            <Link to="/buyer/wishlist" className="navbar__action-btn" aria-label="Wishlist" title="Wishlist">
               <span className="material-symbols-outlined">favorite</span>
-              <span className="navbar__action-badge">12</span>
-            </a>
-            <a href="/buyer/cart" className="navbar__action-btn" aria-label="Cart" title="Cart">
+              {wishlistItems.length > 0 && (
+                <span className="navbar__action-badge">{wishlistItems.length}</span>
+              )}
+            </Link>
+            <Link to="/buyer/cart" className="navbar__action-btn" aria-label="Cart" title="Cart">
               <span className="material-symbols-outlined">shopping_cart</span>
-              <span className="navbar__action-badge">3</span>
-            </a>
+              {itemCount > 0 && <span className="navbar__action-badge">{itemCount}</span>}
+            </Link>
           </>
         )}
 

@@ -579,8 +579,58 @@ async function seedDatabase() {
     const deleteResult = await ProductModel.deleteMany({});
     console.log(`Cleaned up database: Deleted ${deleteResult.deletedCount} existing products.`);
 
+    // Transform productsData from the old nested structure to Color-as-Product format
+    const transformedProducts = [];
+    productsData.forEach((orig, index) => {
+      const styleCode = `ST-${1000 + index}`;
+      const colorMap = {}; // name -> { name, hex, images, sizes: [] }
+
+      orig.stock.forEach(sizeItem => {
+        if (sizeItem.colors) {
+          sizeItem.colors.forEach(colorItem => {
+            if (!colorMap[colorItem.name]) {
+              colorMap[colorItem.name] = {
+                name: colorItem.name,
+                hex: colorItem.hex,
+                images: colorItem.images || [],
+                sizes: []
+              };
+            }
+            colorMap[colorItem.name].sizes.push({
+              size: sizeItem.size,
+              quantity: sizeItem.quantity
+            });
+          });
+        }
+      });
+
+      Object.values(colorMap).forEach(variant => {
+        transformedProducts.push({
+          title: `${orig.title} - ${variant.name}`,
+          brand: orig.brand,
+          description: orig.description,
+          originalPrice: orig.originalPrice,
+          price: orig.price,
+          discountPercent: orig.discountPercent,
+          rating: orig.rating,
+          reviewCount: orig.reviewCount,
+          coverImage: variant.images[0] || orig.coverImage,
+          category: orig.category,
+          badge: orig.badge,
+          seller: orig.seller,
+          styleCode: styleCode,
+          color: {
+            name: variant.name,
+            hex: variant.hex
+          },
+          sizes: variant.sizes,
+          images: variant.images
+        });
+      });
+    });
+
     // Insert new ones
-    const createdProducts = await ProductModel.insertMany(productsData);
+    const createdProducts = await ProductModel.insertMany(transformedProducts);
     console.log(`Successfully seeded ${createdProducts.length} premium products into the database!`);
 
     process.exit(0);

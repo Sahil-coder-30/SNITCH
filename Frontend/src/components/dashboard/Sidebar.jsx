@@ -7,6 +7,7 @@ import './Sidebar.scss';
 const SellerNav = [
   { icon: 'dashboard',          label: 'Overview',            path: '/seller' },
   { icon: 'checkroom',          label: 'My Products',         path: '/seller/products' },
+  { icon: 'menu_book',          label: 'Style Passbook',      path: '/seller/style-passbook' },
   { icon: 'add_circle',         label: 'Create Product',      path: '/seller/products/new', cta: true },
   { icon: 'inventory_2',        label: 'Orders',              path: '/seller/orders' },
   { icon: 'view_carousel',      label: 'Manage Banners',      path: '/admin/banners' },
@@ -40,12 +41,19 @@ const Sidebar = ({ role = 'seller' }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector(state => state.auth);
+  const { itemCount } = useSelector(state => state.cart);
+  const { items: wishlistItems } = useSelector(state => state.wishlist);
   const { authLogout } = useAuth();
 
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
   const navItems = (role === 'seller' ? SellerNav : BuyerNav).map(item => ({
     ...item,
-    active: currentPath === item.path
+    active: currentPath === item.path,
+    // Override dynamic badges for buyer nav
+    badge:
+      role === 'buyer' && item.path === '/buyer/wishlist' ? (wishlistItems.length || null) :
+      role === 'buyer' && item.path === '/buyer/cart'     ? (itemCount || null) :
+      item.badge,
   }));
 
   const userName = user?.username || (role === 'seller' ? 'Arjun Mehta' : 'Priya Sharma');

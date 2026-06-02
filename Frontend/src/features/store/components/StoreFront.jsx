@@ -34,75 +34,135 @@ const CATEGORY_ICONS = {
 
 // ── Hero Banner Carousel ───────────────────────────────────────
 const HeroBanner = ({ onShopNow, loading = false, banners = [] }) => {
-  const bannerList = useMemo(() => new DoublyCircularLinkedList(banners), [banners]);
-  const [activeNode, setActiveNode] = useState(null);
+  const containerRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    setActiveNode(bannerList.head);
-  }, [bannerList]);
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollLeft, clientWidth } = containerRef.current;
+    if (clientWidth > 0) {
+      const index = Math.round(scrollLeft / clientWidth);
+      setActiveIndex(index);
+    }
+  };
 
+  const handleDotClick = (index) => {
+    if (!containerRef.current) return;
+    const { clientWidth } = containerRef.current;
+    containerRef.current.scrollTo({
+      left: index * clientWidth,
+      behavior: 'smooth'
+    });
+    setActiveIndex(index);
+  };
+
+  // Auto-scroll logic matching premium scroll-snap carousel
   useEffect(() => {
-    if (loading || !activeNode || banners.length <= 1) return;
+    if (loading || banners.length <= 1) return;
     const timer = setInterval(() => {
-      setActiveNode(node => node.next);
-    }, 4500);
+      if (!containerRef.current) return;
+      const { clientWidth } = containerRef.current;
+      const nextIndex = (activeIndex + 1) % banners.length;
+      containerRef.current.scrollTo({
+        left: nextIndex * clientWidth,
+        behavior: 'smooth'
+      });
+      setActiveIndex(nextIndex);
+    }, 5000);
     return () => clearInterval(timer);
-  }, [loading, activeNode, banners.length]);
+  }, [loading, activeIndex, banners.length]);
 
   if (loading) return <HeroBannerSkeleton />;
-  if (banners.length === 0 || !activeNode) return null;
-
-  const b = activeNode.value;
-  const imgUrl = b.imageUrl || b.image;
-  const bannerId = b._id || b.id;
+  if (banners.length === 0) return null;
 
   return (
-    <section className="sf-hero" style={{ background: b.gradient }}>
-      <div className="sf-hero__overlay" />
-      {imgUrl && <img src={imgUrl} alt="" className="sf-hero__img" key={bannerId} />}
-      
-      {/* Navigation Arrows */}
-      <button 
-        className="sf-hero__nav-btn sf-hero__nav-btn--prev" 
-        onClick={() => setActiveNode(activeNode.prev)}
-        aria-label="Previous banner"
+    <div 
+      className="sf-hero-scroll-container"
+      style={{
+        position: 'relative',
+        width: '100%'
+      }}
+    >
+      {/* Scrollable track with native momentum scrolling and snap points */}
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        style={{
+          display: 'flex',
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          height: '440px',
+          width: '100%',
+        }}
+        className="sf-hero-track"
       >
-        <span className="material-symbols-outlined">chevron_left</span>
-      </button>
-      
-      <button 
-        className="sf-hero__nav-btn sf-hero__nav-btn--next" 
-        onClick={() => setActiveNode(activeNode.next)}
-        aria-label="Next banner"
-      >
-        <span className="material-symbols-outlined">chevron_right</span>
-      </button>
+        {/* Style block to hide scrollbar on Webkit browsers */}
+        <style dangerouslySetInnerHTML={{__html: `
+          .sf-hero-track::-webkit-scrollbar {
+            display: none !important;
+          }
+        `}} />
 
-      <div className="sf-hero__content">
-        <p className="sf-hero__eyebrow" style={{ color: b.accent }}>SNITCH — New Collection</p>
-        <h2 className="sf-hero__title">{b.title}</h2>
-        <p className="sf-hero__sub">{b.subtitle}</p>
-        <button
-          className="sf-hero__cta"
-          style={{ borderColor: b.accent, color: b.accent }}
-          onClick={onShopNow}
-        >
-          {b.cta || 'Explore Collection'}
-          <span className="material-symbols-outlined">arrow_forward</span>
-        </button>
+        {banners.map((b, i) => {
+          const imgUrl = b.imageUrl || b.image;
+          return (
+            <div
+              key={b._id || b.id || i}
+              style={{
+                flex: '0 0 100%',
+                width: '100%',
+                scrollSnapAlign: 'start',
+                position: 'relative',
+                height: '440px',
+                background: b.gradient,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <div className="sf-hero__overlay" />
+              {imgUrl && (
+                <img 
+                  src={imgUrl} 
+                  alt="" 
+                  className="sf-hero__img" 
+                />
+              )}
+              
+              <div className="sf-hero__content">
+                <p className="sf-hero__eyebrow" style={{ color: b.accent }}>SNITCH — New Collection</p>
+                <h2 className="sf-hero__title">{b.title}</h2>
+                <p className="sf-hero__sub">{b.subtitle}</p>
+                <button
+                  className="sf-hero__cta"
+                  style={{ borderColor: b.accent, color: b.accent }}
+                  onClick={onShopNow}
+                >
+                  {b.cta || 'Explore Collection'}
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
-      <div className="sf-hero__dots">
-        {bannerList.toNodeArray().map((node, i) => (
-          <button
-            key={i}
-            className={`sf-hero__dot ${activeNode === node ? 'active' : ''}`}
-            style={ activeNode === node ? { background: b.accent } : {} }
-            onClick={() => setActiveNode(node)}
-            aria-label={`Banner ${i + 1}`}
-          />
-        ))}
-      </div>
-    </section>
+
+      {/* Dots Indicator */}
+      {banners.length > 1 && (
+        <div className="sf-hero__dots">
+          {banners.map((_, i) => (
+            <button
+              key={i}
+              className={`sf-hero__dot ${activeIndex === i ? 'active' : ''}`}
+              style={activeIndex === i ? { background: banners[i].accent } : {}}
+              onClick={() => handleDotClick(i)}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

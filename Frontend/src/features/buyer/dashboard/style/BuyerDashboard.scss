@@ -128,18 +128,29 @@
     padding: 0;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 0;
+    border: none !important;
+    background: transparent !important;
   }
 
   .sf-nav__action-btn--profile {
-    padding: 0 0.85rem 0 0.45rem;
+    padding: 0 0.5rem;
     height: 40px;
-    border-radius: 50px;
+    border-radius: 0;
     gap: 0.5rem;
     display: flex;
     align-items: center;
-    border: 1.5px solid var(--color-border-strong);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+
+    &:hover {
+      background: transparent !important;
+      color: var(--color-accent) !important;
+      border: none !important;
+    }
   }
 
   .sf-nav__profile-avatar {
@@ -150,8 +161,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border-strong);
+    background: transparent;
+    border: 1px solid rgba(var(--color-rgb-text), 0.15);
     flex-shrink: 0;
 
     img {

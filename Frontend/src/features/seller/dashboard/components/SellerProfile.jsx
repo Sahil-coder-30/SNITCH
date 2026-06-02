@@ -46,6 +46,24 @@ const SellerProfile = () => {
     }
   }, [profile]);
 
+  const isChanged = () => {
+    if (!profile) return false;
+    const initialAddress = profile.address || {};
+    return (
+      contactName !== (profile.name || '') ||
+      contactEmail !== (profile.email || '') ||
+      contactPhone !== (profile.phone || '') ||
+      companyName !== (profile.companyName || '') ||
+      description !== (profile.description || '') ||
+      gstin !== (profile.gstin || '') ||
+      addrLine1 !== (initialAddress.line1 || '') ||
+      addrLine2 !== (initialAddress.line2 || '') ||
+      addrCity !== (initialAddress.city || '') ||
+      addrState !== (initialAddress.state || '') ||
+      addrPincode !== (initialAddress.pincode || '')
+    );
+  };
+
   if (loading || !profile) {
     return (
       <SellerDashboard breadcrumb={['Dashboard', 'My Profile']}>
@@ -306,7 +324,7 @@ const SellerProfile = () => {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderTop: '1px solid var(--color-border)', paddingTop: '24px' }}>
-                  <button type="submit" className="seller-profile__save-btn" disabled={saveStatus.type === 'loading'}>
+                  <button type="submit" className="seller-profile__save-btn" disabled={!isChanged() || saveStatus.type === 'loading'}>
                     Save Changes
                     <span className="material-symbols-outlined">check</span>
                   </button>

@@ -33,11 +33,42 @@ export const productValidationRules = () => {
             }
             return true;
         }),
-        body('stock').custom((value) => {
+        body('styleCode').notEmpty().withMessage('styleCode is required').trim(),
+        body('color').custom((value) => {
             let parsed = value;
-            if (typeof value === 'string') parsed = JSON.parse(value);
+            if (typeof value === 'string') {
+                try {
+                    parsed = JSON.parse(value);
+                } catch (e) {
+                    throw new Error('Invalid color JSON format');
+                }
+            }
+            if (!parsed || !parsed.name || !parsed.hex) {
+                throw new Error('color must include "name" and "hex" properties');
+            }
+            return true;
+        }),
+        body('sizes').custom((value) => {
+            let parsed = value;
+            if (typeof value === 'string') {
+                try {
+                    parsed = JSON.parse(value);
+                } catch (e) {
+                    throw new Error('Invalid sizes JSON format');
+                }
+            }
             if (!Array.isArray(parsed) || parsed.length === 0) {
-                throw new Error('stock must be a non-empty array');
+                throw new Error('sizes must be a non-empty array');
+            }
+            const allowedSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+            for (const item of parsed) {
+                if (!item.size || !allowedSizes.includes(item.size)) {
+                    throw new Error(`Invalid or missing size. Allowed: ${allowedSizes.join(', ')}`);
+                }
+                const qty = Number(item.quantity);
+                if (isNaN(qty) || qty < 0) {
+                    throw new Error(`Invalid quantity for size ${item.size}`);
+                }
             }
             return true;
         })

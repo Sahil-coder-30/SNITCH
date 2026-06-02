@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 /**
  * ProtectedRoute component to handle role-based access control and authentication checks.
@@ -9,6 +9,7 @@ import { Navigate, Outlet } from 'react-router-dom';
  */
 const ProtectedRoute = ({ children, allowedRoles }) => {
     const { user, isLoading } = useSelector((state) => state.auth);
+    const location = useLocation();
 
     // While checking if the user is authenticated (e.g. during initial page load), show nothing or a loader.
     if (isLoading) {
@@ -20,7 +21,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     }
 
     if (!user) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/login" state={{ from: location.pathname }} replace />;
     }
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {

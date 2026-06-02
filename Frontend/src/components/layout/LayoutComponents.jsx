@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import { Button } from '../common/UI';
+import { useCart } from '../../features/cart/hooks/cart.hooks';
 import './style/layout.scss';
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { authFetchCart } = useCart();
   const { user } = useSelector(state => state.auth);
+  const { itemCount } = useSelector(state => state.cart);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (user && user.role === 'BUYER') {
+      authFetchCart();
+    }
+  }, [user]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -47,7 +56,7 @@ export const Navbar = () => {
 
           <Link to="/buyer/cart" className="sn-nav__icon-btn sn-cart-btn">
             <span className="material-symbols-outlined">shopping_bag</span>
-            <span className="sn-cart-badge">0</span>
+            <span className="sn-cart-badge">{itemCount}</span>
           </Link>
 
           {user ? (

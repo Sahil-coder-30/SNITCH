@@ -6,6 +6,8 @@ import passport from "../config/passport.js";
 import productRouter from "../routes/product.routes.js";
 import profileRouter from "../routes/profile.routes.js";
 import bannerRouter from "../routes/banner.routes.js";
+import cartRouter from "../routes/cart.routes.js";
+import wishlistRouter from "../routes/wishlist.routes.js";
 import cors from 'cors';
 import morgan from "morgan";
 
@@ -26,6 +28,8 @@ app.use("/api/products" , productRouter);
 app.use("/api/auth" , authRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/banners", bannerRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/wishlist", wishlistRouter);
 
 // error handler must be last
 app.use(errorHandler);

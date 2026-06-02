@@ -22,3 +22,13 @@ export const getSellerProducts = async () => {
     const response = await axios.get(`${API_URL}/seller`, { withCredentials: true });
     return response.data;
 };
+
+export const getStyleCodes = async () => {
+  const response = await axios.get(`${API_URL}/stylecodes`, { withCredentials: true });
+  return response.data;
+};
+
+export const createStyleCode = async (key) => {
+  const response = await axios.post(`${API_URL}/stylecodes`, { key }, { withCredentials: true });
+  return response.data;
+};

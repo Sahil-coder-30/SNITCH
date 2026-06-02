@@ -1,6 +1,6 @@
 import React from 'react'
 import './style/app.scss'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 
 // ── Public Storefront ──────────────────────────────────────────
 import StoreFront        from '../features/store/components/StoreFront'
@@ -23,15 +23,16 @@ import SellerOrders    from '../features/seller/dashboard/components/SellerOrder
 import SellerEarnings  from '../features/seller/dashboard/components/SellerEarnings'
 import SellerProfile   from '../features/seller/dashboard/components/SellerProfile'
 import AdminBanners   from '../features/seller/dashboard/components/AdminBanners'
+import StylePassbook   from '../features/seller/dashboard/components/StylePassbook'
 
 // ── Buyer Dashboard ────────────────────────────────────────────
 import BrowseProducts  from '../features/buyer/dashboard/components/BrowseProducts'
 import BuyerOrders     from '../features/buyer/dashboard/components/BuyerOrders'
-import Wishlist        from '../features/buyer/dashboard/components/Wishlist'
+import WishlistPage    from '../features/wishlist/components/WishlistPage'
 import BuyerProfile    from '../features/buyer/dashboard/components/BuyerProfile'
 
 // ── Buyer Order Flow ───────────────────────────────────────────
-import CartPage           from '../features/store/components/cart/CartPage'
+import CartPage           from '../features/cart/components/CartPage'
 import CheckoutPage       from '../features/store/components/checkout/CheckoutPage'
 import OrderSuccessPage   from '../features/store/components/orders/OrderSuccessPage'
 import MyOrdersPage       from '../features/store/components/orders/MyOrdersPage'
@@ -47,13 +48,29 @@ import ProductPage        from '../features/store/components/product/ProductPage
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getMe } from '../features/auth/services/auth.api'
-import { setUser, setLoading } from '../features/auth/slice/auth.slice'
+import { setUser, setLoading, clearError as clearAuthError } from '../features/auth/slice/auth.slice'
+import { clearError as clearProductError } from '../features/store/slice/product.slice'
+import { clearError as clearCartError } from '../features/cart/slice/cart.slice'
+import { clearError as clearBuyerError } from '../features/buyer/dashboard/slice/buyer.slice'
+import { clearError as clearSellerError } from '../features/seller/dashboard/slice/seller.slice'
+import { clearError as clearWishlistError } from '../features/wishlist/slice/wishlist.slice'
 import ProtectedRoute from '../features/auth/components/ProtectedRoute'
 import GuestRoute     from '../features/auth/components/GuestRoute'
 
 const App = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { isLoading } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Clear all error states when switching routes/components
+    dispatch(clearProductError());
+    dispatch(clearCartError());
+    dispatch(clearAuthError());
+    dispatch(clearBuyerError());
+    dispatch(clearSellerError());
+    dispatch(clearWishlistError());
+  }, [location.pathname, dispatch]);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -106,6 +123,7 @@ const App = () => {
           <Route path="/seller" element={<SellerOverview />} />
           <Route path="/seller/products" element={<SellerProducts />} />
           <Route path="/seller/products/new" element={<CreateProduct />} />
+          <Route path="/seller/style-passbook" element={<StylePassbook />} />
           <Route path="/seller/orders" element={<SellerOrders />} />
           <Route path="/seller/earnings" element={<SellerEarnings />} />
           <Route path="/seller/profile" element={<SellerProfile />} />
@@ -115,7 +133,7 @@ const App = () => {
         <Route element={<ProtectedRoute allowedRoles={['BUYER']} />}>
           <Route path="/buyer" element={<BrowseProducts />} />
           <Route path="/buyer/orders" element={<BuyerOrders />} />
-          <Route path="/buyer/wishlist" element={<Wishlist />} />
+          <Route path="/buyer/wishlist" element={<WishlistPage />} />
           <Route path="/buyer/profile" element={<BuyerProfile />} />
           <Route path="/buyer/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
