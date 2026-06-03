@@ -95,11 +95,53 @@ export const addToCart = async (req, res, next) => {
 
 // ─── Get Cart ─────────────────────────────────────────────────────────────────
 export const getCart = async (req, res, next) => {
+    const userId = req.user.id;
     try {
         // Find the cart or create a fresh empty one safely
-        let userCart = await cartModel
-            .findOne({ user: req.user.id })
-            .populate({ path: "items.product", select: PRODUCT_SELECT });
+        let userCart = await cartModel.aggregate(
+            [
+                {
+                    $match: {
+                        user: new mongoose.Types.ObjectId(userId)
+                    }
+                },
+                { $unwind: { path: '$items' } },
+                {
+                    $lookup: {
+                        from: 'products',
+                        localField: 'items.product',
+                        foreignField: '_id',
+                        as: 'items.product'
+                    }
+                },
+                { $unwind: { path: '$items.product' } },
+                {
+                    $addFields: {
+                        itemPrice: {
+                            price: {
+                                $multiply: [
+                                    '$items.quantity',
+                                    '$items.product.price.amount'
+                                ]
+                            },
+                            currency:
+                                '$items.product.price.currency'
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: '$_id',
+                        total: { $sum: '$itemPrice.price' },
+                        currency: {
+                            $first: '$itemPrice.currency'
+                        },
+                        items: { $push: '$items' }
+                    }
+                }
+            ],
+            { maxTimeMS: 60000, allowDiskUse: true }
+        )
 
         if (!userCart) {
             userCart = new cartModel({ user: req.user.id, items: [] });
@@ -108,7 +150,7 @@ export const getCart = async (req, res, next) => {
 
         return res.status(200).json({
             message: "Cart fetched successfully",
-            cart: buildCartResponse(userCart),
+            userCart
         });
     } catch (err) {
         next(err);

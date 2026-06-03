@@ -1,98 +1,628 @@
-.verify-container {
-    background-color: #000;
-    color: var(--color-text);
-    font-family: 'Manrope', sans-serif;
-    min-height: 100vh;
+// ─────────────────────────────────────────────────────────────────────────────
+//  VerifyEmail.scss  — full-viewport split layout (mirrors Login.scss exactly)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Outer wrapper ─────────────────────────────────────────────────────────────
+.ve-wrap {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Manrope', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+
+  .font-headline { font-family: 'Epilogue', sans-serif; font-weight: 900; }
+  .font-body     { font-family: 'Manrope', sans-serif; }
+  .font-label    { font-family: 'Manrope', sans-serif; font-weight: 700; }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+// ── Fixed navigation ──────────────────────────────────────────────────────────
+.ve-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  pointer-events: none;
+
+  @media (min-width: 768px) { padding: 2rem 4rem; }
+
+  // make children interactive despite pointer-events: none on parent
+  > * { pointer-events: auto; }
+
+  &__brand {
+    font-size: 1.5rem;
+    letter-spacing: -0.05em;
+    font-style: italic;
+    color: var(--color-accent);
+    font-weight: 900;
+    user-select: none;
+  }
+}
+
+// ── Left hero panel ───────────────────────────────────────────────────────────
+.ve-aside {
+  display: none;                       // hidden on mobile
+
+  @media (min-width: 1024px) {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    width: 50%;
+    flex-shrink: 0;
+    height: 100vh;
+    padding: 4rem;
     position: relative;
     overflow: hidden;
+  }
 
-    .font-headline { font-family: 'Epilogue', sans-serif; }
-    .font-body { font-family: 'Manrope', sans-serif; }
+  &__inner {
+    width: 100%;
+    max-width: 28rem;
+  }
 
-    .text-neon { color: var(--color-accent); }
-    .bg-neon { background-color: var(--color-accent); }
-    
-    .verify-box {
-        position: relative;
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+  &__eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(var(--color-rgb-text), 0.4);
+    margin-bottom: 1.5rem;
+  }
+
+  &__headline {
+    font-size: 4.5rem;
+    line-height: 0.88;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    font-style: italic;
+    margin-bottom: 2rem;
+
+    @media (min-width: 1280px) { font-size: 6rem; }
+  }
+
+  &__accent { color: var(--color-accent); }
+
+  &__line {
+    width: 3rem;
+    height: 2px;
+    background-color: var(--color-accent);
+    margin-bottom: 1.5rem;
+  }
+
+  &__body {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: rgba(var(--color-rgb-text), 0.6);
+    max-width: 22rem;
+  }
+
+  &__watermark {
+    position: absolute;
+    bottom: -6rem;
+    left: -2rem;
+    font-size: 18vw;
+    font-style: italic;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-rgb-text), 0.04);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+// ── Right form panel ──────────────────────────────────────────────────────────
+.ve-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 2rem;
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+
+  @media (min-width: 1024px) {
+    width: 50%;
+    flex-shrink: 0;
+    padding: 4rem;
+  }
+}
+
+// ── Ambient glow (behind the form) ────────────────────────────────────────────
+.ve-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 35rem;
+  height: 35rem;
+  background: radial-gradient(circle, rgba(var(--color-rgb-accent), 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+
+  [data-theme="light"] & {
+    background: radial-gradient(circle, rgba(var(--color-rgb-accent), 0.12) 0%, transparent 70%);
+  }
+}
+
+// ── Inner card (the actual form area) ─────────────────────────────────────────
+.ve-card {
+  width: 100%;
+  max-width: 26rem;
+  position: relative;
+  z-index: 10;
+  // top padding clears the fixed nav on small screens
+  padding-top: 5rem;
+
+  @media (min-width: 1024px) { padding-top: 0; }
+}
+
+// ── Fade-up entry animation ───────────────────────────────────────────────────
+@keyframes ve-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ve-anim {
+  animation: ve-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+// ── Form header ───────────────────────────────────────────────────────────────
+.ve-form-hd {
+  border-bottom: 1px solid rgba(var(--color-rgb-text), 0.05);
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+
+  &__title {
+    font-size: 3rem;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    text-transform: uppercase;
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+}
+
+// ── Eyebrow ───────────────────────────────────────────────────────────────────
+.ve-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+
+  &__line {
+    height: 2px;
+    width: 2.5rem;
+    background-color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+}
+
+// ── Alert banners ─────────────────────────────────────────────────────────────
+.ve-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  border-left-width: 3px;
+  border-left-style: solid;
+
+  .material-symbols-outlined {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  }
+
+  .font-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  &--err {
+    background-color: rgba(255, 60, 60, 0.08);
+    border-left-color: #ff4444;
+    animation: ve-shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+
+    .material-symbols-outlined { color: #ff4444; }
+    .font-label {
+      color: #ff8080;
+      [data-theme="light"] & { color: #c80000; }
     }
 
-    /* Refined SVG Tick Animation */
-    .success-svg {
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
-        display: block;
-        stroke-width: 4;
-        stroke: var(--color-accent);
-        stroke-miterlimit: 10;
-        box-shadow: inset 0px 0px 0px rgba(var(--color-rgb-accent), 0);
-        /* Replaced fill and scale with a unified pop, adding glow tracking */
-        animation: softFillPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.6s forwards, ambientGlow 2s infinite alternate 1.2s;
+    [data-theme="light"] & {
+      background-color: rgba(255, 0, 0, 0.04);
+      border-left-color: #cc0000;
+    }
+  }
+
+  &--ok {
+    background-color: rgba(var(--color-rgb-accent), 0.07);
+    border-left-color: var(--color-accent);
+
+    .material-symbols-outlined { color: var(--color-accent); }
+    .font-label { color: var(--color-accent); }
+  }
+}
+
+// ── Email input ───────────────────────────────────────────────────────────────
+.ve-field {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.ve-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--color-rgb-text), 0.2);
+  padding: 0.75rem 0;
+  color: var(--color-text);
+  font-size: 1.125rem;
+  font-family: 'Manrope', sans-serif;
+  outline: none;
+  transition: border-color 0.3s, transform 0.3s;
+
+  &:focus {
+    border-bottom-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  // Floating label: collapsed (when value present or focused)
+  &:focus ~ .ve-label,
+  &:not(:placeholder-shown) ~ .ve-label {
+    top: -1.2rem;
+    font-size: 10px;
+    color: var(--color-accent);
+    letter-spacing: 0.25em;
+  }
+
+  // Autofill override
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 30px var(--color-bg) inset !important;
+    -webkit-text-fill-color: var(--color-text) !important;
+  }
+}
+
+.ve-label {
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: rgba(var(--color-rgb-text), 0.4);
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: top 0.25s, font-size 0.25s, color 0.25s, letter-spacing 0.25s;
+}
+
+// ── OTP hint text ─────────────────────────────────────────────────────────────
+.ve-hint {
+  font-size: 0.875rem;
+  color: rgba(var(--color-rgb-text), 0.6);
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+
+  &__em {
+    color: var(--color-accent);
+    font-weight: 700;
+    font-style: normal;
+  }
+}
+
+// ── OTP boxes ─────────────────────────────────────────────────────────────────
+.ve-otp {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.625rem;
+  margin-bottom: 2rem;
+
+  &__box {
+    width: 100%;
+    aspect-ratio: 1 / 1.2;
+    background: rgba(var(--color-rgb-text), 0.04);
+    border: 1px solid rgba(var(--color-rgb-text), 0.12);
+    color: var(--color-text);
+    font-family: 'Epilogue', sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+    caret-color: var(--color-accent);
+
+    &:focus {
+      border-color: var(--color-accent);
+      background: rgba(var(--color-rgb-accent), 0.05);
+      box-shadow: 0 0 0 1px rgba(var(--color-rgb-accent), 0.2),
+                  0 6px 16px rgba(var(--color-rgb-accent), 0.06);
+      transform: translateY(-3px);
     }
 
-    .success-svg__circle {
-        stroke-dasharray: 158; /* Accurately matches circumference for flawless drawing */
-        stroke-dashoffset: 158;
-        stroke-width: 2.5;
-        stroke-miterlimit: 10;
-        stroke: rgba(var(--color-rgb-accent), 0.3);
-        fill: none;
-        animation: strokeCircle 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    &--on {
+      border-color: rgba(var(--color-rgb-accent), 0.45);
+      color: var(--color-accent);
+      background: rgba(var(--color-rgb-accent), 0.04);
     }
 
-    .success-svg__check {
-        transform-origin: 50% 50%;
-        stroke-dasharray: 40;
-        stroke-dashoffset: 40;
-        stroke-width: 4;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        animation: strokeCheck 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+    [data-theme="light"] & {
+      background: rgba(var(--color-rgb-text), 0.03);
+      border-color: rgba(var(--color-rgb-text), 0.15);
     }
+  }
+}
 
-    @keyframes strokeCircle {
-        100% {
-            stroke-dashoffset: 0;
-            stroke: var(--color-accent); /* Ignites neon brightness when drawing completes */
-        }
-    }
+// ── Primary action button (accent bg, sweep hover) ────────────────────────────
+.ve-primary-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  padding: 1.25rem 0;
+  margin-top: 0.25rem;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
 
-    @keyframes strokeCheck {
-        100% {
-            stroke-dashoffset: 0;
-        }
-    }
+  @media (min-width: 768px) { padding: 1.5rem 0; }
 
-    @keyframes softFillPop {
-        0% { transform: scale(1); box-shadow: inset 0px 0px 0px rgba(var(--color-rgb-accent), 0); }
-        50% { transform: scale(1.15); }
-        100% { transform: scale(1); box-shadow: inset 0px 0px 0px 80px rgba(var(--color-rgb-accent), 0.08); }
-    }
+  // Sweep overlay
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-text);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s ease-out;
+    z-index: 0;
+  }
 
-    @keyframes ambientGlow {
-        0% { filter: drop-shadow(0 0 10px rgba(var(--color-rgb-accent), 0.1)); }
-        100% { filter: drop-shadow(0 0 25px rgba(var(--color-rgb-accent), 0.4)); }
-    }
+  &__text {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 10;
+    transition: color 0.5s;
+  }
 
-    .animate-fade-up {
-        animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    
-    .delay-1000 { animation-delay: 1000ms; }
-    .delay-1200 { animation-delay: 1200ms; }
-    .delay-1400 { animation-delay: 1400ms; }
+  &__icon {
+    position: relative;
+    z-index: 10;
+    font-size: 1.1rem;
+    transition: transform 0.5s, color 0.5s;
+  }
 
-    @keyframes fadeUp {
-        100% { opacity: 1; transform: translateY(0); }
+  &:hover:not(:disabled) {
+    .ve-primary-btn__text,
+    .ve-primary-btn__icon { color: var(--color-bg); }
+    .ve-primary-btn__icon { transform: translateX(0.75rem); }
+    &::before { transform: scaleX(1); }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ── Resend row ────────────────────────────────────────────────────────────────
+.ve-resend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-top: 1.5rem;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  &__hint { color: rgba(var(--color-rgb-text), 0.45); }
+
+  &__btn {
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(var(--color-rgb-text), 0.2);
+    padding: 0 0 1px;
+    color: var(--color-text);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s, border-color 0.25s;
+
+    &:hover:not(:disabled) {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
     }
+    &:disabled { opacity: 0.35; cursor: not-allowed; }
+  }
+}
+
+// ── Footer link row ───────────────────────────────────────────────────────────
+.ve-footer-text {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(var(--color-rgb-text), 0.5);
+  margin-top: 2rem;
+}
+
+.ve-footer-link {
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--color-rgb-text), 0.2);
+  padding-bottom: 2px;
+  font-weight: 700;
+  margin-left: 0.5rem;
+  transition: color 0.25s;
+
+  &:hover { color: var(--color-accent); }
+
+  &--btn {
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(var(--color-rgb-text), 0.2);
+    padding: 0 0 2px;
+    cursor: pointer;
+    font-family: 'Manrope', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-text);
+    transition: color 0.25s;
+    &:hover { color: var(--color-accent); }
+  }
+}
+
+// ── Centered state screens (spinner / error / success) ────────────────────────
+.ve-state {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__title {
+    font-size: 2.75rem;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    text-transform: uppercase;
+    font-style: italic;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__body {
+    font-size: 0.875rem;
+    color: rgba(var(--color-rgb-text), 0.6);
+    line-height: 1.6;
+    max-width: 22rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// ── Outline button (fallback) ──────────────────────────────────────────────────
+.ve-outline-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(var(--color-rgb-text), 0.15);
+  color: var(--color-text);
+  padding: 0.875rem 1.5rem;
+  font-family: 'Epilogue', sans-serif;
+  font-weight: 900;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.25s, color 0.25s;
+
+  .material-symbols-outlined { font-size: 1rem; transition: transform 0.3s; }
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    .material-symbols-outlined { transform: translateX(4px); }
+  }
+}
+
+// ── Loading spinner ───────────────────────────────────────────────────────────
+.ve-spinner {
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(var(--color-rgb-text), 0.1);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: ve-spin 0.75s linear infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes ve-spin { to { transform: rotate(360deg); } }
+
+// ── Error state icon ──────────────────────────────────────────────────────────
+.ve-icon-err {
+  font-size: 3rem;
+  color: var(--color-error);
+  font-variation-settings: 'FILL' 1;
+  margin-bottom: 0.25rem;
+}
+
+// ── Animated SVG checkmark ────────────────────────────────────────────────────
+.ve-check {
+  margin-bottom: 0.75rem;
+
+  &__svg {
+    width: 70px;
+    height: 70px;
+    stroke: var(--color-accent);
+    stroke-miterlimit: 10;
+  }
+
+  &__circle {
+    fill: none;
+    stroke: rgba(var(--color-rgb-accent), 0.35);
+    stroke-width: 2;
+    stroke-dasharray: 158;
+    stroke-dashoffset: 158;
+    animation: ve-circle 0.65s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  }
+
+  &__tick {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 42;
+    stroke-dashoffset: 42;
+    animation: ve-tick 0.35s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+  }
+}
+
+@keyframes ve-circle { to { stroke-dashoffset: 0; } }
+@keyframes ve-tick   { to { stroke-dashoffset: 0; } }
+
+// ── Error shake ───────────────────────────────────────────────────────────────
+@keyframes ve-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
 }

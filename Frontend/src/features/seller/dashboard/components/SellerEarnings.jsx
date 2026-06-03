@@ -1,5 +1,4 @@
 import React from 'react';
-import SellerDashboard from './SellerDashboard';
 import StatCard       from '../../../../components/dashboard/StatCard';
 import { useSellerEarnings } from '../Hooks/useSellerEarnings';
 import '../style/SellerEarnings.scss';
@@ -43,16 +42,16 @@ const SellerEarnings = () => {
 
   if (loading || !earnings) {
     return (
-      <SellerDashboard breadcrumb={['Dashboard', 'Earnings & Payouts']}>
+      <>
         <div className="seller-earnings-loading">Loading earnings data...</div>
-      </SellerDashboard>
+      </>
     );
   }
 
   const { summary, chartData, payouts } = earnings;
 
   return (
-    <SellerDashboard breadcrumb={['Dashboard', 'Earnings & Payouts']}>
+    <>
       <div className="seller-earnings">
         <div className="seller-earnings__header">
           <h1 className="seller-earnings__title">Earnings & Payouts</h1>
@@ -116,7 +115,7 @@ const SellerEarnings = () => {
           </div>
         </div>
       </div>
-    </SellerDashboard>
+    </>
   );
 };
 

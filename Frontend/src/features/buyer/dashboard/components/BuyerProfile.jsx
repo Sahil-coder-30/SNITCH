@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import BuyerDashboard from './BuyerDashboard';
 import { useBuyerProfile } from '../Hooks/useBuyerProfile';
 import { Modal } from '../../../../components/common/UI';
 import { ProfileSkeleton } from '../../../../components/loaders/ComponentSkeletons';
@@ -69,9 +68,9 @@ const BuyerProfile = () => {
 
   if (loading || !profile) {
     return (
-      <BuyerDashboard breadcrumb={['Home', 'My Profile']}>
+      <>
         <ProfileSkeleton />
-      </BuyerDashboard>
+      </>
     );
   }
 
@@ -171,7 +170,7 @@ const BuyerProfile = () => {
   };
 
   return (
-    <BuyerDashboard breadcrumb={['Home', 'My Profile']}>
+    <>
       <div className="buyer-profile">
         {/* Profile Layout */}
         <div className="buyer-profile__top">
@@ -517,7 +516,7 @@ const BuyerProfile = () => {
           </div>
         </form>
       </Modal>
-    </BuyerDashboard>
+    </>
   );
 };
 

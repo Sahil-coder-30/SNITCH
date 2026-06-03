@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import SellerDashboard from './SellerDashboard';
 import { 
   getBanners, 
   uploadBannerImage, 
@@ -136,7 +135,7 @@ const AdminBanners = () => {
   };
 
   return (
-    <SellerDashboard breadcrumb={['Admin', 'Manage Banners']}>
+    <>
       <div className="admin-banners">
         {/* Header Section */}
         <header className="admin-banners__header">
@@ -313,7 +312,7 @@ const AdminBanners = () => {
           </div>
         )}
       </div>
-    </SellerDashboard>
+    </>
   );
 };
 

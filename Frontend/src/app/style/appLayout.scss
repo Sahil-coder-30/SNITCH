@@ -1,0 +1,41 @@
+// ── AppLayout — Root Shell ─────────────────────────────────────────────────
+//
+// Structure:
+//   .app-layout
+//     .shared-navbar          ← position: sticky; top: 0; height: 64px
+//     .app-layout__body       ← flex row, fills remaining height
+//       .sidebar OR           ← position: sticky; top: 0; height: 100vh
+//       .buyer-sidebar        ←   position: sticky; top: 64px; h: calc(100vh-64px)
+//       .app-layout__main     ← flex: 1, scrollable page content
+//
+// Both sidebars are IN-FLOW flex children, so they naturally push .app-layout__main.
+// DO NOT use margin-left — that causes double-spacing.
+// DO NOT add padding here — storefront/product pages are full-bleed.
+// Each page manages its own internal padding.
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--color-bg, #0a0a0b);
+}
+
+// ── Body row: sidebar + main ──────────────────────────────────────────────
+.app-layout__body {
+  display: flex;
+  flex: 1;
+  align-items: flex-start; // both sidebar and main align to top
+  width: 100%;
+}
+
+// ── Main content slot ─────────────────────────────────────────────────────
+// Pure flex container — pages own their own padding/spacing.
+.app-layout__main {
+  flex: 1;
+  min-width: 0;                   // prevents flex child from overflowing
+  min-height: calc(100vh - 64px); // at least full page below navbar
+  overflow-x: hidden;
+}
+
+
+

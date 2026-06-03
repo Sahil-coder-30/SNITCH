@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import BuyerDashboard from '../../buyer/dashboard/components/BuyerDashboard';
 import { useCart } from '../hooks/cart.hooks';
 import '../style/CartPage.scss';
 
@@ -10,7 +9,7 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const { authFetchCart, authAddToCart, authDecrementItem, authRemoveItem } = useCart();
 
-  const { items, subtotal, currency, isLoading, error } = useSelector((state) => state.cart);
+  const { items, total, currency, isLoading, error } = useSelector((state) => state.cart);
 
   const [coupon, setCoupon] = useState('');
   const [couponState, setCouponState] = useState(null); // null | 'valid' | 'invalid'
@@ -32,12 +31,12 @@ const CartPage = () => {
     authRemoveItem(cartItemId);
   };
 
-  const deliveryFee = subtotal >= 999 ? 0 : 49;
-  const total = subtotal - discountAmt + deliveryFee;
+  const deliveryFee = total >= 999 ? 0 : 49;
+  const grandTotal = total - discountAmt + deliveryFee;
 
   const applyCoupon = () => {
     if (coupon.toUpperCase() === 'SNITCH10') {
-      const disc = Math.round(subtotal * 0.10);
+      const disc = Math.round(total * 0.10);
       setDiscountAmt(disc);
       setCouponState('valid');
     } else {
@@ -46,18 +45,18 @@ const CartPage = () => {
     }
   };
 
-  // Recalculate coupon discount when subtotal changes
+  // Recalculate coupon discount when total changes
   useEffect(() => {
     if (couponState === 'valid') {
-      const disc = Math.round(subtotal * 0.10);
+      const disc = Math.round(total * 0.10);
       setDiscountAmt(disc);
     } else {
       setDiscountAmt(0);
     }
-  }, [subtotal, couponState]);
+  }, [total, couponState]);
 
   return (
-    <BuyerDashboard breadcrumb={['Home', 'My Cart']}>
+    <>
       <div className="cart-page">
         <div className="cart-page__header">
           <h1 className="cart-page__title">My Cart</h1>
@@ -92,8 +91,9 @@ const CartPage = () => {
             <div className="cart-page__items">
               {items.map(item => {
                 const product = item.product || {};
-                const itemPrice = item.price?.amount || 0;
-                const originalPrice = product.originalPrice?.amount || itemPrice;
+                // item.price.amount is the unit price stored when added to cart
+                const itemPrice = item.price?.amount ?? product.price?.amount ?? 0;
+                const originalPrice = product.originalPrice?.amount ?? itemPrice;
                 const showOriginal = originalPrice > itemPrice;
 
                 return (
@@ -205,7 +205,7 @@ const CartPage = () => {
               <div className="order-summary__rows">
                 <div className="order-summary__row">
                   <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                  <span>₹{subtotal.toLocaleString()}</span>
+                  <span>₹{total.toLocaleString()}</span>
                 </div>
                 {discountAmt > 0 && (
                   <div className="order-summary__row order-summary__row--discount">
@@ -219,19 +219,19 @@ const CartPage = () => {
                     {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
                   </span>
                 </div>
-                {deliveryFee === 0 && subtotal < 999 && (
+                {deliveryFee === 0 && total < 999 && (
                   <div className="order-summary__row">
                     <span>Taxes (18% GST)</span>
-                    <span>₹{Math.round(total * 0.18).toLocaleString()}</span>
+                    <span>₹{Math.round(grandTotal * 0.18).toLocaleString()}</span>
                   </div>
                 )}
               </div>
               <div className="order-summary__divider" />
               <div className="order-summary__total">
                 <span>Total</span>
-                <span>₹{total.toLocaleString()}</span>
+                <span>₹{grandTotal.toLocaleString()}</span>
               </div>
-              {subtotal >= 999 && (
+              {total >= 999 && (
                 <p className="order-summary__free-delivery-note">
                   <span className="material-symbols-outlined">local_shipping</span>
                   You've unlocked free delivery!
@@ -252,7 +252,7 @@ const CartPage = () => {
           </div>
         )}
       </div>
-    </BuyerDashboard>
+    </>
   );
 };
 

@@ -1,39 +1,91 @@
+// ── Theme Toggle — Pill Switch ─────────────────────────────────
+//
+// Layout:  [button.theme-toggle-btn]
+//            └── span.theme-toggle-btn__track   (the pill)
+//                  └── span.theme-toggle-btn__thumb  (sliding knob)
+//                        └── material icon
+
 .theme-toggle-btn {
-  background: rgba(var(--color-rgb-text), 0.05);
-  border: 1px solid rgba(var(--color-rgb-text), 0.1);
-  color: var(--color-text, var(--color-text));
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  // Reset button defaults
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(8px);
-  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 
-  &:hover {
-    background: rgba(var(--color-rgb-text), 0.1);
-    transform: scale(1.05);
+  // ── Track (pill) ────────────────────────────────────────────
+  &__track {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    transition:
+      background 0.25s ease,
+      border-color 0.25s ease;
+    box-sizing: border-box;
   }
 
-  .icon {
-    font-size: 20px;
-    transition: transform 0.3s ease;
+  // ── Thumb (knob) ─────────────────────────────────────────────
+  &__thumb {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(0);
+    transition:
+      transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background 0.25s ease;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+
+    .material-symbols-outlined {
+      font-size: 13px;
+      color: var(--color-bg, #0a0a0b);
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      line-height: 1;
+      user-select: none;
+    }
   }
 
-  &:hover .icon {
-    transform: rotate(15deg);
+  // ── Light mode ON state ───────────────────────────────────────
+  &--on &__track {
+    background: var(--color-accent-dim, rgba(212, 175, 122, 0.18));
+    border-color: var(--color-accent, #d4af7a);
   }
-}
 
-[data-theme="light"] .theme-toggle-btn {
-  background: rgba(var(--color-rgb-bg),0.05);
-  border: 1px solid rgba(var(--color-rgb-bg),0.1);
-  color: var(--color-text, #111111);
-  
-  &:hover {
-    background: rgba(var(--color-rgb-bg),0.1);
+  &--on &__thumb {
+    // Slide to the right: track(52) - padding(3*2) - thumb(22) = 24px
+    transform: translateX(24px);
+    background: var(--color-accent, #d4af7a);
+
+    .material-symbols-outlined {
+      color: #000;
+    }
   }
+
+  // ── Hover ─────────────────────────────────────────────────────
+  &:hover &__track {
+    border-color: var(--color-accent, #d4af7a);
+  }
+
+  &:focus-visible &__track {
+    outline: 2px solid var(--color-accent, #d4af7a);
+    outline-offset: 2px;
+  }
+
+  // ── When used as the compact dropdown toggle ───────────────────
+  // .shared-navbar__dropdown-theme-toggle is the className passed in;
+  // no extra overrides needed — the pill naturally fits the row.
 }

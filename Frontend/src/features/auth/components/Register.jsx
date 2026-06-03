@@ -69,11 +69,7 @@ const Register = () => {
         formData.contact,
         formData.role,
       );
-      if (formData.role === 'SELLER') {
-        navigate('/seller');
-      } else {
-        navigate('/buyer');
-      }
+      navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch (err) {
       // Error handled by useAuth dispatch
     } finally {

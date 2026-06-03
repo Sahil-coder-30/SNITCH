@@ -1,5 +1,4 @@
 import React from 'react';
-import SellerDashboard from './SellerDashboard';
 import StatusBadge     from '../../../../components/dashboard/StatusBadge';
 import { useSellerOrders } from '../Hooks/useSellerOrders';
 import '../style/SellerOrders.scss';
@@ -23,7 +22,7 @@ const SellerOrders = () => {
   if (error) return <div className="seller-orders__error">Error: {error}</div>;
 
   return (
-    <SellerDashboard breadcrumb={['Dashboard', 'Orders']}>
+    <>
       <div className="seller-orders">
         <div className="seller-orders__header">
           <h1 className="seller-orders__title">Orders</h1>
@@ -200,7 +199,7 @@ const SellerOrders = () => {
           </aside>
         </div>
       )}
-    </SellerDashboard>
+    </>
   );
 };
 

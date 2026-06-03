@@ -147,7 +147,14 @@
     }
 
     &--sm { flex: 1; padding: $space-2 $space-3; font-size: 13px; }
-    &--no-prefix { border-radius: 0 $radius-md $radius-md 0; }
+    &--no-prefix {
+      border: none;
+      background: transparent;
+      border-radius: 0 $radius-md $radius-md 0;
+      &:focus {
+        background: transparent;
+      }
+    }
   }
 
   &__select { cursor: pointer; }
@@ -221,12 +228,37 @@
     &::placeholder { color: $color-text-dimmed; }
   }
 
+  // ── Style Generator Panel ──────────────────────────────────
+  &__generator-panel {
+    background: $color-surface;
+    border: 1px dashed $color-border;
+    padding: $space-4;
+    border-radius: $radius-md;
+    margin-top: $space-3;
+  }
+  
+  &__generator-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: $color-accent;
+    margin-bottom: $space-2;
+  }
+
   // ── Sizes table ────────────────────────────────────────────
   &__size-table-wrap { overflow-x: auto; }
 
   &__size-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    thead {
+      background: $color-bg-card-hover;
+    }
 
     th {
       font-size: 11px;
@@ -234,14 +266,14 @@
       color: $color-text-dimmed;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      padding: $space-2 $space-3;
+      padding: $space-3 $space-4;
       text-align: left;
       border-bottom: 1px solid $color-border;
     }
 
     td {
-      padding: $space-2 $space-2;
-      border-bottom: 1px solid rgba(var(--color-rgb-text),0.04);
+      padding: $space-3 $space-4;
+      border-bottom: 1px solid $color-border;
     }
 
     tr:last-child td { border-bottom: none; }
@@ -251,15 +283,15 @@
     font-size: 13px;
     font-weight: 700;
     padding: 4px 10px;
-    background: $color-surface;
-    border: 1px solid $color-border;
+    background: $color-accent-dim;
+    border: 1px solid rgba($color-accent, 0.25);
     border-radius: $radius-sm;
-    color: $color-text;
+    color: $color-accent;
   }
 
-  &__table-input {
-    width: 100%;
-    background: rgba(var(--color-rgb-text),0.04);
+  &__size-qty-input {
+    width: 100px;
+    background: rgba(var(--color-rgb-text), 0.04);
     border: 1px solid $color-border;
     border-radius: $radius-md;
     padding: $space-2 $space-3;
@@ -267,8 +299,40 @@
     font-family: $font-body;
     font-size: 13px;
     outline: none;
+    transition: $transition-fast;
 
-    &:focus { border-color: $color-accent; }
+    &:focus {
+      border-color: $color-accent;
+      background: $color-accent-glow;
+    }
+  }
+
+  &__size-btn {
+    padding: 5px 12px;
+    background: $color-surface;
+    color: $color-text-muted;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    font-weight: 700;
+    transition: $transition-fast;
+
+    &:hover {
+      border-color: $color-accent;
+      background: $color-surface-hover;
+      color: $color-text;
+    }
+
+    &--active {
+      background: $color-accent;
+      color: #000;
+      border-color: $color-accent;
+      
+      &:hover {
+        background: $color-accent;
+        color: #000;
+      }
+    }
   }
 
   // ── Colors ─────────────────────────────────────────────────
@@ -278,10 +342,128 @@
     gap: $space-3;
   }
 
-  &__color-item {
+  &__color-card {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    background: $color-surface;
+    padding: $space-5;
+    border-radius: $radius-lg;
+    border: 1px solid $color-border;
+    width: 100%;
+  }
+
+  &__color-row {
     display: flex;
     align-items: center;
     gap: $space-3;
+  }
+
+  &__color-picker-wrapper {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
+    overflow: hidden;
+    border: 2px solid $color-border-strong;
+    flex-shrink: 0;
+  }
+
+  &__color-picker-input {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+  }
+
+  &__color-hex-input {
+    width: 90px;
+  }
+
+  &__color-name-input {
+    flex: 1;
+    color: $color-accent;
+    background: $color-accent-dim;
+    border-color: rgba($color-accent, 0.25);
+    
+    &:disabled {
+      color: $color-accent;
+      opacity: 1;
+      -webkit-text-fill-color: $color-accent;
+    }
+  }
+
+  &__gallery-box {
+    background: rgba(var(--color-rgb-text), 0.02);
+    border: 1px dashed $color-border;
+    border-radius: $radius-md;
+    padding: $space-4;
+  }
+
+  &__gallery-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $space-4;
+  }
+
+  &__gallery-title {
+    font-size: 13px;
+    color: $color-text-muted;
+    font-weight: 700;
+  }
+
+  &__gallery-btn {
+    cursor: pointer;
+    padding: 6px 12px;
+    font-size: 12px;
+    height: auto;
+  }
+
+  &__gallery-previews {
+    display: flex;
+    gap: $space-2;
+    flex-wrap: wrap;
+  }
+
+  &__gallery-thumb {
+    position: relative;
+    width: 70px;
+    height: 90px;
+    border-radius: $radius-sm;
+    overflow: hidden;
+    border: 1px solid $color-border;
+  }
+
+  &__gallery-thumb-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: $radius-full;
+    width: 20px;
+    height: 20px;
+    @include flex-center;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 10;
+    transition: $transition-fast;
+
+    &:hover {
+      background: #000;
+      transform: scale(1.1);
+    }
+  }
+
+  &__gallery-empty {
+    color: $color-text-dimmed;
+    font-size: 12px;
+    margin: 0;
+    text-align: center;
   }
 
   &__color-swatch {
@@ -455,6 +637,31 @@
       color: $color-text-dimmed;
       margin: 0;
     }
+
+    &--has-preview {
+      padding: 0;
+      min-height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
+  &__dropzone-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: $space-2;
+    font-size: 13px;
+    text-align: center;
+    transition: $transition-fast;
+    opacity: 0;
+    
+    .create-product__dropzone:hover & {
+      opacity: 1;
+    }
   }
 
   &__thumbnails {
@@ -525,6 +732,7 @@
     border-radius: $radius-md;
     @include flex-center;
     flex-shrink: 0;
+    overflow: hidden;
 
     .material-symbols-outlined {
       font-size: 1.75rem;
@@ -564,7 +772,7 @@
     font-family: $font-headline;
     font-weight: 900;
     font-size: 1.1rem;
-    color: $color-text;
+    color: $color-accent;
   }
 
   &__preview-original {
@@ -611,6 +819,11 @@
     justify-content: flex-end;
     gap: $space-3;
     z-index: 150;
+    transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .sidebar--collapsed ~ .app-layout__main & {
+      left: $sidebar-collapsed;
+    }
 
     @include respond-to('tablet') { left: $sidebar-collapsed; padding: $space-4; }
     @include respond-to('mobile') { left: 0; padding: $space-3; }
@@ -628,6 +841,12 @@
     cursor: pointer;
     transition: $transition-fast;
     letter-spacing: 0.02em;
+    border: 1px solid transparent;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
 
     .material-symbols-outlined { font-size: 18px; }
 
@@ -635,21 +854,31 @@
       background: none;
       border: 1px solid $color-border;
       color: $color-text-muted;
-      &:hover { border-color: $color-border-strong; color: $color-text; }
+      &:hover:not(:disabled) { border-color: $color-border-strong; color: $color-text; }
     }
 
     &--outline {
       background: none;
       border: 1px solid $color-accent;
       color: $color-accent;
-      &:hover { background: $color-accent-dim; }
+      &:hover:not(:disabled) { background: $color-accent-dim; }
     }
 
     &--primary {
       background: $color-accent;
       border: 1px solid $color-accent;
       color: #000;
-      &:hover { background: #e8c88a; }
+      
+      &:hover:not(:disabled) {
+        background: #f3d8a2;
+        border-color: #f3d8a2;
+      }
+      
+      &:disabled {
+        background: $color-surface;
+        border-color: $color-border;
+        color: $color-text-muted;
+      }
     }
   }
 }

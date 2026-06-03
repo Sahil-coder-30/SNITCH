@@ -41,6 +41,11 @@
     padding: 0;
     width: 100%;
   }
+
+  &--nested {
+    min-height: calc(100vh - 64px);
+    background: transparent;
+  }
 }
 
 // ── App Bar (all inner pages — app-style, no search) ──────────

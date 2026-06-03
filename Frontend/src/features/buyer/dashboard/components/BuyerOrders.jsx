@@ -1,5 +1,4 @@
 import React from 'react';
-import BuyerDashboard from './BuyerDashboard';
 import StatusBadge    from '../../../../components/dashboard/StatusBadge';
 import { useBuyerOrders } from '../Hooks/useBuyerOrders';
 import { OrderCardSkeleton } from '../../../../components/loaders/ComponentSkeletons';
@@ -24,7 +23,7 @@ const BuyerOrders = () => {
   if (error) return <div className="buyer-orders__error">Error: {error}</div>;
 
   return (
-    <BuyerDashboard breadcrumb={['Home', 'My Orders']}>
+    <>
       <div className="buyer-orders">
         <h1 className="buyer-orders__title">My Orders</h1>
 
@@ -157,7 +156,7 @@ const BuyerOrders = () => {
           </div>
         )}
       </div>
-    </BuyerDashboard>
+    </>
   );
 };
 

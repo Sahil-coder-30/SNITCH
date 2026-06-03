@@ -76,6 +76,12 @@ export const resetPassword = async (email, otp, password, confirmPass) => {
     return result.data;
 };
 
+// ── VERIFY EMAIL TOKEN ────────────────────────────────────────────────────────
+export const verifyEmailToken = async (token) => {
+    const result = await api.get(`/verify-email/${token}`);
+    return result.data;
+};
+
 // ── GET ME ───────────────────────────────────────────────────────────────────
 export const getMe = async () => {
     const result = await api.get('/Get-Me');

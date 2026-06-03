@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import BuyerDashboard from '../../buyer/dashboard/components/BuyerDashboard';
 import { useWishlist } from '../hooks/wishlist.hooks';
 import { useCart } from '../../cart/hooks/cart.hooks';
 import '../style/WishlistPage.scss';
@@ -23,14 +21,13 @@ const WishlistCard = ({ item, onMoveToCart, onRemove, isMutating }) => {
   const navigate = useNavigate();
   const product = item.product || {};
 
-  const price        = product.price?.amount        ?? 0;
+  const price         = product.price?.amount        ?? 0;
   const originalPrice = product.originalPrice?.amount ?? 0;
   const showOriginal  = originalPrice > price;
   const discount      = showOriginal
     ? Math.round(100 - (price / originalPrice) * 100)
     : 0;
 
-  // Determine stock for this specific size
   const sizeEntry  = product.sizes?.find((s) => s.size === item.size);
   const sizeStock  = sizeEntry?.quantity ?? 0;
   const isLowStock = sizeStock > 0 && sizeStock <= 3;
@@ -50,14 +47,12 @@ const WishlistCard = ({ item, onMoveToCart, onRemove, isMutating }) => {
           </div>
         )}
 
-        {/* Badge */}
         {product.badge && (
           <span className={`wl-card__badge wl-card__badge--${product.badge}`}>
             {product.badge.replace(/-/g, ' ')}
           </span>
         )}
 
-        {/* Remove X button */}
         <button
           className="wl-card__remove-btn"
           onClick={(e) => { e.stopPropagation(); onRemove(product._id, item.size); }}
@@ -68,7 +63,6 @@ const WishlistCard = ({ item, onMoveToCart, onRemove, isMutating }) => {
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        {/* Low stock ribbon */}
         {isLowStock && (
           <div className="wl-card__low-stock">
             <span className="material-symbols-outlined">warning</span>
@@ -102,9 +96,7 @@ const WishlistCard = ({ item, onMoveToCart, onRemove, isMutating }) => {
         </div>
 
         <div className="wl-card__price-row">
-          <span className="wl-card__price">
-            ₹{price.toLocaleString('en-IN')}
-          </span>
+          <span className="wl-card__price">₹{price.toLocaleString('en-IN')}</span>
           {showOriginal && (
             <span className="wl-card__original-price">
               ₹{originalPrice.toLocaleString('en-IN')}
@@ -162,7 +154,6 @@ const WishlistPage = () => {
 
   const { authAddToCart } = useCart();
 
-  // Fetch wishlist on mount
   useEffect(() => {
     authFetchWishlist();
   }, []);
@@ -190,8 +181,8 @@ const WishlistPage = () => {
     for (const item of items) {
       try {
         await handleMoveToCart(item);
-      } catch (err) {
-        // continue moving remaining items even if one fails
+      } catch (_) {
+        // continue with remaining items
       }
     }
   };
@@ -199,98 +190,92 @@ const WishlistPage = () => {
   // ── Loading State ──
   if (isLoading && items.length === 0) {
     return (
-      <BuyerDashboard breadcrumb={['Home', 'My Wishlist']}>
-        <div className="wishlist-page">
-          <div className="wishlist-page__header">
-            <div className="wishlist-page__title-group">
-              <h1 className="wishlist-page__title">My Wishlist</h1>
-            </div>
-          </div>
-          <div className="wishlist-page__grid">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <WishlistCardSkeleton key={i} />
-            ))}
+      <div className="wishlist-page">
+        <div className="wishlist-page__header">
+          <div className="wishlist-page__title-group">
+            <h1 className="wishlist-page__title">My Wishlist</h1>
           </div>
         </div>
-      </BuyerDashboard>
+        <div className="wishlist-page__grid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <WishlistCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
     );
   }
 
   // ── Error State ──
   if (error && items.length === 0) {
     return (
-      <BuyerDashboard breadcrumb={['Home', 'My Wishlist']}>
-        <div className="wishlist-page">
-          <div className="wishlist-page__error">
-            <span className="material-symbols-outlined">error</span>
-            <h2>Failed to load wishlist</h2>
-            <p>{error}</p>
-            <button onClick={authFetchWishlist}>Retry</button>
-          </div>
+      <div className="wishlist-page">
+        <div className="wishlist-page__error">
+          <span className="material-symbols-outlined">error</span>
+          <h2>Failed to load wishlist</h2>
+          <p>{error}</p>
+          <button onClick={authFetchWishlist}>Retry</button>
         </div>
-      </BuyerDashboard>
+      </div>
     );
   }
 
   return (
-    <BuyerDashboard breadcrumb={['Home', 'My Wishlist']}>
-      <div className="wishlist-page">
+    <div className="wishlist-page">
 
-        {/* ── Header ── */}
-        <div className="wishlist-page__header">
-          <div className="wishlist-page__title-group">
-            <h1 className="wishlist-page__title">My Wishlist</h1>
-            <span className="wishlist-page__count-badge">{items.length}</span>
-          </div>
-
-          {items.length > 0 && (
-            <div className="wishlist-page__actions-row">
-              <button
-                className="wishlist-page__move-all-btn"
-                onClick={handleMoveAll}
-                disabled={isLoading}
-              >
-                <span className="material-symbols-outlined">shopping_cart</span>
-                Move All to Cart
-              </button>
-            </div>
-          )}
+      {/* ── Header ── */}
+      <div className="wishlist-page__header">
+        <div className="wishlist-page__title-group">
+          <h1 className="wishlist-page__title">My Wishlist</h1>
+          <span className="wishlist-page__count-badge">{items.length}</span>
         </div>
 
-        {/* ── Content ── */}
-        {items.length === 0 ? (
-          <div className="wishlist-page__empty">
-            <span className="material-symbols-outlined wishlist-page__empty-icon">
-              favorite
-            </span>
-            <h2 className="wishlist-page__empty-title">Your wishlist is empty</h2>
-            <p className="wishlist-page__empty-desc">
-              Save products you love. Browse the catalog and tap the heart icon to add items here.
-            </p>
+        {items.length > 0 && (
+          <div className="wishlist-page__actions-row">
             <button
-              className="wishlist-page__empty-btn"
-              onClick={() => navigate('/buyer')}
+              className="wishlist-page__move-all-btn"
+              onClick={handleMoveAll}
+              disabled={isLoading}
             >
-              <span className="material-symbols-outlined">storefront</span>
-              Explore Store
+              <span className="material-symbols-outlined">shopping_cart</span>
+              Move All to Cart
             </button>
           </div>
-        ) : (
-          <div className="wishlist-page__grid">
-            {items.map((item) => (
-              <WishlistCard
-                key={`${item._id}`}
-                item={item}
-                onMoveToCart={handleMoveToCart}
-                onRemove={handleRemove}
-                isMutating={isLoading}
-              />
-            ))}
-          </div>
         )}
-
       </div>
-    </BuyerDashboard>
+
+      {/* ── Content ── */}
+      {items.length === 0 ? (
+        <div className="wishlist-page__empty">
+          <span className="material-symbols-outlined wishlist-page__empty-icon">
+            favorite
+          </span>
+          <h2 className="wishlist-page__empty-title">Your wishlist is empty</h2>
+          <p className="wishlist-page__empty-desc">
+            Save products you love. Browse the catalog and tap the heart icon to add items here.
+          </p>
+          <button
+            className="wishlist-page__empty-btn"
+            onClick={() => navigate('/buyer')}
+          >
+            <span className="material-symbols-outlined">storefront</span>
+            Explore Store
+          </button>
+        </div>
+      ) : (
+        <div className="wishlist-page__grid">
+          {items.map((item) => (
+            <WishlistCard
+              key={`${item._id}`}
+              item={item}
+              onMoveToCart={handleMoveToCart}
+              onRemove={handleRemove}
+              isMutating={isLoading}
+            />
+          ))}
+        </div>
+      )}
+
+    </div>
   );
 };
 

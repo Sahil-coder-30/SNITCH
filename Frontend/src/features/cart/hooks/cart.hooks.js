@@ -5,13 +5,24 @@ import { setCart, setLoading, setError, clearError } from '../slice/cart.slice';
 export const useCart = () => {
     const dispatch = useDispatch();
 
+    /**
+     * Internal: fetch cart from server and push to Redux.
+     * getCart returns { message, userCart: [] } — userCart is an aggregate array.
+     * If the cart is empty there are no documents, so userCart is [].
+     */
+    const _fetchAndSync = async () => {
+        const data = await fetchCartAPI();           // { message, userCart: [] }
+        const cart = data.userCart?.[0] ?? null;    // first (and only) aggregate result
+        dispatch(setCart(cart));
+        return cart;
+    };
+
+    // ── Fetch cart ───────────────────────────────────────────────────────────
     const authFetchCart = async () => {
         try {
             dispatch(clearError());
             dispatch(setLoading(true));
-            const data = await fetchCartAPI();
-            dispatch(setCart(data.cart));
-            return data.cart;
+            return await _fetchAndSync();
         } catch (error) {
             dispatch(setError(error.message));
             throw error;
@@ -20,13 +31,13 @@ export const useCart = () => {
         }
     };
 
+    // ── Add to cart — mutate then re-fetch ───────────────────────────────────
     const authAddToCart = async (productId, quantity, size) => {
         try {
             dispatch(clearError());
             dispatch(setLoading(true));
-            const data = await addToCartAPI(productId, quantity, size);
-            dispatch(setCart(data.cart));
-            return data.cart;
+            await addToCartAPI(productId, quantity, size); // response only has message
+            return await _fetchAndSync();                  // pull fresh aggregate data
         } catch (error) {
             dispatch(setError(error.message));
             throw error;
@@ -35,13 +46,13 @@ export const useCart = () => {
         }
     };
 
+    // ── Decrement item — mutate then re-fetch ────────────────────────────────
     const authDecrementItem = async (cartItemId) => {
         try {
             dispatch(clearError());
             dispatch(setLoading(true));
-            const data = await decrementItemAPI(cartItemId);
-            dispatch(setCart(data.cart));
-            return data.cart;
+            await decrementItemAPI(cartItemId);
+            return await _fetchAndSync();
         } catch (error) {
             dispatch(setError(error.message));
             throw error;
@@ -50,13 +61,13 @@ export const useCart = () => {
         }
     };
 
+    // ── Remove item — mutate then re-fetch ───────────────────────────────────
     const authRemoveItem = async (cartItemId) => {
         try {
             dispatch(clearError());
             dispatch(setLoading(true));
-            const data = await removeItemAPI(cartItemId);
-            dispatch(setCart(data.cart));
-            return data.cart;
+            await removeItemAPI(cartItemId);
+            return await _fetchAndSync();
         } catch (error) {
             dispatch(setError(error.message));
             throw error;

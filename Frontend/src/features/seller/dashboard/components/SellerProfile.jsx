@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import SellerDashboard from './SellerDashboard';
 import { useSellerProfile } from '../Hooks/useSellerProfile';
 import '../style/SellerProfile.scss';
 
@@ -66,9 +65,9 @@ const SellerProfile = () => {
 
   if (loading || !profile) {
     return (
-      <SellerDashboard breadcrumb={['Dashboard', 'My Profile']}>
+      <>
         <div className="buyer-profile-loading">Loading store profile...</div>
-      </SellerDashboard>
+      </>
     );
   }
 
@@ -139,7 +138,7 @@ const SellerProfile = () => {
   };
 
   return (
-    <SellerDashboard breadcrumb={['Dashboard', 'My Profile']}>
+    <>
       <div className="seller-profile">
         <div className="seller-profile__top">
           {/* Left Column: Store Logo & Stats */}
@@ -342,7 +341,7 @@ const SellerProfile = () => {
           </div>
         </div>
       </div>
-    </SellerDashboard>
+    </>
   );
 };
 

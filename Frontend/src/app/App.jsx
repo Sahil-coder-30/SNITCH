@@ -1,6 +1,7 @@
 import React from 'react'
 import './style/app.scss'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import AppLayout from './appLayout'
 
 // ── Public Storefront ──────────────────────────────────────────
 import StoreFront        from '../features/store/components/StoreFront'
@@ -99,59 +100,62 @@ const App = () => {
   return (
     <div>
       <Routes>
-        {/* ── Public Storefront (redirect logged-in users to dashboard) ── */}
-        <Route element={<GuestRoute />}>
-          <Route path="/" element={<StoreFront />} />
+        {/* ── Routes WITH Shared Navbar ── */}
+        <Route element={<AppLayout />}>
+          {/* ── Public Storefront (redirect logged-in users to dashboard) ── */}
+          <Route element={<GuestRoute />}>
+            <Route path="/" element={<StoreFront />} />
+          </Route>
+
+          {/* ── Public Product Details (accessible to anyone) ── */}
+          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/product" element={<ProductPage />} />
+          <Route path="/search" element={<SearchResultsPage />} />
+
+          {/* ── Seller Dashboard (Protected) ──────────── */}
+          <Route element={<ProtectedRoute allowedRoles={['SELLER']} />}>
+            <Route path="/seller"                element={<SellerOverview />} />
+            <Route path="/seller/products"       element={<SellerProducts />} />
+            <Route path="/seller/products/new"   element={<CreateProduct />} />
+            <Route path="/seller/style-passbook" element={<StylePassbook />} />
+            <Route path="/seller/orders"         element={<SellerOrders />} />
+            <Route path="/seller/earnings"       element={<SellerEarnings />} />
+            <Route path="/seller/profile"        element={<SellerProfile />} />
+          </Route>
+
+          {/* ── Buyer Dashboard & Flow (Protected) ───────── */}
+          <Route element={<ProtectedRoute allowedRoles={['BUYER']} />}>
+            <Route path="/buyer"              element={<BrowseProducts />} />
+            <Route path="/buyer/orders"       element={<BuyerOrders />} />
+            <Route path="/buyer/wishlist"     element={<WishlistPage />} />
+            <Route path="/buyer/profile"      element={<BuyerProfile />} />
+            <Route path="/buyer/cart"         element={<CartPage />} />
+            <Route path="/checkout"           element={<CheckoutPage />} />
+            <Route path="/order-success"      element={<OrderSuccessPage />} />
+            <Route path="/buyer/all-orders"   element={<MyOrdersPage />} />
+            <Route path="/buyer/orders/:id"   element={<OrderDetailPage />} />
+            <Route path="/buyer/track/:id"    element={<OrderTrackingPage />} />
+            <Route path="/buyer/return"       element={<ReturnRequestPage />} />
+            <Route path="/buyer/review"       element={<WriteReviewPage />} />
+            <Route path="/buyer/refund-status" element={<RefundStatusPage />} />
+          </Route>
+
+          {/* ── Admin Banners (Public for now, auth added later) ── */}
+          <Route path="/admin/banners" element={<AdminBanners />} />
+
+          {/* ── Errors/Status (Public or Auth depending on context) ── */}
+          <Route path="/payment-failed" element={<PaymentFailedPage />} />
+          <Route path="/order-cancelled" element={<OrderCancelledPage />} />
         </Route>
 
-        {/* ── Public Product Details (accessible to anyone) ── */}
-        <Route path="/product/:id" element={<ProductPage />} />
-        <Route path="/product" element={<ProductPage />} />
-        <Route path="/search" element={<SearchResultsPage />} />
-
-        {/* ── Auth (Unauthenticated only) ─────────────── */}
+        {/* ── Auth (Unauthenticated only, no Navbar) ─────────────── */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/api/auth/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/set-password" element={<SetPassword />} />
-
-        {/* ── Seller Dashboard (Protected) ──────────── */}
-        <Route element={<ProtectedRoute allowedRoles={['SELLER']} />}>
-          <Route path="/seller" element={<SellerOverview />} />
-          <Route path="/seller/products" element={<SellerProducts />} />
-          <Route path="/seller/products/new" element={<CreateProduct />} />
-          <Route path="/seller/style-passbook" element={<StylePassbook />} />
-          <Route path="/seller/orders" element={<SellerOrders />} />
-          <Route path="/seller/earnings" element={<SellerEarnings />} />
-          <Route path="/seller/profile" element={<SellerProfile />} />
-        </Route>
-
-        {/* ── Buyer Dashboard & Flow (Protected) ───────── */}
-        <Route element={<ProtectedRoute allowedRoles={['BUYER']} />}>
-          <Route path="/buyer" element={<BrowseProducts />} />
-          <Route path="/buyer/orders" element={<BuyerOrders />} />
-          <Route path="/buyer/wishlist" element={<WishlistPage />} />
-          <Route path="/buyer/profile" element={<BuyerProfile />} />
-          <Route path="/buyer/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-success" element={<OrderSuccessPage />} />
-          <Route path="/buyer/all-orders" element={<MyOrdersPage />} />
-          <Route path="/buyer/orders/:id" element={<OrderDetailPage />} />
-          <Route path="/buyer/track/:id" element={<OrderTrackingPage />} />
-          <Route path="/buyer/return" element={<ReturnRequestPage />} />
-          <Route path="/buyer/review" element={<WriteReviewPage />} />
-          <Route path="/buyer/refund-status" element={<RefundStatusPage />} />
-        </Route>
-
-        {/* ── Admin Banners (Public for now, auth added later) ── */}
-        <Route path="/admin/banners" element={<AdminBanners />} />
-
-        {/* ── Errors/Status (Public or Auth depending on context) ── */}
-        <Route path="/payment-failed" element={<PaymentFailedPage />} />
-        <Route path="/order-cancelled" element={<OrderCancelledPage />} />
       </Routes>
     </div>
   )

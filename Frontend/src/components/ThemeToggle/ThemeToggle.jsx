@@ -6,8 +6,9 @@ const ThemeToggle = ({ className = '' }) => {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    
+    const prefersLight =
+      window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+
     if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
       setIsLight(true);
       document.documentElement.setAttribute('data-theme', 'light');
@@ -30,14 +31,16 @@ const ThemeToggle = ({ className = '' }) => {
   };
 
   return (
-    <button 
-      className={`theme-toggle-btn ${className}`} 
+    <button
+      className={`theme-toggle-btn ${isLight ? 'theme-toggle-btn--on' : ''} ${className}`}
       onClick={toggleTheme}
-      aria-label="Toggle theme"
-      title="Toggle theme"
+      role="switch"
+      aria-checked={isLight}
+      aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+      title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
     >
-      <span className="material-symbols-outlined icon">
-        {isLight ? 'dark_mode' : 'light_mode'}
+      <span className="theme-toggle-btn__track">
+        <span className="theme-toggle-btn__thumb" />
       </span>
     </button>
   );

@@ -3,19 +3,32 @@ import { createSlice } from "@reduxjs/toolkit";
 const cartSlice = createSlice({
     name: "cart",
     initialState: {
+        cartId: null,
         items: [],
         itemCount: 0,
-        subtotal: 0,
+        total: 0,       // computed server-side via aggregate: sum of (qty * price)
         currency: "INR",
         isLoading: false,
         error: null,
     },
     reducers: {
+        // Accepts the first element of the aggregate array returned by getCart
         setCart(state, action) {
-            state.items = action.payload.items;
-            state.itemCount = action.payload.itemCount;
-            state.subtotal = action.payload.subtotal;
-            state.currency = action.payload.currency;
+            const cart = action.payload; // { _id, total, currency, items[] }
+            if (!cart) {
+                // empty cart (no document yet)
+                state.cartId   = null;
+                state.items    = [];
+                state.itemCount = 0;
+                state.total    = 0;
+                state.currency = "INR";
+            } else {
+                state.cartId   = cart._id;
+                state.items    = cart.items ?? [];
+                state.itemCount = (cart.items ?? []).reduce((s, i) => s + i.quantity, 0);
+                state.total    = cart.total ?? 0;
+                state.currency = cart.currency ?? "INR";
+            }
             state.error = null;
         },
         setLoading(state, action) {
@@ -28,11 +41,12 @@ const cartSlice = createSlice({
             state.error = null;
         },
         clearCart(state) {
-            state.items = [];
+            state.cartId   = null;
+            state.items    = [];
             state.itemCount = 0;
-            state.subtotal = 0;
+            state.total    = 0;
             state.currency = "INR";
-            state.error = null;
+            state.error    = null;
         }
     }
 });

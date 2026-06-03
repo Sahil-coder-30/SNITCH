@@ -2,6 +2,14 @@
 
 .cart-page {
   width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 1.25rem 1rem;
+  }
 
   &__header {
     @include flex-between;

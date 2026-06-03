@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import SellerDashboard from './SellerDashboard';
 import { getStyleCodes, createStyleCode } from '../services/product.api';
 import '../style/StylePassbook.scss';
 
@@ -62,7 +61,7 @@ const StylePassbook = () => {
   };
 
   return (
-    <SellerDashboard breadcrumb={['Dashboard', 'My Products', 'Style Passbook']}>
+    <>
       <div className="style-passbook">
         
         {/* Passbook Title */}
@@ -236,7 +235,7 @@ const StylePassbook = () => {
         </div>
 
       </div>
-    </SellerDashboard>
+    </>
   );
 };
 

@@ -41,7 +41,7 @@ export const authRegisterController = async (req, res, next) => {
       { expiresIn: "1d" },
     );
 
-    const verificationLink = `http://localhost:3000/api/auth/verify-email/${emailVerificationToken}`;
+    const verificationLink = `http://localhost:5173/verify-email?token=${emailVerificationToken}`;
 
     await sendEmail({
       to: newUser.email,

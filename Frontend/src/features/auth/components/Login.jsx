@@ -39,6 +39,8 @@ const Login = () => {
     }
   }, [user, navigate, redirectTo]);
 
+  // NOTE: unverified-email redirect is handled in loginHandler catch block below.
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -63,6 +65,10 @@ const Login = () => {
         navigate('/buyer');
       }
     } catch (err) {
+      if (err.status === 403 && err.message?.toLowerCase().includes('verify')) {
+        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+        return;
+      }
       // Detect the Google-OAuth "no password yet" 403 scenario
       if (err.status === 403 && err.data?.needsPassword) {
         const redirectEmail = err.data?.email || formData.email;

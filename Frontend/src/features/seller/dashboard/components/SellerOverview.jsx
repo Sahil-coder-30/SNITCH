@@ -1,5 +1,4 @@
 import React from 'react';
-import SellerDashboard from './SellerDashboard';
 import StatCard       from '../../../../components/dashboard/StatCard';
 import StatusBadge    from '../../../../components/dashboard/StatusBadge';
 import { useSellerOverview } from '../Hooks/useSellerOverview';
@@ -22,7 +21,7 @@ const SellerOverview = () => {
   );
 
   return (
-    <SellerDashboard breadcrumb={['Dashboard', 'Overview']}>
+    <>
       <div className="seller-overview">
         {/* ROW 1 — Stat Cards */}
         <div className="seller-overview__stat-row">
@@ -124,7 +123,7 @@ const SellerOverview = () => {
           </div>
         </div>
       </div>
-    </SellerDashboard>
+    </>
   );
 };
 

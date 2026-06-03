@@ -1,24 +1,30 @@
-import React from 'react';
-import Sidebar from '../../../../components/dashboard/Sidebar';
-import Navbar  from '../../../../components/dashboard/Navbar';
+import React, { useContext } from 'react';
+import { Outlet } from 'react-router-dom';
+import Sidebar from '../../../Shared/Component/Sidebar';
+import { DashboardContext } from '../../../Shared/Component/DashboardContext';
 import '../style/SellerDashboard.scss';
 
 /**
- * SellerDashboard — shell layout (sidebar + navbar + slot for page content)
- * Props:
- *   page: 'overview' | 'products' | 'create-product' | 'orders' | 'earnings'
- *   breadcrumb: string[]
+ * SellerDashboard — shell layout (sidebar + slot for page content)
  */
-const SellerDashboard = ({ children, breadcrumb = ['Dashboard', 'Overview'] }) => (
-  <div className="seller-dashboard">
-    <Sidebar role="seller" />
-    <div className="seller-dashboard__main">
-      <Navbar role="seller" breadcrumb={breadcrumb} />
-      <main className="seller-dashboard__content">
-        {children}
-      </main>
-    </div>
-  </div>
-);
+const SellerDashboard = ({ children }) => {
+  const context = useContext(DashboardContext);
+  const isNested = !!(context && context.isNested);
+  const showSidebar = !isNested;
+
+  return (
+    <DashboardContext.Provider value={{ isNested: true }}>
+      <div className={`seller-dashboard ${isNested ? 'seller-dashboard--nested' : ''}`}>
+        {showSidebar && <Sidebar />}
+        <div className="seller-dashboard__main">
+          <main className="seller-dashboard__content">
+            {children || <Outlet />}
+          </main>
+        </div>
+      </div>
+    </DashboardContext.Provider>
+  );
+};
 
 export default SellerDashboard;
+

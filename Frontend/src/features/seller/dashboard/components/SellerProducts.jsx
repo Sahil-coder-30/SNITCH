@@ -1,5 +1,4 @@
 import React from 'react';
-import SellerDashboard from './SellerDashboard';
 import ProductCard     from '../../../../components/dashboard/ProductCard';
 import Pagination      from '../../../../components/dashboard/Pagination';
 import EmptyState      from '../../../../components/dashboard/EmptyState';
@@ -10,7 +9,7 @@ const SellerProducts = () => {
   const { products, loading, viewMode, setViewMode } = useSellerProducts();
 
   return (
-    <SellerDashboard breadcrumb={['Dashboard', 'My Products']}>
+    <>
       <div className="seller-products">
 
         <div className="seller-products__topbar">
@@ -44,7 +43,7 @@ const SellerProducts = () => {
 
         {products.length > 0 && <Pagination current={1} total={1} from={0} to={0} count={0} />}
       </div>
-    </SellerDashboard>
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BuyerDashboard from './BuyerDashboard';
 import { CATEGORIES, SORT_OPTIONS, BANNERS } from '../../../store/data/products';
 import { useBrowseProducts } from '../Hooks/useBrowseProducts';
 import { DoublyCircularLinkedList } from '../../../../utils/circularLinkedList';
@@ -202,43 +201,41 @@ const BrowseProducts = () => {
   };
 
   return (
-    <BuyerDashboard>
-      <div className="browse-products-new">
-        <section className="sf-products-section" ref={productsRef}>
-          <HeroBanner onShopNow={scrollToProducts} loading={bannersLoading} banners={banners} />
-          
-          <div className="sf-toolbar">
-            <div className="sf-toolbar__left">
-              <h2 className="sf-toolbar__heading">
-                {CATEGORIES.find(c => c.id === category)?.label || 'Store Catalog'}
-              </h2>
-              <span className="sf-toolbar__count">{filteredProducts.length} items found</span>
-            </div>
-            <div className="sf-toolbar__right">
-              <select className="sf-toolbar__sort" value={sort} onChange={e => setSort(e.target.value)}>
-                {SORT_OPTIONS.map(o => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-            </div>
+    <div className="browse-products-new">
+      <section className="sf-products-section" ref={productsRef}>
+        <HeroBanner onShopNow={scrollToProducts} loading={bannersLoading} banners={banners} />
+        
+        <div className="sf-toolbar">
+          <div className="sf-toolbar__left">
+            <h2 className="sf-toolbar__heading">
+              {CATEGORIES.find(c => c.id === category)?.label || 'Store Catalog'}
+            </h2>
+            <span className="sf-toolbar__count">{filteredProducts.length} items found</span>
           </div>
+          <div className="sf-toolbar__right">
+            <select className="sf-toolbar__sort" value={sort} onChange={e => setSort(e.target.value)}>
+              {SORT_OPTIONS.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-          <div className="sf-grid">
-            {loading ? (
-              Array.from({ length: 6 }).map((_, i) => (
-                <ProductCardSkeleton key={i} />
-              ))
-            ) : filteredProducts.length > 0 ? (
-              filteredProducts.map(p => (
-                <ProductCard key={p.id} product={p} onSelect={handleProductSelect} />
-              ))
-            ) : (
-              <div className="sf-empty-grid">No products match your criteria.</div>
-            )}
-          </div>
-        </section>
-      </div>
-    </BuyerDashboard>
+        <div className="sf-grid">
+          {loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))
+          ) : filteredProducts.length > 0 ? (
+            filteredProducts.map(p => (
+              <ProductCard key={p.id} product={p} onSelect={handleProductSelect} />
+            ))
+          ) : (
+            <div className="sf-empty-grid">No products match your criteria.</div>
+          )}
+        </div>
+      </section>
+    </div>
   );
 };
 
